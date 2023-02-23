@@ -45,7 +45,7 @@ $dishes->setSlug($slug);
             $this->addFlash('success', 'Le plat a bien été ajouté');
 
             //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
+            return $this->redirectToRoute('app_dishes_details', ['slug' => $dishes->getSlug()]);
         }
 
         return $this->render('admin/dishes/add.html.twig',compact('dishesForm'));
@@ -60,7 +60,6 @@ $dishes->setSlug($slug);
         //Vérification si l'user peut éditer avec le voter
         $this->denyAccessUnlessGranted('DISHES_EDIT', $dishes);
 
-        // Création du formulaire
         $dishesForm = $this->createForm(DishesFormType::class, $dishes);
 
         $dishesForm->handleRequest($request);
@@ -74,15 +73,15 @@ $dishes->setSlug($slug);
 
 
             //Message flash
-            $this->addFlash('success', 'Le plat a bien été modifier');
+            $this->addFlash('success', 'Le plat a bien été ajouté');
 
             //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
+            return $this->redirectToRoute('app_dishes_details', ['slug' => $dishes->getSlug()]);
         }
 
-        return $this->render('admin/dishes/edit.html.twig',compact('dishesForm'));
+        return $this->render('admin/dishes/add.html.twig',compact('dishesForm'));
        
-      
+        return $this->render('admin/dishes/index.html.twig');
     }
 
     #[Route('/suppression/{id}', name: 'delete')]

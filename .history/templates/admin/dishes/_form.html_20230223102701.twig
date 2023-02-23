@@ -3,5 +3,5 @@
 {{ form_row(dishesForm.description) }}
 {{ form_row(dishesForm.price) }}
 {{ form_row(dishesForm.categories) }}
-<button class="btn" type="submit"> {{ button_label | default ('Ajouter') }} </button>
+<button class="btn" type="submit"> {{ button_label | {{ variable|default('Ajouter') }}}} </button>
 {{ form_end(dishesForm) }}

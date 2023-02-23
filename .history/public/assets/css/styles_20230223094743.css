@@ -56,16 +56,3 @@ input{
 section{
   font-size: 22px;
 }
-
-.page-item, .page-link {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  background-color:var(--templates-color);
-  color: var(--text-color);
-}
-
-a{
-  background-color:var(--templates-color);
-  color: var(--text-color);
-}

@@ -35,17 +35,24 @@ class DishesController extends AbstractController
 
         //Vérification du soumission du formulaire
         if($dishesForm->isSubmitted() && $dishesForm->isValid()){
-            $slug = $slugger->slug($dishes->getName());
-$dishes->setSlug($slug);
+            
+        }
+
+            //Récupération des données du formulaire
+            $dishes = $dishesForm->getData();
+
+            //Génération du slug
+            $dishes->setSlug(strtolower($slugger->slug($dishes->getName())));
+
+            //Enregistrement en BDD
             $em->persist($dishes);
             $em->flush();
-
 
             //Message flash
             $this->addFlash('success', 'Le plat a bien été ajouté');
 
             //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
+            return $this->redirectToRoute('app_dishes_details', ['slug' => $dishes->getSlug()]);
         }
 
         return $this->render('admin/dishes/add.html.twig',compact('dishesForm'));
@@ -55,34 +62,11 @@ $dishes->setSlug($slug);
 
 
     #[Route('/edition/{id}', name: 'edit')]
-    public function edit(Dishes $dishes, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function edit(Dishes $dishes): Response
     {
         //Vérification si l'user peut éditer avec le voter
         $this->denyAccessUnlessGranted('DISHES_EDIT', $dishes);
-
-        // Création du formulaire
-        $dishesForm = $this->createForm(DishesFormType::class, $dishes);
-
-        $dishesForm->handleRequest($request);
-
-        //Vérification du soumission du formulaire
-        if($dishesForm->isSubmitted() && $dishesForm->isValid()){
-            $slug = $slugger->slug($dishes->getName());
-$dishes->setSlug($slug);
-            $em->persist($dishes);
-            $em->flush();
-
-
-            //Message flash
-            $this->addFlash('success', 'Le plat a bien été modifier');
-
-            //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
-        }
-
-        return $this->render('admin/dishes/edit.html.twig',compact('dishesForm'));
-       
-      
+        return $this->render('admin/dishes/index.html.twig');
     }
 
     #[Route('/suppression/{id}', name: 'delete')]

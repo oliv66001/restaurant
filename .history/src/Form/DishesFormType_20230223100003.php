@@ -39,7 +39,6 @@ class DishesFormType extends AbstractType
                 'group_by' => 'parent.name',
                 'query_builder' => function (CategoriesRepository $cr) {
                     return $cr->createQueryBuilder('c')
-                        ->where('c.parent IS NULL')
                         ->orderBy('c.name', 'ASC');
 
                 }

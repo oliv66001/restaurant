@@ -77,7 +77,7 @@ $dishes->setSlug($slug);
             $this->addFlash('success', 'Le plat a bien été modifier');
 
             //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
+            return $this->redirectToRoute('admin_dishes_', ['slug' => $dishes->getSlug()]);
         }
 
         return $this->render('admin/dishes/edit.html.twig',compact('dishesForm'));
