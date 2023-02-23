@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carte des entrées{% endblock %}
+
+{% block body %}
+{% for entree in entree %}
+
+				<div class="col-12 mt-3">
+					<article class="card bg-secondary h-100">
+						<img src="assets/images/beans-g0bef93435_1920.jpg" class="card-img-top" alt="...">
+						<div class="card-body">
+							<h3 class="card-title mt-3  text-center">Nous vous proposons :</br>
+								{{ entree.name }}</h3>
+							<p class="card-text text-center">Prix  :
+									{{ entree.price }} €</p>
+							<p  class="text-center">Déscription du plat :
+									{{ entree.description }}</p>
+									<a href=" {{ path('app_entree_details', {"slug": entree.slug })}} "></a>
+						</div>
+					</article>
+				</div>
+				
+
+
+			{% endfor %}
+
+
+{% endblock %}

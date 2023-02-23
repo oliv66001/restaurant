@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de
+	{{ dishe.name }}
+{% endblock %}
+
+{% block body %}
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h1>{{ dishe.name }}</h1>
+
+			</div>
+			<div class="col-6">
+				<div id="carouselExampleIndicators" class="carousel slide">
+					 <div class="carousel-indicators">
+                        {% for iteration in 1..dishe.images|length %}
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first ) ? 'class="active" aria-current="true"' : '' }} aria-label="Slide {{ iteration }}"></button>
+                        {% endfor %}
+                    </div>
+					<div class="carousel-inner">
+                    {% for image in dishe.images %}
+                        <div class="carousel-item {{ (loop.first ) ? 'active' : '' }}">
+							<img src=" {{ asset('assets/uploads/dishes/mini/300x300-') ~ image.name }} " class="d-block w-100" alt="...">
+						</div>
+                    {% endfor %}
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+			</div>
+			<div class="col-6">
+			<p>	{{ dishe.description }}</p>
+				<p>Catégorie : {{ dishe.categories.name }}
+				</p>
+				<p>Prix : {{ dishe.price }} €</p>
+
+                <a href="{{ path('app_reservation') }}" class="btn mt-3">Réserver</a>
+			</div>
+		</section>
+	</main>
+{% endblock %}

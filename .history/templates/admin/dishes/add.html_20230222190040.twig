@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un plat
+{% endblock %}
+
+{% block body %}
+
+	<main class="container-fluid">
+		<section class="row text-justify-center">
+			<div class="col">
+				<h1>Ajouter un plat</h1>
+                {% include "admin/dishes/_form.html.twig" %}
+			</div>
+		</section>
+	</main>
+
+{% endblock %}

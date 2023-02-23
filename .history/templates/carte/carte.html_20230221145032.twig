@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+
+
+{% block title %}Le Quai-Antique | La carte
+{% endblock %}
+
+{% block body %}
+	<article class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-md-4">
+				<h1 class="text-center mt-5">La carte</h1>
+
+				<div id="flipbook">
+					<div class="hard">
+						La Carte
+					</div>
+					<div class="hard"></div>
+					<div>
+					{% for category in categories %}
+						<p>{{ category.name }}</p>
+						<p>{{ category.parent }}</p>
+					
+					{% endfor %}
+					</div>
+					<div>
+						Page 2
+					</div>
+					<div>
+						Page 3
+					</div>
+					<div>
+						Page 4
+					</div>
+					<div class="hard"></div>
+					<div class="hard"></div>
+				</div>
+				</div>
+		</div>
+	</article>
+
+				{% for category in categories %}
+					{% if category.parent == null %}
+
+						<div class="col-12 ">
+							<h2 class="text-center mt-5">{{ category.name }}</h2>
+							{#<h2 class="text-center mt-5">{{ plats.name.description }}</h2>#}
+						</div>
+					{% else %}
+						<div class="col">
+							<div class="card bg-secondary h-100">
+								<img src="assets/images/beans-g0bef93435_1920.jpg" class="card-img-top" alt="...">
+								<div class="card-body">
+									<h3 class="card-title">{{ category.name }}</h3>
+									<p class="card-text text-center">Voir nos plats et leur déscriptions</p>
+									<a href=" {{ path('app_categories_list', {slug: category.slug}) }} " class="btn">Voir les plats</a>
+								</div>
+							</div>
+						</div>
+
+					{% endif %}
+
+				{% endfor %}
+			
+	{#<section class="container">
+				<div class="row">
+					<div class="col">
+						{% for category in categories %}
+							{% if category.parent == null %}
+								<div class="col-12">
+									<h2 class="text-center mt-5">{{ category.name }}</h2>
+								</div>
+							{% else %}
+								<div class="col-4 mt-3">
+									<div class="card bg-secondary h-100">
+										<img src="assets/images/beans-g0bef93435_1920.jpg" class="card-img-top" alt="...">
+										<div class="card-body">
+											<h3 class="card-title mt-3">{{ category.name }}</h3>
+											<p class="card-text text-center">Voir nos plats et leur déscriptions</p>
+											<a href=" {{ path('app_categories_list', {slug: category.slug}) }} " class="btn">Voir les plats</a>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+			
+						{% endfor %}
+					</div>
+				</div>
+			
+			</section>#}
+
+{% endblock %}

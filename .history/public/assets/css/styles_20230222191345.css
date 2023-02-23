@@ -1,0 +1,113 @@
+:root{
+    --button-color: #2274A5;
+    --button2-color: #F4442E;
+    --button3-color: #BA2C73;
+    --hoverbtn-color: #F45B69;
+    --text-color: #ffde59;
+    --templates-color: #1e1f20;
+}
+
+body{
+    background-color: var(--templates-color);
+    color: var(--text-color);
+}
+
+.btn{
+    background-color: var(--button-color);
+    color: var(--text-color);
+}
+
+.btn2{
+    background-color: var(--button2-color);
+    color: var(--text-color);
+}
+
+.btn3{
+    background-color: var(--button3-color);
+    color: var(--text-color);
+}
+
+.btn :hover{
+    background-color: var(--hoverbtn-color);
+}
+
+a.nav-link, a.navbar-brand, li.nav-item{
+    color: var(--text-color);
+}
+
+.navbar-toggler-icon{
+  background-color: var(--templates-color);
+}
+
+.navbar-toggler{
+    background-color: var(--text-color);
+    
+  }
+
+.logo{
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+}
+
+form{
+    width: 360px;
+}
+
+h1{
+    padding:0.5rem;
+}
+
+input{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+section{
+    font-size: 22px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  form label {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  
+
+.page-item, .page-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    background-color:var(--templates-color);
+    color: var(--text-color);
+  }
+
+  a{
+    background-color:var(--templates-color);
+    color: var(--text-color);
+  }
+
+  .page-item.active .page-link{
+    background-color:var(--text-color);
+    color: var(--templates-color);
+  }
+
+  span .input-group-text{
+    flex: end;
+  }

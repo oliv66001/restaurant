@@ -1,0 +1,43 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Détail
+	{{ category.name }}
+	à la carte
+{% endblock %}
+
+{% block body %}
+
+
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h1>Détail
+					{{ category.name }}
+					à la carte</h1>
+			</div>
+		{% for dishes in dishes.data %}
+
+			<div class="col-12 mt-3">
+				<article class="card bg-secondary h-100">
+					<img src="assets/images/beans-g0bef93435_1920.jpg" class="card-img-top" alt="...">
+					<div class="card-body">
+						<h3 class="card-title mt-3  text-center">Nous vous proposons :</br>
+							{{ dishes.name }}</h3>
+						<p class="card-text text-center">Prix  :
+								{{ dishes.price }} €</p>
+						<p  class="text-center">Déscription du plat :
+								{{ dishes.description }}</p>
+								<a href=" {{ path('app_dishes_details', {"slug": dishes.slug })}} "></a>
+					</div>
+				</article>
+			</div>
+		 {% endfor %}
+            {% set path = 'categories_list' %}
+            {% set slug = category.slug %}
+            {% set pages = products.pages %}
+            {% set currentPage = products.page %}
+            {% include "_partials/_pagination.html.twig" %}
+        </section>
+    </main>
+{% endblock %}

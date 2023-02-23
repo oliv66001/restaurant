@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Le Quai-Antique
+{% endblock %}
+
+
+{% block body %}
+
+
+	<img src="/assets/images/drinks-g511c81e1d_1920.jpg" class="img-fluid" alt="">
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h1>Bienvenue sur le site du Quai-Antique</h1>
+			</div>
+
+{% for category in categories %}
+				{% if category.parent === 'entree' %}
+					<div class="col-12">
+						<h2 class="text-center mt-5">{{ category.name === 'entree' }}</h2>
+					</div>
+				{% else %}
+					<div class="col-4 mt-3">
+						<div class="card bg-secondary h-100">
+							<img src="assets/images/beans-g0bef93435_1920.jpg" class="card-img-top" alt="...">
+							<div class="card-body">
+								<h3 class="card-title mt-3">{{ category.name === 'entree' }}</h3>
+								<p class="card-text text-center">Voir nos plats et leur déscriptions</p>
+								<a href=" {{ path('app_categories_list', {slug: category.slug}) }} " class="btn">Voir les plats</a>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+
+			{% endfor %}
+
+		</section>
+	</main>
+
+
+{% endblock %}
