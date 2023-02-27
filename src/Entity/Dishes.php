@@ -40,7 +40,7 @@ class Dishes
     #[ORM\JoinColumn(nullable: false)]
     private ?Categories $categories = null;
 
-    #[ORM\OneToMany(mappedBy: 'dishes', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'dishes', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist'])]
     private $images;
 
     public function __construct()
@@ -112,7 +112,7 @@ class Dishes
     public function addImage(Images $image): self
     {
         if (!$this->images->contains($image)) {
-            $this->images->add($image);
+            $this->images[] = $image;
             $image->setDishes($this);
         }
 

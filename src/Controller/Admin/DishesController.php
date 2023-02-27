@@ -16,6 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/dishes', name: 'admin_dishes_')]
+/**
+ * Summary of DishesController
+ */
 class DishesController extends AbstractController
 {
     #[Route('/', name: 'index')]
@@ -26,7 +29,19 @@ class DishesController extends AbstractController
     }
 
     #[Route('/ajout', name: 'add')]
-    public function add(Request $request, EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
+    /**
+     * Summary of add
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param SluggerInterface $slugger
+     * @param PictureService $pictureService
+     * @return Response
+     */
+    public function add(
+        Request $request, 
+        EntityManagerInterface $em, 
+        SluggerInterface $slugger, 
+        PictureService $pictureService): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -75,7 +90,12 @@ class DishesController extends AbstractController
 
 
     #[Route('/edition/{id}', name: 'edit')]
-    public function edit(Dishes $dishes, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
+    public function edit(
+        Dishes $dishes, 
+        Request $request, 
+        EntityManagerInterface $em, 
+        SluggerInterface $slugger, 
+        PictureService $pictureService): Response
     {
         //Vérification si l'user peut éditer avec le voter
         $this->denyAccessUnlessGranted('DISHES_EDIT', $dishes);
@@ -133,7 +153,11 @@ class DishesController extends AbstractController
     }
 
     #[Route('/suppression/image/{id}', name: 'delete_image', methods: ['DELETE'])]
-    public function deleteImage(Images $images, Request $request, EntityManagerInterface $em, PictureService $pictureService): JsonResponse
+    public function deleteImage(
+        Images $images, 
+        Request $request, 
+        EntityManagerInterface $em, 
+        PictureService $pictureService): JsonResponse
     {
         //Vérification si l'user peut supprimer avec le voter
         $this->denyAccessUnlessGranted('DISHES_DELETE', $images->getDishes());
@@ -146,17 +170,19 @@ class DishesController extends AbstractController
             $name = $images->getName();
 
             // On supprime le fichier
-            if($pictureService->delete($name, 'dishes', 300, 300));
+            if ($pictureService->delete($name, 'dishes', 300, 300)) {
 
             // On supprime l'entrée de la base
             $em->remove($images);
             $em->flush();
 
-            // On répond en json
-            return new JsonResponse(['success' => 1], 200);
-        } else {
-            return new JsonResponse(['error' => 'Token Invalide'], 400);
+            return new JsonResponse(['success' => true], 200);
         }
+        // La suppression a échoué
+        return new JsonResponse(['error' => 'Erreur de suppression'], 400);
     }
+
+    return new JsonResponse(['error' => 'Token invalide'], 400);
+}
 
 }

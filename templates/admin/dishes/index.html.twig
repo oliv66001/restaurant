@@ -30,7 +30,9 @@
 							<td>{{ dishe.name }}</td>
 							<td>{{ dishe.price }}</td>
 							<td>{{ dishe.categories.name }}</td>
-                            <td></td>
+                            <td>
+							<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn">Modifier</a>
+							</td>
 						</tr>
 
 					{% endfor %}
