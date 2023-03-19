@@ -1,0 +1,48 @@
+    {% extends 'base.html.twig' %}
+
+{% block title %}Accueil | Le chemin fermier!
+{% endblock %}
+
+{% block body %}
+<article class="container text-center">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-lg-6 col-sm-12">
+	<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+		<h1>Le chemin Fermier</h1>
+	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
+    </div>
+    <div class="col-lg-6 col-sm-12">
+      <img class="img-fluid rounded" src={{ categories.0.imageUrl }}>
+    </div>
+  </div>
+</article>
+<hr>
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				
+			</div>
+
+			{% for categorie in categories %}
+				<div  class="col-lg-6 col-md-6 col-sm-8 mb-4">
+					<div class="card h-60" id="card">
+						<div class="card-body">
+							<div>
+								<img class="img-fluid rounded" src="{{ categorie.imageUrl }}">
+							</div>
+							<h2 class="card-title  text-center">{{ categorie.name }}</h2>
+							<div class="d-flex mb-3">
+							<a href="{{ path('app_carte', {slug: categorie.slug}) }}" class="btn btn me-auto p-2">Les {{ categorie.name }}</a>
+							{% if app.user %}
+							<a class="btn btn p-2" href=" {{ path('app_calendar_new') }} ">Réserver</a>
+							{% else %}
+							<a class="btn btn p-2" href=" {{ path('app_login')}} ">connection</a>
+							{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</section>
+</main>{% endblock %}

@@ -1,0 +1,18 @@
+.btn{
+    background-color: var(--button-color);
+    color: var(--text-color);
+  }
+  
+  .btn2{
+    background-color: var(--button2-color);
+    color: var(--text-color);
+  }
+  
+  .btn3{
+    background-color: var(--button3-color);
+    color: var(--text-color);
+  }
+  
+  .btn .btn2 .btn3 :hover{
+    background-color: var(--hoverbtn-color);
+  }
