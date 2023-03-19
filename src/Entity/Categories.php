@@ -45,8 +45,7 @@ class Categories
         mappedBy: 'categories',
         targetEntity: Images::class,
         orphanRemoval: true,
-        cascade: ['persist'],
-        nullable: true
+        cascade: ['persist']
     )]
     private $images;
 

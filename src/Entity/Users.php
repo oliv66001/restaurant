@@ -46,11 +46,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isVerified = false;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $resetToken = null;
-
-    #[ORM\OneToOne(mappedBy: 'reservationTable', cascade: ['persist'])]
-    private ?Calendar $calendar;
 
     public function getId(): ?int
     {
@@ -166,23 +163,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getCalendar(): ?Calendar
-    {
-        return $this->calendar;
-    }
-
-    public function setCalendar(Calendar $calendar): self
-    {
-        // set the owning side of the relation if necessary
-        if ($calendar->getReservationTable() !== $this) {
-            $calendar->setReservationTable($this);
-        }
-
-        $this->calendar = $calendar;
 
         return $this;
     }

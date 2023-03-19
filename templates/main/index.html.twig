@@ -12,7 +12,7 @@
 	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
     </div>
     <div class="col-lg-6 col-sm-12">
-      <img class="img-fluid rounded" src={{ categories.0.imageUrl }}>
+      {#<img class="img-fluid rounded" src={{ categories.0.imageUrl }}>#}
     </div>
   </div>
 </article>
@@ -23,7 +23,7 @@
 				
 			</div>
 
-			{% for categorie in categories %}
+			{#{% for categorie in categories %}
 				<div  class="col-lg-6 col-md-6 col-sm-8 mb-4">
 					<div class="card h-60" id="card">
 						<div class="card-body">
@@ -42,7 +42,7 @@
 						</div>
 					</div>
 				</div>
-			{% endfor %}
+			{% endfor %}#}
 		</div>
 	</section>
 </main>{% endblock %}

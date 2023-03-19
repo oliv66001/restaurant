@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!
+{% endblock %}
+
+{% block body %}
+	<article class="container text-center">
+		<div class="row h-100 justify-content-center align-items-center">
+			<div class="col-12">
+				<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+				<h1>Le chemin Fermier</h1>
+				<h2>Découvrez</br>
+				notre cuisine</br>
+			modèrne</h2>
+	</div>
+
+</div></article><hr><h3 class="text-center mt-4">Profil de
+{{ app.user.firstname }}
+{{ app.user.lastname }}</h3><section class="container">
+<div class="row justify-content-center">
+	<div class="col-12 col-md-6">
+		<h2 class="text-center mt-8 mb-4">Mes informations</h2>
+		<p class="text-center mt-2 mb-2">
+			<strong>Nom :</strong>
+			{{ app.user.lastname }}</p>
+		<p class="text-center mt-2 mb-2">
+			<strong>Prénom :</strong>
+			{{ app.user.firstname }}</p>
+		<p class="text-center mt-2 mb-2">
+			<strong>Email :</strong>
+			{{ app.user.email }}</p>
+		<p class="text-center mt-2 mb-2">
+			<strong>Téléphone :</strong>
+			{{ app.user.phone }}</p>
+	</div>
+	<div class="col-12 col-md-6">
+		<h2 class="text-center mt-8 mb-4">Mes réservations</h2>
+
+		{% if app.user %}
+
+			<table class="table">
+
+				<thead>
+					<tr>
+						<th>Date et heure</th>
+						<!--<th>Heure</th>-->
+						<th>Nombre de personne</th>
+						<th>actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for calendar in calendars %}
+						<tr>
+							<td>{{ calendar.dateStart ? calendar.dateStart|date('d-m-Y H:i') : '' }}</td>
+							{#<td>{{ calendar.timeStart }}</td>#}
+							<td>{{ calendar.lastName}}
+							<td>{{ calendar.nbOfPeople }}</td>
+							<td>
+								<a class="btn btn2" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
+							</td>
+						</tr>
+			
+					</tbody>
+				</table>
+			</table>
+      	{% else %}
+			<div class="text-center">
+				<p class="text-center">Vous n'avez aucune réservation enregistrée</p>
+				<a class="btn btn" href="{{ path('app_calendar_new') }}">Réserver</a>
+			</div>
+		</div>
+	{% endfor %}
+{% endif %}</div></section>{% endblock %}
