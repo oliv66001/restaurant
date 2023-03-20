@@ -114,9 +114,10 @@ class DishesController extends AbstractController
             foreach ($images as $image) {
                 $folder = 'dishes';
 
+                
                 // Generate a unique name for the file before saving it
                 $fichier = $pictureService->add($image, $folder, 300, 300);
-
+               
                 $img = new Images();
                 $img->setName($fichier);
                 $dishes->addImage($img);
@@ -147,7 +148,7 @@ class DishesController extends AbstractController
     public function delete(Dishes $dishes): Response
     {
         //Vérification si l'user peut supprimer avec le voter
-        $this->denyAccessUnlessGranted('DISHE_DELETE', $dishes);
+        $this->denyAccessUnlessGranted('DISHE_EDIT', $dishes);
 
         return $this->render('admin/dishes/index.html.twig');
     }
@@ -155,31 +156,31 @@ class DishesController extends AbstractController
 
     #[Route('/suppression/image/{id}', name: 'delete_image', methods:['DELETE'])]
     public function deleteImage(
-        Images $images, 
+        Images $image, 
         Request $request, 
         EntityManagerInterface $em, 
         PictureService $pictureService): JsonResponse
     {
         //Vérification si l'user peut supprimer avec le voter
-        $this->denyAccessUnlessGranted('DISHE_DELETE', $images->getDishes());
+       // $this->denyAccessUnlessGranted('DISHE_EDIT', $image->getDishes());
 
         $data = json_decode($request->getContent(), true);
 
         // On vérifie si le token est valide
-        if ($this->isCsrfTokenValid('delete' . $images->getId(), $data['_token'])) {
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
             // On récupère le nom de l'image
-            $name = $images->getName();
+            $name = $image->getName();
 
             // On supprime le fichier
             if ($pictureService->delete($name, 'dishes', 300, 300)) {
 
             // On supprime l'entrée de la base
-            $em->remove($images);
+            $em->remove($image);
             $em->flush();
 
             return new JsonResponse(['success' => true], 200);
         }
-        // La suppression a échoué
+        // Echec de la suppréssion
         return new JsonResponse(['error' => 'Erreur de suppression'], 400);
     }
 

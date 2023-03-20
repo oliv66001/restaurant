@@ -16,9 +16,6 @@ class Images
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $imageUrl;
-
     #[ORM\ManyToOne(targetEntity: Dishes::class, inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
     private $dishes;
@@ -48,24 +45,6 @@ class Images
     public function setDishes(?Dishes $dishes): self
     {
         $this->dishes = $dishes;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of imageUrl
-     */
-    public function getImageUrl()
-    {
-        return $this->imageUrl;
-    }
-
-    /**
-     * Set the value of imageUrl
-     */
-    public function setImageUrl($imageUrl): self
-    {
-        $this->imageUrl = $imageUrl;
 
         return $this;
     }

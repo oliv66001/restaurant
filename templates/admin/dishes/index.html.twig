@@ -12,7 +12,7 @@
 				<h1>Liste des plats</h1>
 				<table class="table">
 					<thead>
-						<tr>
+						<tr class="text-center">
 							<th>ID</th>
 							<th>Photo</th>
 							<th>Nom</th>
@@ -22,17 +22,17 @@
 						</tr>
 					</thead>
 					{% for dishe in dishes %}
-						<tr>
-							<td>
+						<tr class="text-center">
+							<td class="mt-3">
 								{{ dishe.id }}
 							</td>
 							<td>
                                {#<img class="img-thumbnail" src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}">#}
                            </td>
-							<td>{{ dishe.name }}</td>
-							<td>{{ dishe.price }}</td>
-							<td>{{ dishe.categories.name }}</td>
-                            <td>
+							<td class="mt-3">{{ dishe.name }}</td>
+							<td class="mt-3">{{ dishe.price }}</td>
+							<td class="mt-3">{{ dishe.categories.name }}</td>
+                            <td class="mt-3">
 							<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn">Modifier</a>
 							</td>
 						</tr>
