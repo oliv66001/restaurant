@@ -1,16 +1,19 @@
 .btn{
     background-color: var(--button-color);
     color: var(--text-color);
+    font-family: Roboto;
   }
   
   .btn2{
     background-color: var(--button2-color);
     color: var(--text-color);
+    font-family: Roboto;
   }
   
   .btn3{
     background-color: var(--button3-color);
     color: var(--text-color);
+    font-family: Roboto;
   }
   
   .btn .btn2 .btn3 :hover{

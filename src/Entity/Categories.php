@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Images;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\MyTrait\SlugTrait;
 use App\Repository\CategoriesRepository;
@@ -13,47 +13,32 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Categories
 {
     use SlugTrait;
-
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 100)]
-    private ?string $name = null;
+    #[ORM\Column(type: 'string', length: 100)]
+    private $name;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    #[ORM\GeneratedValue]
-    private ?int $categoryOrder;
+    #[ORM\Column(type: 'integer')]
+    private $categoryOrder;
 
-    // Remet la base à zéro pour les tests datafixtures
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
-    private ?self $parent = null;
-
-
-    #[ORM\Column(name: 'parent_id', nullable: true)]
-    private ?int $parentId = null;
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private $parent;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
-    private Collection $categories;
+    private $categories;
 
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Dishes::class)]
-    private Collection $dishes;
-
-    #[ORM\OneToMany(
-        mappedBy: 'categories',
-        targetEntity: Images::class,
-        orphanRemoval: true,
-        cascade: ['persist']
-    )]
-    private $images;
+    private $dishes;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->dishes = new ArrayCollection();
-        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,6 +58,18 @@ class Categories
         return $this;
     }
 
+    public function getCategoryOrder(): ?int
+    {
+        return $this->categoryOrder;
+    }
+
+    public function setCategoryOrder(int $categoryOrder): self
+    {
+        $this->categoryOrder = $categoryOrder;
+
+        return $this;
+    }
+
     public function getParent(): ?self
     {
         return $this->parent;
@@ -85,20 +82,8 @@ class Categories
         return $this;
     }
 
-    public function getParentId(): ?int
-    {
-        return $this->parentId;
-    }
-
-    public function setParentId(?int $parentId): self
-    {
-        $this->parentId = $parentId;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, self>
+     * @return Collection|self[]
      */
     public function getCategories(): Collection
     {
@@ -108,7 +93,7 @@ class Categories
     public function addCategory(self $category): self
     {
         if (!$this->categories->contains($category)) {
-            $this->categories->add($category);
+            $this->categories[] = $category;
             $category->setParent($this);
         }
 
@@ -128,79 +113,29 @@ class Categories
     }
 
     /**
-     * @return Collection<int, Dishes>
+     * @return Collection|Dishes[]
      */
     public function getDishes(): Collection
     {
         return $this->dishes;
     }
 
-    public function addDish(Dishes $dish): self
+    public function addDishe(Dishes $dishe): self
     {
-        if (!$this->dishes->contains($dish)) {
-            $this->dishes->add($dish);
-            $dish->setCategories($this);
+        if (!$this->dishes->contains($dishe)) {
+            $this->dishes[] = $dishe;
+            $dishe->setCategories($this);
         }
 
         return $this;
     }
 
-    public function removeDish(Dishes $dish): self
+    public function removeDishe(Dishes $dishe): self
     {
-        if ($this->dishes->removeElement($dish)) {
+        if ($this->dishes->removeElement($dishe)) {
             // set the owning side to null (unless already changed)
-            if ($dish->getCategories() === $this) {
-                $dish->setCategories(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the value of categoryOrder
-     */
-    public function getCategoryOrder()
-    {
-        return $this->categoryOrder;
-    }
-
-    /**
-     * Set the value of categoryOrder
-     *
-     * @return  self
-     */
-    public function setCategoryOrder($categoryOrder)
-    {
-        $this->categoryOrder = $categoryOrder;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of images
-     */
-    public function getImages()
-    {
-        return $this->images;
-    }
-
-    /**
-     * Set the value of images
-     */
-    public function setImages($images): self
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-    public function removeImage(Images $image): self
-    {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getCategories() === $this) {
-                $image->setCategories(null);
+            if ($dishe->getCategories() === $this) {
+                $dishe->setCategories(null);
             }
         }
 

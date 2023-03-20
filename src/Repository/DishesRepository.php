@@ -40,7 +40,7 @@ class DishesRepository extends ServiceEntityRepository
         }
     }
 
-    /*public function findDishesPaginated(int $page, string $slug, int $limit = 6): array
+    public function findDishesPaginated(int $page, string $slug, int $limit = 3): array
     {
         $limit = abs($limit);
 
@@ -54,22 +54,25 @@ class DishesRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->setFirstResult(($page * $limit) - $limit);
 
-            $paginator = new Paginator($query);
-            $data = $paginator->getQuery()->getResult();
-
-            if(empty($data)){
-                return $result;
-            }
-    
-            //On calcule le nombre de pages
-            $pages = ceil($paginator->count() / $limit);
-    
-            // On remplit le tableau
-            $result['data'] = $data;
-            $result['pages'] = $pages;
-            $result['page'] = $page;
-            $result['limit'] = $limit;
-
+        $paginator = new Paginator($query);
+        $data = $paginator->getQuery()->getResult();
+        
+        //On vérifie qu'on a des données
+        if(empty($data)){
             return $result;
-    }*/
+        }
+
+        //On calcule le nombre de pages
+        $pages = ceil($paginator->count() / $limit);
+
+        // On remplit le tableau
+        $result['data'] = $data;
+        $result['pages'] = $pages;
+        $result['page'] = $page;
+        $result['limit'] = $limit;
+
+        return $result;
+    }
+
+    
 }

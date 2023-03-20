@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Liste des plats
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			{#{% include "_partials/_adminnav.html.twig" %}#}
+			<main class="col-9 p-2">
+				<h1>Liste des plats</h1>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Photo</th>
+							<th>Nom</th>
+							<th>Prix</th>
+							<th>Catégorie</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					{% for dishe in dishes %}
+						<tr>
+							<td>
+								{{ dishe.id }}
+							</td>
+							<td>
+                               {#<img class="img-thumbnail" src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}">#}
+                           </td>
+							<td>{{ dishe.name }}</td>
+							<td>{{ dishe.price }}</td>
+							<td>{{ dishe.categories.name }}</td>
+                            <td>
+							<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn">Modifier</a>
+							</td>
+						</tr>
+
+					{% endfor %}
+				</table>
+			</main>
+		</div>
+	</div>
+{% endblock %}

@@ -2,47 +2,55 @@
 
 namespace App\Entity;
 
+
+
+
+use App\Entity\Images;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\MyTrait\SlugTrait;
 use App\Repository\DishesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DishesRepository::class)]
+
 class Dishes
 {
     use SlugTrait;
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le nom du plat est obligatoire')]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Le nom du produit ne peut pas être vide')]
     #[Assert\Length(
-    min: 3, 
-    max: 255, 
-    minMessage: 'Le nom du plat doit faire au moins {{limit}} caractères', 
-    maxMessage: 'Le nom du plat doit faire au plus {{limit}} caractères')]
-    private ?string $name = null;
+        min: 5,
+        max: 200,
+        minMessage: 'Le titre doit faire au moins {{ limit }} caractère',
+        maxMessage: 'Le titre doit faire plus de {{ limit }} caractère'
+    )]
+    private $name;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    #[ORM\Column(type: 'text')]
+    private $description;
 
-    #[ORM\Column]
-    #[Assert\Positive(message: 'Le prix doit être supérieur à 0')]
-    private ?int $price = null;
+    #[ORM\Column(type: 'integer')]
+    private $price;
 
-    #[ORM\ManyToOne(inversedBy: 'dishes')]
+    #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'dishes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Categories $categories = null;
+    private $categories;
 
-   
+    #[ORM\OneToMany(mappedBy: 'dishes', targetEntity: Images::class, orphanRemoval: true, cascade:['persist'])]
+    private $images;
 
-  
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -97,5 +105,33 @@ class Dishes
         return $this;
     }
 
+    /**
+     * @return Collection|Images[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
 
+    public function addImage(Images $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setDishes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Images $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getDishes() === $this) {
+                $image->setDishes(null);
+            }
+        }
+
+        return $this;
+    }
 }

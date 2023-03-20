@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+
+{% block title %}Le chemin Fermier | La carte
+{% endblock %}
+
+{% block body %}
+<article class="container text-center">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-lg-6 col-sm-12">
+	<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+		<h1>Le chemin Fermier</h1>
+	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
+    </div>
+    <div class="col-lg-6 col-sm-12">
+      {#<img class="img-fluid rounded" src={{ categories.0.imageUrl }}>#}
+    </div>
+  </div>
+</article>
+<hr>
+	<article class="container-fluid text-center">
+		<div class="row justify-content-center">
+			<div class="col-lg-12 col-sm-12">
+				<h1 class="text-center mb-5">La carte</h1>
+
+				<section class="container" id="carte">
+					<div>
+						<h1>Carte du restaurant Le chemin Fermier</h1>
+					</div>
+					<div>
+						<p>Notre menu gastro</p>
+					</div>
+				</div>
+				{% set last_category = "" %}
+  {% for category in category %}
+    {% for dishes in category.dishes %}
+      {% if dishes.images %}
+        {% if category.name != last_category %}
+          <div class="row justify-content-center">
+            <div class="col-6">
+              <h2 class="borderTitre">Les {{ category.name }}</h2>
+            </div>
+          </div>
+          {% set last_category = category.name %}
+        {% endif %}
+        <div class="row justify-content-center">
+          <div class="col-6 px-20  border">
+            {#<img src="{{ dishes.images[0].url }}" alt="{{ dishes.name }}">#}
+            <h3>{{ dishes.name }}</h3>
+
+            <p class="text-center px-50">{{ dishes.description }}</p>
+            <p class="price">{{ dishes.price }} €</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+				<div></div>
+			</section>
+
+		</div>
+	</div>
+</article>
+{% endblock %}
+

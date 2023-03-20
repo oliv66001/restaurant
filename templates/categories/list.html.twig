@@ -1,0 +1,65 @@
+    {% extends 'base.html.twig' %}
+
+{% block title %}Accueil | Le Quai-Antique
+{% endblock %}
+
+{% block body %}
+<article class="container text-center">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-lg-6 col-sm-12">
+	<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+		<h1>Le Quai-Antique</h1>
+	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
+    </div>
+    <div class="col-lg-6 col-sm-12">
+      {#<img class="img-fluid rounded" src={{ dishes.images }}>#}
+    </div>
+  </div>
+</article>
+<hr>
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h1>Voir les {{ category.name }}</h1>
+			</div>
+
+			{% for dishe in dishes.data %}
+			
+				<div  class="col-lg-6 col-md-6 col-sm-8 mb-4">
+					<article class="card h-100" id="card">
+						<div class="card-body">
+							<div>
+								{#<img class="img-fluid rounded" src="{{ dishe.images }}">#}
+							</div>
+							<h2 class="card-title  text-center">{{ dishe.name }}</h2>
+							
+							
+							<p >Les {{ dishe.description }}</p>
+							<div class="text-center mt-auto">
+							<a href="{{ path('app_dishes_details', {"slug": dishe.slug }) }}" class="btn btn">Détails</a>
+							{% if app.user %}
+							<div class="d-flex mt-auto">
+							
+							<a class="btn btn2 me-auto p-2" href=" {{ path('app_carte')}} ">La carte</a>
+							<a class="btn p-2" href="">Réserver</a>
+							</div>
+							{% else %}
+							<div class="d-flex mt-auto">
+							<a class="btn btn3 me-auto p-2" href=" {{ path('app_login')}} ">connexion</a>
+							<a type="button" href="{{ path('app_register') }}" class="btn btn3 p-2">S'inscrire</a>
+							</div>
+							{% endif %}
+							
+							
+						</div>
+					</article>
+				</div>
+			{% endfor %}
+			{% set path = 'app_categories_list' %}
+			{% set slug = category.slug %}
+			{% set pages = dishes.pages %}
+			{% set currentPage = dishes.page %}
+			{% include "_partials/_pagination.html.twig" %}
+		</div>
+	</section>
+</main>{% endblock %}

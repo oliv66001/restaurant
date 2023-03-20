@@ -2,24 +2,26 @@
 
 namespace App\Entity;
 
-use App\Entity\Categories;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ImagesRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ImagesRepository::class)]
 class Images
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private $name;
 
-    #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: true)]
-    private $categories;
+    #[ORM\Column(type: 'string', length: 255)]
+    private $imageUrl;
+
+    #[ORM\ManyToOne(targetEntity: Dishes::class, inversedBy: 'images')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $dishes;
 
     public function getId(): ?int
     {
@@ -38,24 +40,32 @@ class Images
         return $this;
     }
 
-   
-
-    /**
-     * Get the value of dishes
-     */ 
-    public function getCategories(): ?categories
+    public function getDishes(): ?Dishes
     {
-        return $this->categories;
+        return $this->dishes;
+    }
+
+    public function setDishes(?Dishes $dishes): self
+    {
+        $this->dishes = $dishes;
+
+        return $this;
     }
 
     /**
-     * Set the value of categories
-     *
-     * @return  self
-     */ 
-    public function setCategories($categories): self
+     * Get the value of imageUrl
+     */
+    public function getImageUrl()
     {
-        $this->categories = $categories;
+        return $this->imageUrl;
+    }
+
+    /**
+     * Set the value of imageUrl
+     */
+    public function setImageUrl($imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }

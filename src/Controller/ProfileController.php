@@ -12,22 +12,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProfileController extends AbstractController
 {
     #[Route('/', name: 'app_profil', methods: ['GET'])]
-    public function index(Calendar $calendar, CalendarRepository $calendarRepository): Response
+    public function index(): Response
     {
         return $this->render('profile/index.html.twig', [
-            'calendars' => $calendarRepository->findBy([
-                'lastName' => $this->getUser(),
-            ]),
+            'controller_name' => 'ProfileController',
         ]);
+        
     }
 
-    #[Route('/{id}', name: 'show' , methods: ['GET'])]
-    public function show(Calendar $calendar): Response
-    {
-        
-        return $this->render('profile/index.html.twig', [
-            'calendar' => $calendar,
-            
-        ]);
-    }
+   // #[Route('/{id}', name: 'show' , methods: ['GET'])]
+   // public function show(Calendar $calendar): Response
+   // {
+   //     
+   //     return $this->render('profile/index.html.twig', [
+   //         'calendar' => $calendar,
+   //         
+   //     ]);
+   // }
 }
