@@ -14,11 +14,11 @@ class ImagesFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Faker\Factory::create('fr_FR');
 
-        for($img = 1; $img <= 100; $img++){
+        for($img = 1; $img <= 1; $img++){
             $image = new Images();
-            $image->setName($faker->image(null, 640, 480));
-            $product = $this->getReference('dis-'.rand(1, 10));
-            $image->setDishes($product);
+            $image->setName($faker->text(20));
+            $dishe = $this->getReference('dish-'.rand(1, 10));
+            $image->setDishes($dishe);
             $manager->persist($image);
         }
 

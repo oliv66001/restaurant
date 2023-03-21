@@ -7,41 +7,34 @@
 
 
 	<div class="container">
-		<div class="row">
+		<div class="row justify-content-center">
 			{% include "_partials/_adminnav.html.twig" %}
 			<main class="col-9 p-2">
-				<h1>Listes des utilisateurs</h1>
+				<h1 class="text-center">Listes des utilisateurs</h1>
 				<table class="table">
 					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Prénom</th>
+						<tr class="text-center">
 							<th>Nom</th>
-							<th>Email</th>
+							<th>Téléphone</th>
+							
 							<th>Rôles</th>
 							<th>Vérifié</th>
-							<th>Actions</th>
 						</tr>
 					</thead>
 					{% for user in users %}
 						<tr>
-							<td>
-								{{ user.id }}
-							</td>
-							<td>
-								{{ user.firstname }}
-							</td>
 							<td>{{ user.lastname }}</td>
-							<td>{{ user.email }}</td>
+							<td>{{ user.phone }}</td>
+						
 							<td>
 								{% for role in user.roles %}
 									{% if role == "ROLE_ADMIN" %}
 										{% set name = "Administrateur" %}
 										{% set color = "danger" %}
 									{% elseif role == "ROLE_DISHES_ADMIN" %}
-										{% set name = "Administrateur des plats" %}
+										{% set name = "Admin produits" %}
 										{% set color = "warning" %}
-									{% else %}
+									{% elseif role == "ROLE_USER" %}
 										{% set name = "Membre" %}
 										{% set color = "success" %}
 									{% endif %}
@@ -50,6 +43,7 @@
 
 								{% endfor %}
 							</td>
+								<td>{{ user.isVerified }}</td>
 							<td>
 								<div class="form-check form-switch">
 									<input class="form-check-input" type="checkbox" role="switch" id="switch {{ user.id }} " {{ user.isVerified ? "checked" : "" }} disabled>
@@ -57,7 +51,7 @@
 								</div>
 								</td>
 							<td>
-								<a href="#" class="btn btn">Modifier</a>
+								<a href="{{ path('admin_users_edit', {'id': user.id}) }}" class="btn btn">Modifier</a>
 							</td>
 						</tr>
 

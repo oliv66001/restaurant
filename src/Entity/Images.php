@@ -16,6 +16,7 @@ class Images
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+
     #[ORM\ManyToOne(targetEntity: Dishes::class, inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
     private $dishes;

@@ -2,18 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\Categories;
 use App\Entity\Dishes;
+use App\Entity\Categories;
 use App\Repository\CategoriesRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class DishesFormType extends AbstractType
 {
@@ -34,8 +35,8 @@ class DishesFormType extends AbstractType
                 'class' => 'form-control'
                 ]
             ])
-            ->add('price', MoneyType::class, options: [
-                'label' => 'Prix en ',
+            ->add('price', IntegerType::class, options: [
+                'label' => 'Prix en €',
                 'attr' => [
                     'placeholder' => 'Prix',
                 'class' => 'form-control'
@@ -67,7 +68,6 @@ class DishesFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Nom du plat',
                 'class' => 'form-control'
                 ],
                 'constraints' => [

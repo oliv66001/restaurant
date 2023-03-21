@@ -58,7 +58,7 @@ class DishesController extends AbstractController
 
             // Récuperation des images
             $images = $dishesForm->get('images')->getData();
-
+           
             foreach ($images as $image) {
                 $folder = 'dishes';
 
@@ -131,10 +131,10 @@ class DishesController extends AbstractController
 
 
             //Message flash
-            $this->addFlash('success', 'Le plat a bien été modifier');
+            $this->addFlash('success', 'Le produit a bien été modifier');
 
-            //Redirection vers la page de détails du plat
-            return $this->redirectToRoute('admin_dishes_index', ['slug' => $dishes->getSlug()]);
+            //Redirection vers la page de détails du produit
+            return $this->redirectToRoute('admin_dishes_index');
         }
 
         return $this->render('admin/dishes/edit.html.twig', [
@@ -169,10 +169,10 @@ class DishesController extends AbstractController
         // On vérifie si le token est valide
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
             // On récupère le nom de l'image
-            $name = $image->getName();
+            $nom = $image->getName();
 
             // On supprime le fichier
-            if ($pictureService->delete($name, 'dishes', 300, 300)) {
+            if ($pictureService->delete($nom, 'dishes', 300, 300)) {
 
             // On supprime l'entrée de la base
             $em->remove($image);
@@ -180,6 +180,7 @@ class DishesController extends AbstractController
 
             return new JsonResponse(['success' => true], 200);
         }
+
         // Echec de la suppréssion
         return new JsonResponse(['error' => 'Erreur de suppression'], 400);
     }

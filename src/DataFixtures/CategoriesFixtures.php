@@ -15,41 +15,41 @@ class CategoriesFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $parent = $this->createCategory('Entrées', null, $manager);
-        
-        $this->createCategory('Entrées chaude', $parent, $manager);
-        $this->createCategory('Entrées froide', $parent, $manager);
-        
+        $parent = $this->createCategory('Entrées', null, 1, $manager);
 
-        $parent = $this->createCategory('Plats', null, $manager);
+        $this->createCategory('Entrées chaude', $parent, 2, $manager);
+        $this->createCategory('Entrées froide', $parent, 3, $manager);
 
-        $this->createCategory('Plats chaud', $parent, $manager);
-        $this->createCategory('Fondues', $parent, $manager);
-        
-        $parent = $this->createCategory('Desserts', null, $manager);
 
-        $this->createCategory('Glaces', $parent, $manager);
-        $this->createCategory('Gâteaux', $parent, $manager);
-                
-        $parent = $this->createCategory('Boissons', null, $manager);
+        $parent = $this->createCategory('Plats', null, 4, $manager);
 
-        $this->createCategory('Boissons', $parent, $manager);
-        $this->createCategory('Vins et spiritieux', $parent, $manager);
+        $this->createCategory('Plats chaud', $parent, 5, $manager);
+        $this->createCategory('Fondues', $parent, 6, $manager);
+
+        $parent = $this->createCategory('Desserts', null, 7, $manager);
+
+        $this->createCategory('Glaces', $parent, 8, $manager);
+        $this->createCategory('Gâteaux', $parent, 9, $manager);
+
+        $parent = $this->createCategory('Boissons', null, 10, $manager);
+
+        $this->createCategory('Boissons', $parent, 11, $manager);
+        $this->createCategory('Vins et spiritieux', $parent, 12, $manager);
         $manager->flush();
     }
 
     public function createCategory(
-        string $name, 
-        Categories $parent = null, 
+        string $name,
+        Categories $parent = null,
+        int $order,
         ObjectManager $manager)
     {
         $category = new Categories();
         $category->setName($name);
         $category->setSlug($this->slugger->slug($category->getName())->lower());
         $category->setParent($parent);
-        $category->setCategoryOrder(rand(1, 10));
+        $category->setCategoryOrder($order);
         $manager->persist($category);
-
 
         $this->addReference('cat-'.$this->counter, $category);
         $this->counter++;

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un plat
+{% block title %}Modifier un utilisateur
 {% endblock %}
 
 {% block body %}
@@ -8,10 +8,16 @@
 	<main class="container text-center">
 		<section class="row justify-content-center">
 			<div class="col-md-6">
-				<h1 class="text-center">Ajouter un produit</h1>
-                {% include "admin/dishes/_form.html.twig" %}
+				<h1 class="text-start">Modifier</h1>
+                {% include "admin/users/_form.html.twig" with {'button_label': 'Modifier'} %}
 			</div>
 		</section>
 	</main>
 
 {% endblock %}
+
+
+
+	
+
+

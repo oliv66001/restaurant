@@ -15,7 +15,7 @@ class PictureService
         $this->params = $params;
     }
 
-    public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 250, ?int $height = 250)
+    public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 150, ?int $height = 150)
     {
         // On donne un nouveau nom à l'image
         $fichier = md5(uniqid(rand(), true)) . '.webp';
@@ -48,7 +48,7 @@ class PictureService
         $imageHeight = $picture_infos[1];
 
         // On vérifie l'orientation de l'image
-        switch ($imageWidth <=> $imageHeight){
+        switch($imageWidth <=> $imageHeight){
             case -1: // portrait
                 $squareSize = $imageWidth;
                 $src_x = 0;
@@ -69,7 +69,15 @@ class PictureService
         // On crée une nouvelle image "vierge"
         $resized_picture = imagecreatetruecolor($width, $height);
 
-        imagecopyresampled($resized_picture, $picture_source, 0, 0, $src_x, $src_y, $width, $height, $squareSize, $squareSize);
+        imagecopyresampled(
+            $resized_picture, 
+            $picture_source, 0, 0, 
+            $src_x, 
+            $src_y, 
+            $width, 
+            $height, 
+            $squareSize, 
+            $squareSize);
 
         $path = $this->params->get('images_directory') . $folder;
 

@@ -13,7 +13,11 @@
 	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
     </div>
     <div class="col-lg-6 col-sm-12">
-      {#<img class="img-fluid rounded" src={{ categories.0.imageUrl }}>#}
+    {% if dishes.images[0] is defined %}
+      <img class="img-fluid rounded" src={{ dishes.images }}>
+      {% else %}
+      <img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+    {% endif %}
     </div>
   </div>
 </article>

@@ -17,7 +17,7 @@ class DishesFixtures extends Fixture
         // use the factory to create a Faker\Generator instance
         $faker = Faker\Factory::create('fr_FR');
 
-        for($dis = 1; $dis <= 50; $dis++){
+        for($dish = 1; $dish <= 15; $dish++){
             $dishe = new Dishes();
             $dishe->setName($faker->text(15));
             $dishe->setDescription($faker->text());
@@ -28,7 +28,7 @@ class DishesFixtures extends Fixture
             $category = $this->getReference('cat-'. mt_rand(1, 10));
             $dishe->setCategories($category);
 
-            $this->setReference('dis-'.$dis, $dishe);
+            $this->setReference('dish-'.$dish, $dishe);
             $manager->persist($dishe);
         }
 

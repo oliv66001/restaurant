@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-
-
-
 use App\Entity\Images;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\MyTrait\SlugTrait;
@@ -28,7 +25,7 @@ class Dishes
     #[Assert\NotBlank(message: 'Le nom du produit ne peut pas être vide')]
     #[Assert\Length(
         min: 5,
-        max: 200,
+        max: 100,
         minMessage: 'Le titre doit faire au moins {{ limit }} caractère',
         maxMessage: 'Le titre doit faire plus de {{ limit }} caractère'
     )]
@@ -38,6 +35,7 @@ class Dishes
     private $description;
 
     #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero(message: 'Le prix doit être positif ou nul')]
     private $price;
 
     #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'dishes')]
