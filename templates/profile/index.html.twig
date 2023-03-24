@@ -32,9 +32,16 @@
 		<p class="text-center mt-2 mb-2">
 			<strong>Téléphone :</strong>
 			{{ app.user.phone }}</p>
+
+			<a href="{{ path('app_profil_edit', {'id': app.user.id}) }}" class="btn btn2">Modifier</a>
 	</div>
+
 	<div class="col-12 col-md-6">
 		<h2 class="text-center mt-8 mb-4">Mes réservations</h2>
+
+		
+	
+
 
 		{#{% if app.user %}
 
@@ -70,4 +77,6 @@
 			</div>
 		</div>
 	{% endfor %}
-{% endif %}</div></section>#}{% endblock %}
+{% endif %}</div></section>#}
+
+{% endblock %}

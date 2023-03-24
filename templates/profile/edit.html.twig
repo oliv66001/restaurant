@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier votre compte
+{% endblock %}
+
+{% block body %}
+
+	<main class="container text-center">
+		<section class="row justify-content-center">
+			<div class="col-md-6">
+				  <h1 class="text-center">Modifier</h1>
+                <div class="mt-2">
+                    {% include "profile/_form.html.twig" with {'button_label': 'Modifier'} %}
+                </div>
+                <div class="mt-2">
+                   
+                        <a href=" {{ path('forgotten_password')}} " class="btn btn3 mt-3">Modifier mon mot de passe</a>
+                 
+                    <div class="mt-4">
+                        {% include "profile/_delete_form.html.twig" with {'button_label': 'Supprimer mon compte'} %}
+                    </div>
+                </div>
+            </div>
+        </section>
+	</main>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('assets/js/users.js') }}" defer></script>
+
+{% endblock %}
+
+
+
+	
+
+

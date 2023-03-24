@@ -1,0 +1,3 @@
+<form method="DELETE" action="{{ path('app_profil_delete_user', {'id': app.user.id}) }}">
+   <a class="btn btn2" href="{{ path('app_profil_delete_user', {'id': app.user.id}) }}" data-delete data-token="{{ csrf_token('delete_user' ~ app.user.id) }}">Supprimer mon compte</a>
+</form>

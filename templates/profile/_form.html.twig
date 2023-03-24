@@ -1,0 +1,20 @@
+<section class="container">
+	<div class="row justify-content-center">
+		<div class="col">
+			{{ form_start(usersForm) }}
+			{{ form_row(usersForm.lastname) }}
+            {{ form_row(usersForm.firstname) }}
+            {{ form_row(usersForm.phone) }}
+            {{ form_row(usersForm.allergie) }}
+			{{ form_row(usersForm.email) }}
+				
+                <div>
+					<button class="btn btn mt-2" type="submit">
+						{{ button_label | default ('Ajouter') }}
+					</button>
+				</div>
+			{{ form_end(usersForm) }}
+          
+		</div>
+	</div>
+</section>
