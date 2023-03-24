@@ -5,31 +5,30 @@
 			{{ form_row(dishesForm.name) }}
 			{{ form_row(dishesForm.description) }}
 			{{ form_row(dishesForm.price) }}
-            <div class=" mb-4">
-			{{ form_row(dishesForm.categories) }}
-</div>
-		
+			<div class=" mb-4">
+				{{ form_row(dishesForm.categories) }}
+			</div>
+			<div class"mt-4">
+				{# Affichage des images #}
+				{% if app.request.attributes.get('_route') == 'admin_dishes_edit' %}
 
-<div class"mt-4">
-{# Affichage des images #}
-{% if app.request.attributes.get('_route') == 'admin_dishes_edit' %}
+					<h2>Images</h2>
+					{% for image in dishes.images %}
+						<div>
+							<img src=" {{ asset('assets/uploads/dishes/mini/300x300-' ~ image.name) }} " alt=" {{ dishes.name }} " width="150">
+							<a class="btn" href=" {{ path('admin_dishes_delete_image', {id: image.id, 'deleteDishe': false})}} " data-delete data-token=" {{ csrf_token('delete' ~ image.id) }} ">Supprimer</a>
+						</div>
+					{% endfor %}
 
-	<h2>Images</h2>
-	{% for image in dishes.images %}
-		<div>
-			<img src=" {{ asset('assets/uploads/dishes/mini/300x300-' ~ image.name) }} " alt=" {{ dishes.name }} " width="150">
-			<a class="btn" href=" {{ path('admin_dishes_delete_image', {id: image.id})}} " data-delete data-token=" {{ csrf_token('delete' ~ image.id) }} ">Supprimer</a>
+				{% endif %}
+				{{ form_row(dishesForm.images) }}
+				<div>
+					<button class="btn mt-4" type="submit">
+						{{ button_label | default ('Ajouter') }}
+					</button>
+				</div>
+			</div>
+			{{ form_end(dishesForm) }}
 		</div>
-	{% endfor %}
-
-{% endif %}
-
-{{ form_row(dishesForm.images) }}
-<button class="btn mt-4" type="submit">
-	{{ button_label | default ('Ajouter') }}
-</button>
-</div>
-{{ form_end(dishesForm) }}
-</div>
 	</div>
 </section>

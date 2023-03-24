@@ -1,30 +1,34 @@
 let links = document.querySelectorAll("[data-delete]");
 
-
-// On boucle sur les liens
-for(let link of links){
-    //On met un écouteur d'évènements
-    link.addEventListener("click", function(e){
+for (let link of links) {
+    link.addEventListener("click", function (e) {
         e.preventDefault();
 
-        //On demande confirmation
-        if(confirm("Voulez-vous supprimer ce produit ?")){
-            //On envoie la requete ajax
+        if (confirm("Voulez-vous supprimer ce produit ?")) {
             fetch(this.getAttribute("href"), {
                 method: "DELETE",
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({"_token": this.dataset.token})
-            }).then(response => response.json())
-            .then(data =>{
-                if(data.success){
+                body: JSON.stringify({ "_token": this.dataset.token })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     this.parentElement.remove();
-                }else{
+
+                      // Afficher le message flash
+                    alert(data.message);
+                    // Redirection vers la route 'admin_dishes_index'
+                    window.location.href = '/admin/dishes';
+                } else {
                     alert(data.error);
                 }
             })
+            .catch(error => {
+                console.error('Erreur lors de la suppression:', error);
+            });
         }
     });
 }

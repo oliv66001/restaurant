@@ -27,10 +27,10 @@
 			
 				<div  class="col-lg-6 col-md-6 col-sm-8 mb-4">
 					<article class="card h-100" id="card">
-						<div class="card-body">
+						<div class="card-body text-center">
 							<div>
 							
-							{% if dishes.images[0] is defined %}
+							{% if dishe.images[0] is defined %}
 								<img class="img-fluid rounded" src="{{ asset('assets/uploads/dishes/mini/300x300-') ~ dishe.images[0].name }} " class="d-block img-fluid" alt= "{{ dishe.name }}">
 							{% else %}
 								<img class="img-fluid rounded" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" class="d-block img-fluid" alt= "{{ dishe.name }}">

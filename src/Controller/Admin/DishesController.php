@@ -24,6 +24,7 @@ class DishesController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(DishesRepository $dishesRepository): Response
     {
+
         $dishes = $dishesRepository->findAll();
         return $this->render('admin/dishes/index.html.twig', compact('dishes'));
     }
@@ -38,11 +39,11 @@ class DishesController extends AbstractController
      * @return Response
      */
     public function add(
-        Request $request, 
-        EntityManagerInterface $em, 
-        SluggerInterface $slugger, 
-        PictureService $pictureService): Response
-    {
+        Request $request,
+        EntityManagerInterface $em,
+        SluggerInterface $slugger,
+        PictureService $pictureService
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         // Création d'un nouveau plat
@@ -58,7 +59,7 @@ class DishesController extends AbstractController
 
             // Récuperation des images
             $images = $dishesForm->get('images')->getData();
-           
+
             foreach ($images as $image) {
                 $folder = 'dishes';
 
@@ -91,12 +92,12 @@ class DishesController extends AbstractController
 
     #[Route('/edition/{id}', name: 'edit')]
     public function edit(
-        Dishes $dishes, 
-        Request $request, 
-        EntityManagerInterface $em, 
-        SluggerInterface $slugger, 
-        PictureService $pictureService): Response
-    {
+        Dishes $dishes,
+        Request $request,
+        EntityManagerInterface $em,
+        SluggerInterface $slugger,
+        PictureService $pictureService
+    ): Response {
         //Vérification si l'user peut éditer avec le voter
         $this->denyAccessUnlessGranted('DISHE_EDIT', $dishes);
 
@@ -114,10 +115,10 @@ class DishesController extends AbstractController
             foreach ($images as $image) {
                 $folder = 'dishes';
 
-                
+
                 // Generate a unique name for the file before saving it
                 $fichier = $pictureService->add($image, $folder, 300, 300);
-               
+
                 $img = new Images();
                 $img->setName($fichier);
                 $dishes->addImage($img);
@@ -144,25 +145,46 @@ class DishesController extends AbstractController
         ]);
     }
 
-    #[Route('/suppression/{id}', name: 'delete')]
-    public function delete(Dishes $dishes): Response
-    {
-        //Vérification si l'user peut supprimer avec le voter
-        $this->denyAccessUnlessGranted('DISHE_EDIT', $dishes);
+    // Ajoutez l'annotation de la route en haut de votre méthode, en changeant le nom de la route et le chemin si nécessaire
+    #[Route('/suppression/dishes/{id}', name: 'delete_dishe', methods: ['DELETE'])]
+    public function deleteDishe(
+        Dishes $dishes,
+        Request $request,
+        EntityManagerInterface $em
+    ): JsonResponse {
+       
 
-        return $this->render('admin/dishes/index.html.twig');
+        $data = json_decode($request->getContent(), true);
+
+        // On vérifie si le token est valide
+        if ($this->isCsrfTokenValid('delete_dishe' . $dishes->getId(), $data['_token'])) {
+
+
+            // On supprime le produit de la base
+            $em->remove($dishes);
+            $em->flush();
+
+            $this->addFlash('success', 'Produit supprimé avec succès.');
+
+
+            return new JsonResponse(['success' => true, 'message' => 'Produit supprimé avec succès'], 200);
+
+        }
+
+        // Echec de la suppréssion
+        return new JsonResponse(['error' => 'Token invalide'], 400);
     }
 
 
-    #[Route('/suppression/image/{id}', name: 'delete_image', methods:['DELETE'])]
+    #[Route('/suppression/image/{id}', name: 'delete_image', methods: ['DELETE'])]
     public function deleteImage(
-        Images $image, 
-        Request $request, 
-        EntityManagerInterface $em, 
-        PictureService $pictureService): JsonResponse
-    {
+        Images $image,
+        Request $request,
+        EntityManagerInterface $em,
+        PictureService $pictureService
+    ): JsonResponse {
         //Vérification si l'user peut supprimer avec le voter
-       // $this->denyAccessUnlessGranted('DISHE_EDIT', $image->getDishes());
+        // $this->denyAccessUnlessGranted('DISHE_EDIT', $image->getDishes());
 
         $data = json_decode($request->getContent(), true);
 
@@ -174,18 +196,17 @@ class DishesController extends AbstractController
             // On supprime le fichier
             if ($pictureService->delete($nom, 'dishes', 300, 300)) {
 
-            // On supprime l'entrée de la base
-            $em->remove($image);
-            $em->flush();
+                // On supprime l'entrée de la base
+                $em->remove($image);
+                $em->flush();
 
-            return new JsonResponse(['success' => true], 200);
+                return new JsonResponse(['success' => true], 200);
+            }
+
+            // Echec de la suppréssion
+            return new JsonResponse(['error' => 'Erreur de suppression'], 400);
         }
 
-        // Echec de la suppréssion
-        return new JsonResponse(['error' => 'Erreur de suppression'], 400);
+        return new JsonResponse(['error' => 'Token invalide'], 400);
     }
-
-    return new JsonResponse(['error' => 'Token invalide'], 400);
-}
-
 }
