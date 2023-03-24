@@ -16,15 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CategoriesController extends AbstractController
 {
    
-
-    #[Route('/{slug}', name: 'list')]
-    public function list(Categories $category, DishesRepository $dishesRepository, Request $request
+     #[Route('/{slug}', name: 'list')]
+    public function list(Categories $categorie, Request $request, CategoriesRepository $categoriesRepository, DishesRepository $dishesRepository, EntityManagerInterface $entityManager
     ): Response
     {
-        $page = $request->query->getInt('page', 1);
 
-        $dishes = $dishesRepository->findDishesPaginated($page, $category->getSlug(), 3);
-            
-        return $this->render('categories/list.html.twig', compact('category', 'dishes'));
+        $category = $entityManager->getRepository(Categories::class)->findAll();
+        $dishes = $dishesRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $dishes = $dishesRepository->findDishesPaginated($page, $categorie->getSlug(), 3);
+        return $this->render('categories/list.html.twig', compact('categorie', 'dishes', 'category'));
     }
 }

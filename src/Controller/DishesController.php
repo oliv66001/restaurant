@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Dishes;
-use App\Entity\Categorie;
 use App\Entity\Categories;
 use App\Repository\DishesRepository;
+use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DishesController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(CategoriesRepository $categoriesRepository,DishesRepository $dishesRepository, EntityManagerInterface $entityManager): Response
     {
-        
-        return $this->render('dishes/index.html.twig');
+        $category = $entityManager->getRepository(Categories::class)->findAll();
+        $dishes = $dishesRepository->findAll();
+        return $this->render('dishes/index.html.twig', compact('dishes', 'category'));
     }
 
     #[Route('/{slug}', name: 'details')]

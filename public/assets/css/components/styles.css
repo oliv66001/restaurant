@@ -111,6 +111,17 @@ a.page-link:hover{
     border-color: var(--text-color);
 }
 
+.img-fluid{
+    width: 120%;
+    height: 110%;
+    transition: transform 0.5s ease;
+}
+
+/* Appliquez un effet de zoom lors du survol */
+.img-fluid:hover {
+    transform: scale(1.1);
+}
+
 
     
   

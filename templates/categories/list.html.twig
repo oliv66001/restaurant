@@ -11,8 +11,34 @@
 		<h1>Le Quai-Antique</h1>
 	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
     </div>
-    <div class="col-lg-6 col-sm-12">
-      {#<img class="img-fluid rounded" src={{ dishes.images }}>#}
+      <div class="col-lg-6 col-sm-12">
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% set firstImageShown = false %}
+          {% for category in category %}
+            {% for dishe in category.dishes %}
+              {% if dishe.images|length > 0 and not firstImageShown %}
+                <div class="carousel-item active">
+                  <img src="{{ asset('assets/uploads/dishes/mini/300x300-') ~ dishe.images[0].name }}" class="d-block img-fluid"  alt="{{ dishe.name }}">
+                </div>
+                {% set firstImageShown = true %}
+              {% elseif dishe.images|length > 0 %}
+                <div class="carousel-item">
+                  <img src="{{ asset('assets/uploads/dishes/mini/300x300-') ~ dishe.images[0].name }}" class="d-block img-fluid"  alt="{{ dishe.name }}">
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
   </div>
 </article>
@@ -20,7 +46,7 @@
 	<main class="container">
 		<section class="row">
 			<div class="col-12">
-				<h1>Voir les {{ category.name }}</h1>
+				<h1>Voir les {{ categorie.name }}</h1>
 			</div>
 
 			{% for dishe in dishes.data %}
@@ -61,7 +87,7 @@
 				</div>
 			{% endfor %}
 			{% set path = 'app_categories_list' %}
-			{% set slug = category.slug %}
+			{% set slug = categorie.slug %}
 			{% set pages = dishes.pages %}
 			{% set currentPage = dishes.page %}
 			{% include "_partials/_pagination.html.twig" %}
