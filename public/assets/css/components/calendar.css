@@ -2,36 +2,68 @@
     width: 80%;
     margin: auto;
     color: var(--text-color);
+    border-radius: 8px solid var(--text-color);
   }
 
   #calendar div a {
     background-color: var(--templates-color);
     color: var(--text-color);
-    border-radius: 2px solid;
+    border-radius: 8px solid var(--text-color);
   }
 
   #calendar div span {
     background-color: var(--templates-color);
     color: var(--text-color);
-    border-radius: 2px solid;
+    border-radius: 8px solid var(--text-color);
   }
 
   #calendar div button{
     background-color: var(--templates-color);
     color: var(--text-color);
-    border-radius: 2px solid;
+    border-radius: 8px solid var(--text-color);
   }
 
-  input#calendar_dateStart{
-    background-color: var(--button-color);
+  #calendar_start_date_month, #calendar_start_date_day, #calendar_start_date_year{
+    background-color: var(--templates-color);
     color: var(--text-color);
-    border-radius: 2px solid;
+    border-radius: 8px solid var(--text-color);
+   
+    
   }
 
-  input#calendar_nbOfPeople{
-    background-color: var(--button-color);
+  #calendar_start_date, #calendar_start_time{
+    padding: 10px;
+    border-radius: 12px solid var(--text-color);
+ 
+  }
+
+  #calendar_start_time_hour, #calendar_start_time_minute{
+    background-color: var(--templates-color);
     color: var(--text-color);
-    border-radius: 2px solid;
+    border-radius: 8px solid var(--text-color);
+ 
+  }
+
+  #calendar_name, #calendar_email, #calendar_phone, #calendar_{
+    background-color: var(--templates-color);
+    color: var(--text-color);
+    border-radius: 8px solid var(--text-color);
+   
+  }
+  input#calendar_start_date{
+    background-color: var(--templates-color);
+    color: var(--text-color);
+    border-radius: 8px solid var(--text-color) ;
+   
+  }
+
+  #calendar_numberOfGuests{
+    background-color: var(--templates-color);
+    color: var(--text-color);
+    border-radius: 8px solid var(--text-color);
+    width: 4.6rem;
+    height: 2.5rem;
+    text-align: center;
   }
 
   .btn a{
@@ -43,5 +75,89 @@
     font-size: 1.5rem;
     font-weight: 400;
   }
+
+  .flatpickr-calendar {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 5px);
+    z-index: 100;
+}
+
+#calendar_start_date_month,
+#calendar_start_date_day,
+#calendar_start_date_year,
+#calendar_start_time_hour,
+#calendar_start_time_minute,
+#calendar_name,
+#calendar_email,
+#calendar_phone,
+#calendar_numberOfGuests,
+input#calendar_start_date {
+  background-color: var(--templates-color);
+  color: var(--input-text-color);
+  border: 1px solid var(--text-color) ;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 1.8rem;
+  overflow: hidden;
+}
+
+  /* Variables de couleurs pour une personnalisation facile 
+
+
+#calendar {
+  width: 80%;
+  margin: auto;
+  color: var(--text-color);
+}
+
+#calendar div a,
+#calendar div span,
+#calendar div button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+#calendar div a:hover,
+#calendar div button:hover {
+  background-color: var(--button-hover-color);
+}
+
+#calendar_start_date_month,
+#calendar_start_date_day,
+#calendar_start_date_year,
+#calendar_start_time_hour,
+#calendar_start_time_minute,
+#calendar_name,
+#calendar_email,
+#calendar_phone,
+#calendar_numberOfGuests,
+input#calendar_start_date {
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+  border: 1px solid var(--text-color) var(--secondary-color);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 1rem;
+}
+
+#calendar_numberOfGuests {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.btn a {
+  color: var(--text-color);
+}
+
+label.required {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}*/
+
 
   

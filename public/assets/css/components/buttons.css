@@ -19,3 +19,9 @@
   .btn .btn2 .btn3 :hover{
     background-color: var(--hoverbtn-color);
   }
+
+  .btnTime{
+    background-color: var(--button-color);
+    color: var(--text-color);
+    font-family: Roboto;
+  }

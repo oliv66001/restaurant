@@ -20,10 +20,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ProfileController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(): Response
+    public function index(CalendarRepository $calendarRepository): Response
     {
         return $this->render('profile/index.html.twig', [
-            'controller_name' => 'ProfileController',
+            'calendars' => $calendarRepository->findBy([
+                'name' => $this->getUser(),
+            ]),
         ]);
     }
 
@@ -70,7 +72,7 @@ class ProfileController extends AbstractController
 
 
     // Ajoutez l'annotation de la route en haut de votre méthode, en changeant le nom de la route et le chemin si nécessaire
-    #[Route('/suppression/user/{id}', name: 'delete_user', methods: ['DELETE'])]
+    #[Route('/suppression/user/{id}', name: 'delete_user', methods:['DELETE'])]
     public function deleteUser(
         Request $request,
         EntityManagerInterface $em,
@@ -98,16 +100,13 @@ class ProfileController extends AbstractController
         return new JsonResponse(['error' => 'Token invalide'], 400);
     }
     
-
-
-
-    // #[Route('/{id}', name: 'show' , methods: ['GET'])]
-    // public function show(Calendar $calendar): Response
-    // {
-    //     
-    //     return $this->render('profile/index.html.twig', [
-    //         'calendar' => $calendar,
-    //         
-    //     ]);
-    // }
+    #[Route('/{id}', name: 'show' , methods: ['GET'])]
+     public function show(Calendar $calendar): Response
+     {
+         
+         return $this->render('profile/index.html.twig', [
+             'calendar' => $calendar,
+             
+         ]);
+     }
 }

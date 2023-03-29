@@ -1,0 +1,39 @@
+.about-us {
+    font-family: "Roboto", sans-serif;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .about-us h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+   
+  }
+
+  .about-us h3 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+   
+  }
+
+  .about-us .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .about-us .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .about-us .col-md-6,
+  .about-us .col-md-12 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }

@@ -11,43 +11,73 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path('app_carte') }}">Carte</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('app_contact') }}">Contact</a>
+				</li>
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link" href=" # ">Réserver</a>
+						<a class="nav-link" href="{{ path('app_calendar_new') }}">Réserver</a>
 					</li>
 				{% endif %}
 
 
 			</ul>
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-				{% if app.user %}
-					{% if is_granted('ROLE_DISHES_ADMIN') %}
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('admin_index') }}">Administration</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href=" {#{{ path('app_reservation') }}#} ">Réservation</a>
-						</li>
-					{% endif %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_profil_index') }}">Compte</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_logout') }}">Me déconnecter</a>
-					</li>
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href=" {{ path('app_login') }}">Me connecter</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
-					</li>
+		<div class="d-flex">
+    <ul class="navbar-nav me-auto">
+        {% if app.user %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ app.user.lastname }}
+                </a>
+                <div class="dropdown-menu">
+                    {% if is_granted('ROLE_DISHES_ADMIN') %}
+                        <a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
+                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Réservation</a>
+                        <div class="dropdown-divider"></div>
+                    {% endif %}
+                    <a class="dropdown-item" href="{{ path('app_profil_index') }}">Compte</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">Me déconnecter</a>
+                </div>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_login') }}">Me connecter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
 
+
+
+
+		{#<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+			{% if app.user %}
+				{% if is_granted('ROLE_DISHES_ADMIN') %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('admin_index') }}">Administration</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href=" {{ path('admin_reservation') }} ">Réservation</a>
+					</li>
 				{% endif %}
-			</ul>
-		</div>
-	</div>
-</nav>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('app_profil_index') }}">Compte</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('app_logout') }}">Me déconnecter</a>
+				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href=" {{ path('app_login') }}">Me connecter</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
+				</li>
 
-
-
+			{% endif %}
+		</ul>
+	</div>#}
+</div></nav>

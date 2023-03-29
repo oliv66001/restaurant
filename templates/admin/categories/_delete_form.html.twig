@@ -1,0 +1,5 @@
+
+
+<form method="DELETE" action="{{ path('admin_categories_delete_categories', {'id': category.id}) }}">
+  <a href="{{ path('admin_categories_delete_categories', {'id': category.id}) }}" data-delete data-token="{{ csrf_token('delete_categories' ~ category.id) }}" class="btn btn2">Supprimer</a>
+</form>

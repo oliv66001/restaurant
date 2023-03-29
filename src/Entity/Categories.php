@@ -8,8 +8,10 @@ use App\Entity\MyTrait\SlugTrait;
 use App\Repository\CategoriesRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
 class Categories
 {
     use SlugTrait;
@@ -34,6 +36,8 @@ class Categories
 
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Dishes::class)]
     private $dishes;
+
+   
 
     public function __construct()
     {

@@ -13,26 +13,26 @@
 				<table class="table">
 					<thead>
 						<tr class="text-center">
-							<th>ID</th>
-							<th>Nom</th>
-							<th>Parent</th>
-							<th>Slug</th>
-							<th>Ordre</th>
+							<th class="text-center">Nom</th>
+							<th class="text-center">Parent</th>
+							<th class="text-center">N°</th>
+							<th class="text-center">Action</th>
 						</tr>
 					</thead>
 					{% for categorie in categories %}
-						<tr>
-							<td>
-								{{ categorie.id }}
-							</td>
+						<tr class="text-center">
+							
 							<td>{{ categorie.name }}</td>
 							<td>
 								{% if categorie.parent is not null %}
 									{{ categorie.parent.name }}
 								{% endif %}
 							</td>
-							<td>{{ categorie.slug }}</td>
 							<td>{{ categorie.categoryOrder }}</td>
+								<td class="align-middle">
+								<a href="{{ path('admin_categories_edit', {'id': categorie.id}) }}" class="btn btn2">Modifier</a>
+								
+							</td>
 						</tr>
 
 					{% endfor %}

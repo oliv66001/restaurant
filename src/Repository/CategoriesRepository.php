@@ -39,37 +39,16 @@ class CategoriesRepository extends ServiceEntityRepository
         }
     }
 
-//    public function findChildCategories(Categories $parentCategory): array
-//{
-//    $qb = $this->createQueryBuilder('c');
-//    $qb->andWhere('c.parent = :parent')
-//        ->setParameter('parent', $parentCategory);
-//    $query = $qb->getQuery();
-//    return $query->getResult();
-//}
+    // src/Repository/CategoriesRepository.php
 
-//    /**
-//     * @return Categories[] Returns an array of Categories objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+public function getMaxCategoryOrderForParent(Categories $parent): int
+{
+    $qb = $this->createQueryBuilder('c')
+        ->select('MAX(c.categoryOrder)')
+        ->where('c.parent = :parent')
+        ->setParameter('parent', $parent);
 
-//    public function findOneBySomeField($value): ?Categories
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    return (int) $qb->getQuery()->getSingleScalarResult();
+}
+
 }

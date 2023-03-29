@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Réserver une table</h1>
+<div class="text-center">
+
+    {{ include('calendar/_form.html.twig') }}
+<div class="mt-3">
+        <a class="btn btn" href="{{ path('app_calendar_index') }}">Retour</a>
+        </div>
+   </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#calendar_date", {
+            enableTime: true,
+            dateFormat: "dd-mm-YYYY HH:mm",
+        });
+    </script>
+{% endblock %}

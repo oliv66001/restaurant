@@ -26,31 +26,32 @@
 		<p class="text-center mt-2 mb-2">
 			<strong>Prénom :</strong>
 			{{ app.user.firstname }}</p>
+				<p class="text-center mt-2 mb-2">
+			<strong>Allergie :</strong>
+			{{ app.user.allergie }}</p>
 		<p class="text-center mt-2 mb-2">
 			<strong>Email :</strong>
 			{{ app.user.email }}</p>
 		<p class="text-center mt-2 mb-2">
 			<strong>Téléphone :</strong>
 			{{ app.user.phone }}</p>
-
+<div class="text-center">
+			<p>Modifier mon profil</p>
 			<a href="{{ path('app_profil_edit', {'id': app.user.id}) }}" class="btn btn2">Modifier</a>
+			</div>
 	</div>
 
 	<div class="col-12 col-md-6">
 		<h2 class="text-center mt-8 mb-4">Mes réservations</h2>
 
-		
-	
-
-
-		{#{% if app.user %}
+		{% if app.user %}
 
 			<table class="table">
 
 				<thead>
-					<tr>
+					<tr class="text-center">
 						<th>Date et heure</th>
-						<!--<th>Heure</th>-->
+						<th>Nom</th>
 						<th>Nombre de personne</th>
 						<th>actions</th>
 					</tr>
@@ -58,25 +59,24 @@
 				<tbody>
 					{% for calendar in calendars %}
 						<tr>
-							<td>{{ calendar.dateStart ? calendar.dateStart|date('d-m-Y H:i') : '' }}</td>
-							{#<td>{{ calendar.timeStart }}</td>#}
-							{#<td>{{ calendar.lastName}}
-							<td>{{ calendar.nbOfPeople }}</td>
+							<td>{{ calendar.start ? calendar.start|date('d-m-Y H:i') : '' }}</td>
+							<td>{{ calendar.name}}
+							<td>{{ calendar.numberOfGuests }}</td>
 							<td>
 								<a class="btn btn2" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
 							</td>
 						</tr>
-			
+			{% endfor %}
 					</tbody>
 				</table>
-			</table>
+		
       	{% else %}
 			<div class="text-center">
 				<p class="text-center">Vous n'avez aucune réservation enregistrée</p>
 				<a class="btn btn" href="{{ path('app_calendar_new') }}">Réserver</a>
 			</div>
 		</div>
-	{% endfor %}
-{% endif %}</div></section>#}
+	
+{% endif %}</div></section>
 
 {% endblock %}

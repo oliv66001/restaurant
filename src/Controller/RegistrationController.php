@@ -64,7 +64,7 @@ class RegistrationController extends AbstractController
     
 
             $mail->send(
-                'no-reply@monsite.net',
+                'restaurant-quai-antique@abcquiz.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
@@ -113,7 +113,7 @@ class RegistrationController extends AbstractController
                $user->setIsVerified(true);
                $em->flush($user);
                $this->addFlash('success', 'Votre compte a bien été activé');
-           return $this->redirectToRoute('app_profil');
+           return $this->redirectToRoute('app_profil_index');
             
             }
 
@@ -144,7 +144,7 @@ class RegistrationController extends AbstractController
        
                if ($user->getIsVerified()) {
                    $this->addFlash('danger', 'Votre compte est déjà activé');
-                   return $this->redirectToRoute('app_profile_index');
+                   return $this->redirectToRoute('app_profil_index');
                }
 
                 //génération du JWT de l'utilisateur
@@ -170,7 +170,7 @@ class RegistrationController extends AbstractController
                     
                 );
                 $this->addFlash('success', 'Un nouveau lien d\'activation vous a été envoyé par mail');
-                return $this->redirectToRoute('app_profil');
+                return $this->redirectToRoute('app_profil_index');
 }
 
 }

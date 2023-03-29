@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Calendar;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UsersRepository;
@@ -48,6 +50,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $resetToken = null;
+
+    #[ORM\OneToMany(mappedBy: 'name', targetEntity: Calendar::class, orphanRemoval: true, cascade: ['persist'])]
+    private Collection $calendars;
+
+    public function __construct()
+    {
+        $this->calendars = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -224,4 +234,42 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->id = unserialize($data);
     }
+
+    /**
+     * @return Collection<int, Calendar>
+     */
+    public function getCalendars(): Collection
+    {
+        return $this->calendars;
+    }
+
+    public function addCalendar(Calendar $calendar): self
+    {
+        if (!$this->calendars->contains($calendar)) {
+            $this->calendars->add($calendar);
+            $calendar->setName($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendar(Calendar $calendar): self
+    {
+        if ($this->calendars->removeElement($calendar)) {
+            // set the owning side to null (unless already changed)
+            if ($calendar->getName() === $this) {
+                $calendar->setName(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+{
+    // Retourner l'email ou le nom complet, selon vos préférences
+    return $this->lastname;
+    // ou
+    // return $this->lastname . ' ' . $this->firstname;
+}
 }

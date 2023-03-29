@@ -74,7 +74,6 @@
 				<div class="row justify-content-center">
 					<div
 						class="col-6 px-20  border">
-						{#<img src="{{ dishes.images[0].url }}" alt="{{ dishes.name }}">#}
 						<h3>{{ dishes.name }}</h3>
 
 						<p class="text-center px-50">{{ dishes.description }}</p>
@@ -86,4 +85,17 @@
 		{% endfor %}
 	{% endfor %}
 	<div></div>
+  	{% if app.user %}
+					<div class="nav-item">
+						<a class="btn btn mt-3" href="{{ path('app_calendar_new') }}">Réserver</a>
+					</div>
+			{% else %}
+					<div class="nav-item">
+						<a class="btn btn mt-3" href=" {{ path('app_login') }}">Me connecter</a>
+					</div>
+					<div class="nav-item">
+						<a class="btn btn mt-3" href="{{ path('app_register') }}">M'inscrire</a>
+					</div>
+
+				{% endif %}
 </section></div></div></article>{% endblock %}

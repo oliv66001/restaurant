@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des réservation
+{% endblock %}
+
+{% block body %}
+	<div id="calendar"></div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type='importmap'>
+		{
+					"imports": {
+						"@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.4",
+						"@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.4",
+						"@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.4",
+						"@fullcalendar/core/locales/fr": "https://cdn.skypack.dev/@fullcalendar/core/locales/fr",
+						"@fullcalendar/interaction": "https://cdn.skypack.dev/@fullcalendar/interaction"
+													}
+												}
+	</script>
+	<script type='module'>
+		import {Calendar} from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import frLocale from '@fullcalendar/core/locales/fr';
+import interactionPlugin from '@fullcalendar/interaction';
+
+
+document.addEventListener('DOMContentLoaded', function () {
+const calendarEl = document.getElementById('calendar');
+const calendar = new Calendar(calendarEl, {
+plugins: [
+timeGridPlugin, dayGridPlugin, interactionPlugin
+],
+initialView: 'timeGridWeek',
+locales: [frLocale],
+locale: 'fr',
+timeZone: 'Europe/Paris',
+headerToolbar: {
+left: 'prev,next today',
+center: 'title',
+format: 'DD/MM/YYYY',
+right: 'dayGridMonth,timeGridWeek'
+},
+buttonText: {
+today: 'Aujourd\'hui',
+month: 'Mois',
+week: 'Semaine',
+},
+
+events: {{ data|raw }},
+editable: true,
+slotMinTime: '11:00', // Limiter l'affichage de l'heure de début
+slotMaxTime: '22:00', // Limiter l'affichage de l'heure de fin
+});
+
+
+calendar.on('eventClick', (eventClickInfo) => {
+    let eventId = eventClickInfo.event.id;
+    window.location.href = `/calendar/${eventId}/edit`;
+});
+
+calendar.on('eventChange', (e) => {
+let url = `/api/${
+e.event.id
+}/edit`;
+let data = {
+"start": e.event.start.toISOString(),
+"name": e.event.extendedProps.name,
+"numberOfGuests": e.event.extendedProps.numberOfGuests
+};
+
+let xhr = new XMLHttpRequest();
+
+xhr.open("PUT", url);
+xhr.setRequestHeader('Content-Type', 'application/json'); // Ajoutez cette ligne pour définir le type de contenu
+xhr.send(JSON.stringify(data));
+});
+
+
+calendar.render();
+});
+	</script>
+{% endblock %}

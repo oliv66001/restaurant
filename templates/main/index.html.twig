@@ -42,12 +42,16 @@
 			</button>
 		</div>
 	</div>
-</div></article><hr><main class="container">
+</div></article><hr>
+	<img class="img-fluid" id="front" src="{{ asset('assets/images/le bar1.jpg') }}" alt="Le bar du restaurant">
+
+<main class="container">
 <section class="row">
 	<div class="col-12">
+	
 		<h1>Le Quai-Antique</h1>
 	</div>
-
+<hr>
 	{% for category in categories %}
 		{% if category.parent == null %}
 			<div class="col-12">
@@ -70,9 +74,9 @@
 						{% endfor %}
                         <div class="col-12 text-center">
 						<h3 class="card-title mt-5 mb-0">{{ category.name }}</h3>
-						<a type="button" href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn mt-3">Voir le détails</a>
+						<a  href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn mt-3">Voir le détails</a>
 						{% if app.user %}
-							<a type="button" href="#" class="btn mt-3">Réserver</a>
+							<a type="button" href="{{ path('app_calendar_new') }}" class="btn mt-3">Réserver</a>
 						{% else %}
 							<p>Connectez-vous pour réserver</p>
 							<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>

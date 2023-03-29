@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire de contact{% endblock %}
+
+{% block body %}
+<h1 class="text-center">Formulaire de contact</h1>
+
+<section class="container">
+<div class="row justify-content-center">
+<div class="col-md-6">
+
+{{ form_start(contact) }}
+<div class="form-group text-center">
+{{ form_row(contact.full_name) }}
+{{ form_row(contact.email) }}
+{{ form_row(contact.phone) }}
+{{ form_row(contact.subject) }}
+{{ form_row(contact.message) }}
+<button type="submit" class="btn btn text-center mt-3">Envoyer</button>
+{{ form_end(contact) }}
+</div>
+</div>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+<section class="container">
+	<div class="row justify-content-center">
+		<div class="col">
+			{{ form_start(categoryForm) }}
+			{{ form_row(categoryForm.name) }}
+			{{ form_row(categoryForm.parent) }}
+
+			<div>
+				<button class="btn btn mt-2" type="submit">
+					{{ button_label | default ('Ajouter') }}
+				</button>
+			</div>
+			{{ form_end(categoryForm) }}
+
+		</div>
+	</div>
+</section>

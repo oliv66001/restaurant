@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un utilisateur
+{% endblock %}
+
+{% block body %}
+
+	<main class="container text-center">
+		<section class="row justify-content-center">
+			<div class="col-md-6">
+				<h1 class="text-center">Modifier</h1>
+				<div class="mt-2">
+					{% include "admin/categories/_form.html.twig" with {'button_label': 'Modifier'} %}
+				</div>
+				<div class="mt-4">
+					{% include "admin/categories/_delete_form.html.twig" with {'button_label': 'Supprimer un compte'} %}
+				</div>
+			</div>
+		</div>
+	</section>
+</main>{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('assets/js/admincategories.js') }}" defer></script>
+
+{% endblock %}

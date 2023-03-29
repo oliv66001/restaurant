@@ -16,10 +16,15 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['data'];
+
+        $defaultValue = $user->getId() === null ? 'Pas d\'allergie' : $user->getAllergie();
+    
         $builder
             ->add(
                 'email',
@@ -69,7 +74,8 @@ class RegistrationFormType extends AbstractType
                         'class' => 'form-control'
                     ],
                     'label' => 'Allergie',
-                    'required' => false
+                    'required' => false,
+                    'data' => $defaultValue,
                 ]
             )
             ->add('RGPDConsent', CheckboxType::class, [

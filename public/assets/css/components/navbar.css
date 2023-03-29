@@ -1,7 +1,7 @@
 a.nav-link{
     color: var(--text-color);
     font-family: 'Roboto Flex', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 a.nav-link:hover{
@@ -19,4 +19,21 @@ nav{
 title{
     font-family: 'Roboto Flex', sans-serif;
 }
+
+
+.nav-item .dropdown-menu {
+    background-color:var(--template-color); 
+  }
+  
+  /* Modifier la couleur du texte des éléments du menu déroulant */
+  .nav-item .dropdown-menu .dropdown-item {
+    color:var(--text-color);
+  }
+  
+  /* Modifier la couleur du texte des éléments du menu déroulant au survol */
+  .nav-item .dropdown-menu .dropdown-item:hover {
+    color: var(--button-color);
+    background-color: var(--template-color);
+  }
+  
 

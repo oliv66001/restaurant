@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class UsersFormType extends AbstractType
@@ -53,6 +54,27 @@ class UsersFormType extends AbstractType
                         'class' => 'form-control'
                     ],
                     'label' => 'Téléphone'
+                ]
+            )
+
+            ->add(
+                'roles',
+                ChoiceType::class,
+                [
+                    'choices' => [
+                        'Utilisateur' => 'ROLE_USER',
+                        'ProduitAdmin' => 'ROLE_DISHES_ADMIN',
+                        'Administrateur' => 'ROLE_ADMIN',
+                    ],
+                    'multiple' => true,
+                    'expanded' => true,
+                    'label' => 'Rôles',
+                    'attr' => [
+                        'class' => 'form-check'
+                    ],
+                    'label_attr' => [
+                        'class' => 'form-check-label'
+                    ],
                 ]
             )
             ->add(

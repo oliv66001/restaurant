@@ -31,10 +31,14 @@ class CategoriesFixtures extends Fixture
         $this->createCategory('Glaces', $parent, 8, $manager);
         $this->createCategory('Gâteaux', $parent, 9, $manager);
 
-        $parent = $this->createCategory('Boissons', null, 10, $manager);
+        $parent = $this->createCategory('Plateau de fromage', null, 10, $manager);
 
-        $this->createCategory('Boissons', $parent, 11, $manager);
-        $this->createCategory('Vins et spiritieux', $parent, 12, $manager);
+        $this->createCategory('Plateau de fromage', $parent, 11, $manager);
+
+        $parent = $this->createCategory('Boissons', null, 12, $manager);
+
+        $this->createCategory('Boissons', $parent, 13, $manager);
+        $this->createCategory('Vins et spiritieux', $parent, 14, $manager);
         $manager->flush();
     }
 
