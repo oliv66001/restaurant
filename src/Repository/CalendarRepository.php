@@ -66,4 +66,27 @@ class CalendarRepository extends ServiceEntityRepository
     {
         return $this->findAllByUserAndDateQueryBuilder($user, $date)->getQuery()->getResult();
     }
+
+    public function findByUserOrAll(Users $user)
+{
+    $qb = $this->createQueryBuilder('c')
+        ->andWhere('c.name = :user')
+        ->setParameter('user', $user)
+        ->orderBy('c.start', 'ASC')
+        ->getQuery();
+
+    return $qb->getResult();
+}
+
+// src/Repository/CalendarRepository.php
+public function countReservationsAtDateTime(\DateTimeInterface $dateTime): int
+{
+    return $this->createQueryBuilder('c')
+        ->select('COUNT(c.id)')
+        ->where('c.start = :dateTime')
+        ->setParameter('dateTime', $dateTime)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
 }

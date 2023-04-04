@@ -32,7 +32,8 @@
                 <div class="dropdown-menu">
                     {% if is_granted('ROLE_DISHES_ADMIN') %}
                         <a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
-                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Réservation</a>
+                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Calendrier des réservation</a>
+						 <a class="dropdown-item" href="{{ path('app_calendar_index') }}">Tableau des réservations</a>
                         <div class="dropdown-divider"></div>
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('app_profil_index') }}">Compte</a>

@@ -20,45 +20,54 @@ class CalendarController extends AbstractController
     #[Route('/', name: 'app_calendar_index', methods: ['GET'])]
     public function index(CalendarRepository $calendarRepository): Response
     {
+        $user = $this->getUser();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $calendars = $calendarRepository->findAll(); // L'administrateur voit toutes les réservations
+        } else {
+            $calendars = $calendarRepository->findByUserOrAll($this->getUser()); // Les autres utilisateurs ne voient que leurs réservations
+        }
+        
         return $this->render('calendar/index.html.twig', [
-            'calendars' => $calendarRepository->findBy([
-                'name' => $this->getUser(),
-            ]),
+            'calendars' => $calendars
 
         ]);
     }
 
-    #[Route('/new', name: 'app_calendar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CalendarRepository $calendarRepository, Security $security, Calendar $calendar): Response
-    {
-        $dateFormatter = new IntlDateFormatter(
-            'fr_FR',
-            IntlDateFormatter::SHORT,
-            IntlDateFormatter::SHORT
-        );
-        $dateFormatter->setPattern('dd-MM-yyyy HH:mm');
-        $formattedStart = $dateFormatter->format($calendar->getStart());
+#[Route('/new', name: 'app_calendar_new', methods: ['GET', 'POST'])]
+public function new(Request $request, CalendarRepository $calendarRepository, Security $security): Response
+{
+    $user = $security->getUser();
+    $userId = $user->getId();
+    $calendar = new Calendar();
+    $calendar->setName($user);
+    $form = $this->createForm(CalendarType::class, $calendar);
+    $form->handleRequest($request);
 
-        $user = $security->getUser();
-        $userId = $user->getId(); // récupérer l'id de l'utilisateur connecté
-        $calendar = new Calendar();
+    $existingReservations = $calendarRepository->findByUserOrAll($user);
 
-        $calendar->setName($user);
-        $form = $this->createForm(CalendarType::class, $calendar);
-        $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Vérifier le nombre de réservations pour cette date et heure
+        $reservationsCount = $calendarRepository->countReservationsAtDateTime($calendar->getStart());
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $calendarRepository->save($calendar, true);
-
-            return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
+        if ($reservationsCount >= 30) {
+            // Ajoutez un message d'erreur et renvoyez à la page de réservation
+            $this->addFlash('error', 'Désolé, il y a déjà 30 réservations pour cette date et heure. Veuillez choisir un autre créneau.');
+            return $this->redirectToRoute('app_calendar_new');
         }
 
-        return $this->render('calendar/new.html.twig', [
-            'calendar' => $calendar,
-            'formattedStart' => $formattedStart,
-            'form' => $form,
-        ]);
+        // Enregistrez la réservation
+        $calendarRepository->save($calendar, true);
+
+        return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    return $this->render('calendar/new.html.twig', [
+        'calendar' => $calendar,
+        'form' => $form->createView(),
+        'existingReservations' => $existingReservations,
+    ]);
+}
+
 
     #[Route('/{id}', name: 'app_calendar_show', methods: ['GET'])]
     public function show(Calendar $calendar): Response

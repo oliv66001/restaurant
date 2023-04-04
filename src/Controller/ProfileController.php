@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Users;
 use App\Entity\Calendar;
 use App\Form\UsersFormType;
+use App\Form\ProfileFormType;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,12 +46,12 @@ class ProfileController extends AbstractController
         $this->denyAccessUnlessGranted('USER_EDIT', $users);
 
         // Création du formulaire
-        $usersForm = $this->createForm(UsersFormType::class, $users);
+        $profileForm = $this->createForm(ProfileFormType::class, $users);
 
-        $usersForm->handleRequest($request);
+        $profileForm->handleRequest($request);
 
         //Vérification du soumission du formulaire
-        if ($usersForm->isSubmitted() && $usersForm->isValid()) {
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
 
             $em->persist($users);
             $em->flush();
@@ -64,8 +65,8 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/edit.html.twig', [
-            'usersForm' => $usersForm->createView(),
-            'users' => $users
+
+            'profileForm' => $profileForm->createView(),
 
         ]);
     }

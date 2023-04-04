@@ -9,7 +9,7 @@
     <div class="col-12">
 	<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
 		<h1>Le chemin Fermier</h1>
-	 <h2>Découvrez</br> notre cuisine</br> modèrne</h2>
+	 <h3>Découvrez</br> notre cuisine</br> modèrne</h3>
     </div>
     
   </div>
@@ -17,25 +17,46 @@
 <hr>
 	<section class="container text-center">
 		<div class="row justify-content-center">
-			<div class="col-md-4">
+			<div class="col-lg-9 col-md-6">
 				
 				{{ form_start(registrationForm) }}
                 <h1>Inscription</h1>
 				<fieldset class="mb-3">
 					<legend>Mon identité</legend>
-					{{ form_row(registrationForm.lastname) }}
-					{{ form_row(registrationForm.firstname) }}
+					<div class="row">
+						<div class="col-6">
+							{{ form_row(registrationForm.lastname) }}
+						</div>
+						<div class="col-6">
+							{{ form_row(registrationForm.firstname) }}
+						</div>
+					</div>
 					{{ form_row(registrationForm.email) }}
 				</fieldset>
 
 				<fieldset class="mb-3">
 					<legend>Mes infos</legend>
+					
+					<div class="row">
+					<div class="col-6">
 					{{ form_row(registrationForm.phone) }}
+					</div>
+					<div class="col-6">
 					{{ form_row(registrationForm.allergie) }}
+					</div>
+					</div>
 				</fieldset>
-				{{ form_row(registrationForm.plainPassword, {
+				</div>
+				
+					<div class="col-6">
+					{{ form_row(registrationForm.plainPassword, {
             label: 'Mot de passe'}) }}
-				{{ form_row(registrationForm.RGPDConsent) }}
+					</div>
+					<div class="col-6">
+						{{ form_row(registrationForm.RGPDConsent) }}
+					</div>
+				
+			
 
 				<button type="submit" class="btn btn-lg my-3">M'inscrire</button>
 				<a href=" {{ path('app_login')}} " class="btn btn-lg btn2 my-3">Me connecter</a>

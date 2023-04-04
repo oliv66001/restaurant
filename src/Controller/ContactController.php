@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\Contact;
 use App\Form\ContactFormType;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Psr\Log\LoggerInterface;
 
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request, EntityManagerInterface $em, SendMailService $sendMailService): Response
+    public function index(Request $request, EntityManagerInterface $em, SendMailService $sendMailService, LoggerInterface $logger): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactFormType::class, $contact);
@@ -26,22 +28,26 @@ class ContactController extends AbstractController
             $em->persist($contact);
             $em->flush();
 
-            // Utiliser SendMailService pour envoyer l'email
-            $sendMailService->send(
-                'no-reply@exemple.com',
-                'restaurant-quai-antique@abcquiz.fr',
-                'Nouveau message de contact',
-                'contact',
-                ['contact' => $contact]
-            );
+            try {
+                $sendMailService->send(
+                    'quai-antique@crocobingo.fr',
+                    'oliv66001@gmail.com',
+                    'Nouveau message de contact',
+                    'contact',
+                    ['contact' => $contact]
+                );
+                $this->addFlash('success', 'Votre message a bien été envoyé !');
+            } catch (Exception $e) {
+                $logger->error('Erreur lors de l\'envoi du courriel : ' . $e->getMessage());
+                $this->addFlash('error', 'Une erreur s\'est produite lors de l\'envoi de votre message. Veuillez réessayer plus tard.');
+            }
 
-            $this->addFlash('success', 'Votre message a bien été envoyé !');
-        return $this->redirectToRoute('app_contact');
-    }
+            return $this->redirectToRoute('app_contact');
+        }
 
         return $this->render('contact/index.html.twig', [
             'controller_name' => 'ContactController',
-            'contact' => $form->createView()
+            'form' => $form->createView()
         ]);
     }
 }

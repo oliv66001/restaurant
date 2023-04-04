@@ -1,0 +1,34 @@
+<section class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2"> 
+
+{% if existingReservations|length > 0 %}
+    <table class="table">
+        <thead>
+            <tr class="text-center">
+                <th>N°</th>
+                <th>Date et heure</th>
+                <th>Nombre de convive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for calendar in existingReservations %}
+            <tr>
+                <td>{{ calendar.id }}</td>
+                <td>{{ calendar.start ? calendar.start|date('d-m-Y H:i:s') : '' }}</td>
+                <td>{{ calendar.numberOfGuests }}</td>
+                <td>
+                    <a class="btn btn2" href="{{ path('app_calendar_show', {'id': calendar.id}) }}">Voir</a>
+                    <a class="btn btn3" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucune réservation trouvée.</p>
+{% endif %}
+</div>
+</div>
+</section>

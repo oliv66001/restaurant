@@ -47,7 +47,7 @@ class Contact
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?bool $read = false;
+    private ?bool $is_read = false;
 
     public function __construct()
     {
@@ -119,18 +119,6 @@ class Contact
         return $this;
     }
 
-    public function isRead(): ?bool
-    {
-        return $this->read;
-    }
-
-    public function setRead(bool $read): self
-    {
-        $this->read = $read;
-
-        return $this;
-    }
-
     /**
      * Get the value of phone
      *
@@ -151,6 +139,30 @@ class Contact
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of is_read
+     *
+     * @return ?bool
+     */
+    public function getIsRead(): ?bool
+    {
+        return $this->is_read;
+    }
+
+    /**
+     * Set the value of is_read
+     *
+     * @param ?bool $is_read
+     *
+     * @return self
+     */
+    public function setIsRead(?bool $is_read): self
+    {
+        $this->is_read = $is_read;
 
         return $this;
     }

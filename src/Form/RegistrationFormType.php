@@ -89,6 +89,9 @@ class RegistrationFormType extends AbstractType
                  pour la gestion de ma commande et de mes réservations.
                 Je peux à tout moment me désinscrire en envoyant un mail à 
                 l\'adresse suivante : developpement.solution@gmail.com',
+                'attr' => [
+                    'class' => 'form-check-input mb-3'
+                ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,

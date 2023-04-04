@@ -64,7 +64,7 @@ class RegistrationController extends AbstractController
     
 
             $mail->send(
-                'restaurant-quai-antique@abcquiz.fr',
+                'quai-antique@crocobingo.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
@@ -162,7 +162,7 @@ class RegistrationController extends AbstractController
                 $this->getParameter('app.jwtsecret'));
 
                 $mail->send (
-                    'no-reply@monsite.net',
+                    'quai-antique@crocobingo.fr',
                     $user->getEmail(),
                     'Activation de votre compte',
                     'register',

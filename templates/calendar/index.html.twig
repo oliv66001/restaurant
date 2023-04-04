@@ -4,36 +4,41 @@
 
 {% block body %}
     <h1 class="text-center">Calendrier des réservations</h1>
- {% if app.user %}
-    <table class="table">
-        <thead>
-            <tr class="text-center">
-                <th>N°</th>
-                <th>Date et heure</th>
-                <th>Nombre de convive</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for calendar in calendars %}
-     
-            <tr>
-                <td>{{ calendar.id }}</td>
-                <td>{{ calendar.start ? calendar.start|date('d-m-Y H:i:s') : '' }}</td>
-                <td>{{ calendar.numberOfGuests }}</td>
-                <td>
-                    <a class="btn btn2" href="{{ path('app_calendar_show', {'id': calendar.id}) }}">Voir</a>
-                    <a class="btn btn3" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-              <a class="btn btn" href="{{ path('app_calendar_new') }}">Nouvelle réservation</a>
-        {% endfor %}
-        {% endif %}
-      
-        </tbody>
-    </table>
-{% endblock %}
+    {% if app.user %}
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>N°</th>
+                    <th>Date et heure</th>
+                    <th>Nombre de convive</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>Nom de l'utilisateur</th>
+                    {% endif %}
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for calendar in calendars %}
+                <tr>
+                    <td>{{ calendar.id }}</td>
+                    <td>{{ calendar.start ? calendar.start|date('d-m-Y H:i:s') : '' }}</td>
+                    <td>{{ calendar.numberOfGuests }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>{{ calendar.name.firstname }} {{ calendar.name.lastname }}</td>
+                    {% endif %}
+                    <td>
+                        <a class="btn btn2" href="{{ path('app_calendar_show', {'id': calendar.id}) }}">Voir</a>
+                        <a class="btn btn3" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+                  <a class="btn btn" href="{{ path('app_calendar_new') }}">Nouvelle réservation</a>
+            {% endfor %}
+            {% endif %}
+          
+            </tbody>
+        </table>
+    {% endblock %}

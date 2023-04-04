@@ -74,7 +74,7 @@ class SecurityController extends AbstractController
 
                 //Envoi du mail
                 $mail->send(
-                    'np-relpy@e-commerce.fr',
+                    'quai-antique@crocobingo.fr',
                     $user->getEmail(),
                     'Réinitialisation de mot de passe',
                     'password_reset',

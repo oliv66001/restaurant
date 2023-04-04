@@ -1,19 +1,19 @@
 <section class="container">
 	<div class="row justify-content-center">
 		<div class="col">
-			{{ form_start(usersForm) }}
-			{{ form_row(usersForm.lastname) }}
-            {{ form_row(usersForm.firstname) }}
-            {{ form_row(usersForm.phone) }}
-            {{ form_row(usersForm.allergie) }}
-			{{ form_row(usersForm.email) }}
+			{{ form_start(profileForm) }}
+			{{ form_row(profileForm.lastname) }}
+            {{ form_row(profileForm.firstname) }}
+            {{ form_row(profileForm.phone) }}
+            {{ form_row(profileForm.allergie) }}
+			{{ form_row(profileForm.email) }}
 				
                 <div>
 					<button class="btn btn mt-2" type="submit">
 						{{ button_label | default ('Ajouter') }}
 					</button>
 				</div>
-			{{ form_end(usersForm) }}
+			{{ form_end(profileForm) }}
           
 		</div>
 	</div>
