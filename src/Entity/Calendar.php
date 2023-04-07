@@ -21,8 +21,8 @@ class Calendar
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank(message: 'Veuillez renseigner une date de début')]
+    #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
     #[Assert\GreaterThan('today', message: 'La date de début doit être supérieure à la date du jour')]
-    
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column]
@@ -71,4 +71,6 @@ class Calendar
 
         return $this;
     }
+
+    
 }

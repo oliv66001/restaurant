@@ -1,7 +1,9 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary fixed-top mb-6">
 	<div class="container">
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-			<span id="toggler" class="navbar-toggler-icon"></span>
+		<button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="menu-btn__line"></span>
+			<span class="menu-btn__line"></span>
+			<span class="menu-btn__line"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -22,63 +24,52 @@
 
 
 			</ul>
-		<div class="d-flex">
-    <ul class="navbar-nav me-auto">
-        {% if app.user %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ app.user.lastname }}
-                </a>
-                <div class="dropdown-menu">
-                    {% if is_granted('ROLE_DISHES_ADMIN') %}
-                        <a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
-                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Calendrier des réservation</a>
-						 <a class="dropdown-item" href="{{ path('app_calendar_index') }}">Tableau des réservations</a>
+			<div class="d-flex">
+				<ul class="navbar-nav me-auto">
+					{% if app.user %}
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								{{ app.user.lastname }}
+							</a>
+							<div class="dropdown-menu">
+								{% if is_granted('ROLE_DISHES_ADMIN') %}
+									 <a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
+                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Calendrier des<br> réservations</a>
+						 <a class="dropdown-item" href="{{ path('app_calendar_index') }}">Tableau des<br> réservations</a>
                         <div class="dropdown-divider"></div>
-                    {% endif %}
-                    <a class="dropdown-item" href="{{ path('app_profil_index') }}">Compte</a>
-                    <a class="dropdown-item" href="{{ path('app_logout') }}">Me déconnecter</a>
-                </div>
-            </li>
-        {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_login') }}">Me connecter</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
-            </li>
-        {% endif %}
-    </ul>
-</div>
+								{% endif %}
+								<a class="dropdown-item" href="{{ path('app_profil_index') }}">Compte</a>
+								<a class="dropdown-item" href="{{ path('app_logout') }}">Me déconnecter</a>
+							</div>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_login') }}">Me connecter</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
 
+<script>
+	$(document).ready(function () {
+var navbar = $('#navbar');
 
+function checkNavbarVisibility() {
+if ($(window).scrollTop() === 0 || event.clientY <= 50) {
+navbar.fadeIn();
+} else {
+navbar.fadeOut();
+}
+}
 
-
-		{#<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-			{% if app.user %}
-				{% if is_granted('ROLE_DISHES_ADMIN') %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('admin_index') }}">Administration</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href=" {{ path('admin_reservation') }} ">Réservation</a>
-					</li>
-				{% endif %}
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_profil_index') }}">Compte</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_logout') }}">Me déconnecter</a>
-				</li>
-			{% else %}
-				<li class="nav-item">
-					<a class="nav-link" href=" {{ path('app_login') }}">Me connecter</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_register') }}">M'inscrire</a>
-				</li>
-
-			{% endif %}
-		</ul>
-	</div>#}
-</div></nav>
+checkNavbarVisibility(); // Vérifiez la visibilité de la barre de navigation au chargement de la page
+$(window).mousemove(checkNavbarVisibility); // Vérifiez la visibilité de la barre de navigation lors du déplacement de la souris
+$(window).scroll(checkNavbarVisibility); // Vérifiez la visibilité de la barre de navigation lors du défilement de la page
+});
+</script>

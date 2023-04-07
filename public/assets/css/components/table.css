@@ -1,15 +1,15 @@
 .table th {
-    background-color: var(--template-color);
+    background-color: var(--templates-color);
     color: var(--text-color);
 }
 
 thead tr th{
-    background-color: var(--template-color);
+    background-color: var(--templates-color);
     color: var(--text-color);
 }
 
 tbody tr td{
-    background-color: var(--template-color);
+    background-color: var(--templates-color);
     color: var(--text-color);
 }
 

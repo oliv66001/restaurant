@@ -85,13 +85,6 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Vous devez accepter les conditions d\'utilisation.',
                     ])
                 ],
-                'label' => 'J\'accepte que mes données personnelles soient utilisées 
-                 pour la gestion de ma commande et de mes réservations.
-                Je peux à tout moment me désinscrire en envoyant un mail à 
-                l\'adresse suivante : developpement.solution@gmail.com',
-                'attr' => [
-                    'class' => 'form-check-input mb-3'
-                ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,

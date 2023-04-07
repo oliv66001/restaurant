@@ -99,7 +99,7 @@ input#calendar_start_date {
   border: 1px solid var(--text-color) ;
   border-radius: 4px;
   padding: 5px 10px;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   overflow: hidden;
 }
 

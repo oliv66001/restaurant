@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use Time;
+use TimeInterval;
 use DateTimeInterface;
 use IntlDateFormatter;
 use App\Entity\Calendar;
@@ -12,9 +14,11 @@ use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class CalendarType extends AbstractType
 {
@@ -47,12 +51,20 @@ class CalendarType extends AbstractType
                     'data-date-autoclose' => 'true',
                     'data-date-today-highlight' => 'true',
                     'data-date-week-start' => '1',
+                    'data-date-start-date' => '0d',
                     'auto_initialize' => true,
                     'required' => true,
                     'data-date-format' => 'dd/MM/yyyy',
                     'html5' => false,
 
                 ],
+                'constraints' => [
+                    new GreaterThan([
+                        'value' => new \DateTime('today'),
+                        'message' => 'L\'heure de début doit être supérieure à l\'heure actuelle',
+                    ]),
+                ]
+                
             ])
 
             ->add('numberOfGuests', IntegerType::class, [

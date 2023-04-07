@@ -11,14 +11,14 @@
 	{{ parent() }}
 	<script type='importmap'>
 		{
-					"imports": {
-						"@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.4",
-						"@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.4",
-						"@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.4",
-						"@fullcalendar/core/locales/fr": "https://cdn.skypack.dev/@fullcalendar/core/locales/fr",
-						"@fullcalendar/interaction": "https://cdn.skypack.dev/@fullcalendar/interaction"
-													}
-												}
+							"imports": {
+								"@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.4",
+								"@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.4",
+								"@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.4",
+								"@fullcalendar/core/locales/fr": "https://cdn.skypack.dev/@fullcalendar/core/locales/fr",
+								"@fullcalendar/interaction": "https://cdn.skypack.dev/@fullcalendar/interaction"
+															}
+														}
 	</script>
 	<script type='module'>
 		import {Calendar} from '@fullcalendar/core';
@@ -48,8 +48,10 @@ buttonText: {
 today: 'Aujourd\'hui',
 month: 'Mois',
 week: 'Semaine',
+allDay: 'Toute la journée'
 },
 
+allDaySlot: false, // Masquer la colonne "Toute la journée"
 events: {{ data|raw }},
 editable: true,
 slotMinTime: '11:00', // Limiter l'affichage de l'heure de début
@@ -58,8 +60,8 @@ slotMaxTime: '22:00', // Limiter l'affichage de l'heure de fin
 
 
 calendar.on('eventClick', (eventClickInfo) => {
-    let eventId = eventClickInfo.event.id;
-    window.location.href = `/calendar/${eventId}/edit`;
+let eventId = eventClickInfo.event.id;
+window.location.href = `/calendar/${eventId}/edit`;
 });
 
 calendar.on('eventChange', (e) => {
@@ -67,8 +69,8 @@ let url = `/api/${
 e.event.id
 }/edit`;
 let data = {
-"start": e.event.start.toISOString(),
 "name": e.event.extendedProps.name,
+"start": e.event.start.toISOString(),
 "numberOfGuests": e.event.extendedProps.numberOfGuests
 };
 

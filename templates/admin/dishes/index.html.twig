@@ -9,14 +9,14 @@
 		<div class="row justify-content-center">
 
 			{% include "_partials/_adminnav.html.twig" %}
-			<main class="col-8 ">
+			<main class="col-12 ">
 				<h1 class="text-center">Liste des plats</h1>
 				<table class="table">
 					<thead>
 						<tr class="text-center">
 							<th>Image</th>
 							<th>Nom</th>
-							<th>Prix</th>
+							<th>Prix en €</th>
 							<th>Catégorie</th>
 							<th>Actions</th>
 						</tr>
@@ -28,8 +28,7 @@
 							<td><img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail"></td>
 
 							<td class="align-middle">{{ dishe.name }}</td>
-							<td class="align-middle">{{ dishe.price }}
-								€</td>
+							<td class="align-middle">{{ dishe.price }}€</td>
 							<td class="align-middle">{{ dishe.categories.name }}</td>
 							<td class="align-middle">
 								<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn2">Modifier</a>

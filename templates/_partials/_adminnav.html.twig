@@ -1,33 +1,39 @@
-<aside class="col-3 border border-light p-3 mb-3" >
-    <article class="card mb-3">
-    <div class="card-header">
-<h4 class="text-center">Catégories</h4>
-    </div>
-       <div class="card-body">
-       <p>
-         <a class="btn" href="{{ path('admin_categories_index') }}">liste</a></p>
-           <p>
-         <a class="btn" href="{{ path('admin_categories_add') }}">Ajouter</a></p>
+<div class="container">
+  <div class="row justify-content-center">
+    <aside class="col-12 mb-3">
+      <div class="d-flex flex-column flex-md-row justify-content-md-between">
+        <article class="card mb-3 mb-md-0">
+          <div class="card-header">
+            <h3 class="text-center">Catégories</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              <a class="btn" href="{{ path('admin_categories_index') }}">liste</a></p>
+            <p>
+              <a class="btn" href="{{ path('admin_categories_add') }}">Ajouter</a></p>
+          </div>
+        </article>
+        <article class="card mb-3 mb-md-0">
+          <div class="card-header">
+            <h3 class="text-center">Produits</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              <a class="btn" href="{{ path('admin_dishes_index') }}">liste</a></p>
+            <p>
+              <a class="btn" href="{{ path('admin_dishes_add') }}">Ajouter</a></p>
+          </div>
+        </article>
+        <article class="card mb-3 mb-md-0">
+          <div class="card-header">
+            <h3 class="text-center">Utilisateurs</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              <a class="btn" href="{{ path('admin_users_index') }}">Voir ou modifier</a></p>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </div>
 </div>
-    </article>
-    <article class="card mb-3">
-    <div class="card-header">
-   <h4 class="text-center"> Produits</h4>
-    </div>
-       <div class="card-body">
-       <p>
-         <a class="btn" href="{{ path('admin_dishes_index') }}">liste</a></p>
-           <p>
-         <a class="btn" href="{{ path('admin_dishes_add') }}">Ajouter</a></p>
-</div>
-    </article>
-     <article class="card mb-3">
-    <div class="card-header">
-  <h4 class="text-center">  Utilisateurs</h4>
-    </div>
-       <div class="card-body">
-       <p>
-         <a class="btn" href="{{ path('admin_users_index') }}">Voir ou modifier</a></p>
-</div>
-    </article>
-</aside>

@@ -9,23 +9,25 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			{% include "_partials/_adminnav.html.twig" %}
-			<main class="col-9 p-2">
+			<main class="col-12 p-2">
 				<h1 class="text-center">Listes des utilisateurs</h1>
 				<table class="table">
 					<thead>
 						<tr class="text-center">
 							<th>Nom</th>
 							<th>Téléphone</th>
-							
 							<th>Rôles</th>
-							<th>Vérifié</th>
+							<th>Compte vérifié</th>
+							<th>Action</th>
 						</tr>
 					</thead>
+
+
 					{% for user in users %}
-						<tr>
+						<tr class="text-center">
 							<td>{{ user.lastname }}</td>
 							<td>{{ user.phone }}</td>
-						
+
 							<td>
 								{% for role in user.roles %}
 									{% if role == "ROLE_ADMIN" %}
@@ -43,13 +45,15 @@
 
 								{% endfor %}
 							</td>
-								<td>{{ user.isVerified }}</td>
+							
 							<td>
+							
 								<div class="form-check form-switch">
+								
 									<input class="form-check-input" type="checkbox" role="switch" id="switch {{ user.id }} " {{ user.isVerified ? "checked" : "" }} disabled>
-									<label class="form-check-label" for="switch {{ user.id }}"></label>
+									<label class="form-check-label" for="switch {{ user.id }}">{{ user.isVerified }}</label>
 								</div>
-								</td>
+							</td>
 							<td>
 								<a href="{{ path('admin_users_edit', {'id': user.id}) }}" class="btn btn">Modifier</a>
 							</td>
@@ -57,6 +61,7 @@
 
 					{% endfor %}
 				</table>
+
 			</main>
 		</div>
 	</div>
