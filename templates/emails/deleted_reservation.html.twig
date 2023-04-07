@@ -1,0 +1,10 @@
+   <h1>Réservation supprimée</h1>
+    <p>Bonjour,</p>
+    <p>Une réservation a été supprimée.</p>
+    <p>Détails de la réservation :</p>
+    <ul>
+        <li>Date et heure de début : {{ reservation.start|date('d/m/Y H:i') }}</li>
+        <li>Nombre de personnes : {{ reservation.numberOfGuests }}</li>
+        <li>Nom : {{ reservation.name }}</li>
+    </ul>
+    <p>Veuillez vérifier les détails de la réservation dans le système de gestion des réservations.</p>

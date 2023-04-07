@@ -68,7 +68,7 @@ class RegistrationController extends AbstractController
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
-                    compact('user', 'token') 
+                    compact('user','token') 
                 
             );
 
@@ -161,14 +161,13 @@ class RegistrationController extends AbstractController
 
                 $this->getParameter('app.jwtsecret'));
 
-                $mail->send (
+                 $mail->send(
                     'quai-antique@crocobingo.fr',
                     $user->getEmail(),
                     'Activation de votre compte',
                     'register',
                         compact ('user', 'token') 
-                    
-                );
+                       );
                 $this->addFlash('success', 'Un nouveau lien d\'activation vous a été envoyé par mail');
                 return $this->redirectToRoute('app_profil_index');
 }

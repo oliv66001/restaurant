@@ -19,13 +19,13 @@ class UsersFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
          $admin = new Users();
-            $admin->setEmail('admin@demo.fr');
+            $admin->setEmail('quai.antiquead@gmail.com');
             $admin->setResetToken('admin');
             $admin->setLastName('Admin');
             $admin->setFirstname('Admin');
             $admin->setPhone('0606060606');
             $admin->setRoles(['ROLE_ADMIN']);
-            $admin->setPassword($this->passwordEncoder->hashPassword($admin, 'admin'));
+            $admin->setPassword($this->passwordEncoder->hashPassword($admin, '%$.;,864296oliv'));
          $manager->persist($admin);
 
          $dishesadmin = new Users();

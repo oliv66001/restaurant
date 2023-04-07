@@ -17,10 +17,12 @@ class ProfileFormType extends AbstractType
         $builder
             ->add('email', EmailType::class,
             [
+                
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => 'E-mail'
+                'label' => 'E-mail',
+                'required' => true,
             ]
         )
             ->add('lastname', TextType::class,
@@ -28,7 +30,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => 'Nom'
+                'label' => 'Nom',
+                'required' => true,
             ]
         )
             ->add('firstname', TextType::class,
@@ -36,7 +39,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => 'Prénom'
+                'label' => 'Prénom',
+                'required' => true,
             ]
         )
             ->add('allergie',  TextareaType::class,
@@ -53,7 +57,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => 'Téléphone'
+                'label' => 'Téléphone',
+                'required' => true,
             ]
         )
         ;

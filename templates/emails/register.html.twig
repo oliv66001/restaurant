@@ -1,5 +1,14 @@
 <h1>Activez votre compte</h1>
 <p>Bonjour {{ user.firstname }},</p>
-<p>Votre inscription sur le site e-commerce est à valider en cliquant sur le lien ci-dessous :</p>
-<p><a href="{{ absolute_url(path('app_verify_user', {token: token})) }}">{{ absolute_url(path('app_verify_user', {token: token})) }}</a></p>
+<p>Votre inscription sur le site e-commerce est à valider en cliquant sur le bouton ci-dessous :</p>
+
+{# Créez un bouton avec un style personnalisé pour cacher l'URL de vérification #}
+<a href="{{ absolute_url(path('app_verify_user', {token: token})) }}" style="background-color: #3f9cef; color: #ffffff; display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+    Activer mon compte
+</a>
+
+<p>Si vous rencontrez des problèmes pour cliquer sur le bouton, veuillez copier et coller l'URL suivante dans votre navigateur :</p>
+<p>{{ absolute_url(path('app_verify_user', {token: token})) }}</p>
 <p>Ce lien expirera dans 3 heures</p>
+{% set logo_url = absolute_url(asset('https://crocobingo.fr/assets/images/Orange%20et%20Bordeaux%20Restaurant%20Logo.png')) %}
+<img style="width: 150px; height: auto; background-color: #1e1f20; padding: 10px; border-radius: 5px;" src="{{ logo_url }}" alt="Logo" />

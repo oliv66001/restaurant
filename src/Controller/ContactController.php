@@ -31,7 +31,7 @@ class ContactController extends AbstractController
             try {
                 $sendMailService->send(
                     'quai-antique@crocobingo.fr',
-                    'oliv66001@gmail.com',
+                    'quai.antiquead@gmail.com',
                     'Nouveau message de contact',
                     'contact',
                     ['contact' => $contact]

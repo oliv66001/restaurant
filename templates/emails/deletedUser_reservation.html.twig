@@ -1,0 +1,8 @@
+<h1>Suppression de réservation</h1>
+<p>Bonjour {{ reservation.name.firstname }},</p>
+<p>Votre réservation a été supprimée avec succès.</p>
+<p>Date et heure de réservation initiale : {{ reservation.start|date('d-m-Y H:i') }}</p>
+<p>Nous sommes désolés de ne pas vous accueillir cette fois-ci et espérons vous revoir bientôt.</p>
+
+{% set logo_url = absolute_url(asset('https://crocobingo.fr/assets/images/Orange%20et%20Bordeaux%20Restaurant%20Logo.png')) %}
+<img style="width: 150px; height: auto; background-color: #1e1f20; padding: 10px; border-radius: 5px;" src="{{ logo_url }}" alt="Logo" />
