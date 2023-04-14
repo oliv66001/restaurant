@@ -1,27 +1,46 @@
-.btn{
-    background-color: var(--button-color);
-    color: var(--text-color);
-    font-family: Roboto;
-  }
-  
-  .btn2{
-    background-color: var(--button2-color);
-    color: var(--text-color);
-    font-family: Roboto;
-  }
-  
-  .btn3{
-    background-color: var(--button3-color);
-    color: var(--text-color);
-    font-family: Roboto;
-  }
-  
-  .btn .btn2 .btn3 :hover{
-    background-color: var(--hoverbtn-color);
-  }
+.btn, .btn2, .btn3, .btnTime {
+  background-color: var(--button-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
 
-  .btnTime{
-    background-color: var(--button-color);
-    color: var(--text-color);
-    font-family: Roboto;
-  }
+.btn:hover {
+  background-color: var(--hoverbtn-color);
+  color: var(--templates-color);
+}
+
+.btn2 {
+  background-color: var(--button2-color);
+}
+
+.btn2:hover {
+  background-color: var(--hoverbtn-color);
+  color: var(--templates-color);
+}
+
+.btn3 {
+  background-color: var(--button3-color);
+}
+
+.btn3:hover {
+  background-color: var(--hoverbtn-color);
+  color: var(--templates-color);
+}
+
+.btnTime {
+  background-color: var(--button-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+}
+
+.btnTime:hover {
+  background-color: var(--hoverbtn-color);
+  color: var(--templates-color);
+}

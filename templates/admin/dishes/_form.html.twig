@@ -16,7 +16,7 @@
 					{% for image in dishes.images %}
 						<div>
 							<img src=" {{ asset('assets/uploads/dishes/mini/300x300-' ~ image.name) }} " alt=" {{ dishes.name }} " width="150">
-							<a class="btn" href=" {{ path('admin_dishes_delete_image', {id: image.id, 'deleteDishe': false})}} " data-delete data-token=" {{ csrf_token('delete' ~ image.id) }} ">Supprimer</a>
+							<a class="btn" href=" {{ path('admin_dishes_delete_image', {id: image.id, 'deleteDishe': false})}} " data-delete data-type="image" data-token=" {{ csrf_token('delete' ~ image.id) }} ">Supprimer</a>
 						</div>
 					{% endfor %}
 

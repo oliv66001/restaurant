@@ -1,45 +1,43 @@
 <article class="container text-center" style="padding-top:80px">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-lg-6 col-sm-12">
-            <img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
-            <h1>Le Quai-Antique</h1>
-            <h3 class="titre2">Découvrez</br>
-            notre cuisine</br>
-        modèrne</h3>
-    </div>
-    <div class="col-lg-6 col-sm-12">
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                {% set firstImageShown = false %}
-                {% for category in category %}
-                    {% for dishe in category.dishes %}
-                        {% if dishe.images|length > 0 %}
-                            <div class="carousel-item{% if not firstImageShown %} active{% endif %}">
-                                <img src="{{ asset('assets/uploads/dishes/mini/300x300-') ~ dishe.images[0].name }}" class="d-block img-fluid rounded" alt="{{ dishe.name }}">
-                            </div>
-                            {% if not firstImageShown %}
-                                {% set firstImageShown = true %}
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-                
-                {% if not firstImageShown %}
-                    <div class="carousel-item active">
-                        <img src="{{ asset('assets/images/coupe de champagne.png') }}" class="d-block img-fluid rounded" alt="Image par défaut">
-                    </div>
-                {% endif %}
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
+	<div class="row h-100 justify-content-center align-items-center">
+		<div class="col-lg-6 col-sm-12">
+			<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+			<h1>Le Quai-Antique</h1>
+			<h3 class="titre2">Découvrez</br>
+			notre cuisine</br>
+		modèrne</h3>
 </div>
-</article>
-<hr>
+<div class="col-lg-6 col-sm-12">
+	<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+		<div class="carousel-inner">
+			{% set firstImageShown = false %}
+			{% for category in category|default([]) %}
+				{% for dishe in category.dishes %}
+					{% if dishe.images|length > 0 %}
+						<div class="carousel-item{% if not firstImageShown %} active{% endif %}">
+							<img src="{{ asset('assets/uploads/dishes/mini/300x300-') ~ dishe.images[0].name }}" class="d-block img-fluid rounded" alt="{{ dishe.name }}">
+						</div>
+						{% if not firstImageShown %}
+							{% set firstImageShown = true %}
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+
+			{% if not firstImageShown %}
+				<div class="carousel-item active">
+					<img src="{{ asset('assets/images/coupe de champagne.png') }}" class="d-block img-fluid rounded" alt="Image par défaut">
+				</div>
+			{% endif %}
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+</div></div></article><hr>

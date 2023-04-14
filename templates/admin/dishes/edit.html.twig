@@ -21,10 +21,10 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset('assets/js/dishes.js') }}" defer></script>
-<script src="{{ asset('assets/js/images.js') }}" defer></script>
-
+    {{ parent() }}
+    <script src="{{ asset('assets/js/delete.js') }}" defer></script>
 {% endblock %}
+
 
 
 

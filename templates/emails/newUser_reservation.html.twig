@@ -5,3 +5,6 @@
 <p>Date et heure de réservation : {{ reservation.start|date('d-m-Y H:i') }}</p>
 <p>Merci de votre confiance et à bientôt.</p>
 
+{% set logo_url = absolute_url(asset('https://crocobingo.fr/assets/images/Orange%20et%20Bordeaux%20Restaurant%20Logo.png')) %}
+<img style="width: 150px; height: auto; background-color: #1e1f20; padding: 10px; border-radius: 5px;" src="{{ logo_url }}" alt="Logo" />
+

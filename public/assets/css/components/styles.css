@@ -100,7 +100,6 @@ a.page-link:hover{
     background-color:var(--text-color);
     font-family: 'Roboto' , sans-serif;
     font-size: 20px;
-    color: var(--templates-color);
     text-align: center;
     border-color: var(--text-color);
 }
@@ -226,15 +225,15 @@ hr {
 .btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
+    background-color: var(--templates-color);
+    color: var(--text-color);
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 .btn:hover {
-    background-color: #555;
+    background-color: var(--hover-btn-color);
 }
 
 

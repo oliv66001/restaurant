@@ -89,4 +89,18 @@ public function countReservationsAtDateTime(\DateTimeInterface $dateTime): int
         ->getSingleScalarResult();
 }
 
+public function findReservationsStartingInNext24Hours(): array
+{
+    $now = new \DateTimeImmutable();
+    $in24Hours = $now->add(new \DateInterval('PT24H'));
+
+    return $this->createQueryBuilder('c')
+        ->andWhere('c.start >= :now')
+        ->andWhere('c.start <= :in24Hours')
+        ->setParameter('now', $now)
+        ->setParameter('in24Hours', $in24Hours)
+        ->getQuery()
+        ->getResult();
+}
+
 }

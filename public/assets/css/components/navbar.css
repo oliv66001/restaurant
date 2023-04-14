@@ -83,5 +83,14 @@ button.navbar-toggler span{
   transition: all 0.3s;
 }
 
+/*.navbar {
+  min-height: 80px;
+}
+
+.navbar .dropdown-menu {
+  margin-top: 0;
+}*/
+
+
 
 

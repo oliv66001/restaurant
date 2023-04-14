@@ -1,8 +1,8 @@
-let links = document.querySelectorAll("[data-delete]");
+let imageLinks = document.querySelectorAll("[data-delete][data-type='image']");
 
 
 // On boucle sur les liens
-for(let link of links){
+for(let link of imageLinks){
     //On met un écouteur d'évènements
     link.addEventListener("click", function(e){
         e.preventDefault();

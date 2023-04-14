@@ -1,4 +1,4 @@
-<nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary fixed-top mb-6">
+<nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
 	<div class="container">
 		<button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="menu-btn__line"></span>
@@ -18,7 +18,7 @@
 				</li>
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_calendar_new') }}">Réserver</a>
+						<a class="nav-link" href="{{ path('app_calendar_new') }}">Réserver/Mes réservations</a>
 					</li>
 				{% endif %}
 
@@ -57,19 +57,37 @@
 </nav>
 
 <script>
-	$(document).ready(function () {
-var navbar = $('#navbar');
+   $(document).ready(function () {
+    var navbar = $('#navbar');
+    var dropdownVisible = false;
 
-function checkNavbarVisibility() {
-if ($(window).scrollTop() === 0 || event.clientY <= 50) {
-navbar.fadeIn();
-} else {
-navbar.fadeOut();
-}
-}
+    function checkNavbarVisibility() {
+        if ($(window).scrollTop() === 0 || dropdownVisible || (event && event.clientY <= 80)) {
+            navbar.fadeIn();
+        } else {
+            navbar.fadeOut();
+        }
+    }
 
-checkNavbarVisibility(); // Vérifiez la visibilité de la barre de navigation au chargement de la page
-$(window).mousemove(checkNavbarVisibility); // Vérifiez la visibilité de la barre de navigation lors du déplacement de la souris
-$(window).scroll(checkNavbarVisibility); // Vérifiez la visibilité de la barre de navigation lors du défilement de la page
+    checkNavbarVisibility(); // Vérifiez la visibilité de la barre de navigation au chargement de la page
+    $(window).mousemove(function (event) {
+        checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du déplacement de la souris
+    });
+    $(window).scroll(function (event) {
+        checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du défilement de la page
+    });
+
+    // Ajoutez des écouteurs d'événements pour détecter l'ouverture et la fermeture du menu déroulant
+    $('body').on('show.bs.dropdown', function () {
+        dropdownVisible = true;
+        checkNavbarVisibility();
+    });
+
+    $('body').on('hide.bs.dropdown', function () {
+        dropdownVisible = false;
+        checkNavbarVisibility();
+    });
 });
+
 </script>
+

@@ -1,0 +1,30 @@
+<h1>Rappel de réservation</h1>
+
+    <h2>Bonjour Mr{{ user.lastname }},</h2>
+    <p>
+        C'est un rappel pour vous informer que vous avez une réservation au restaurant Le Quai Antique demain.
+    </p>
+    <p>
+        Détails de la réservation :
+    </p>
+    <ul>
+        <li>Date et heure : {{ reservation.start|date('d/m/Y H:i') }}</li>
+        <li>Nombre de personnes : {{ reservation.numberOfGuests }}</li>
+        {% if reservation.comment %}
+            <li>Commentaire : {{ reservation.comment }}</li>
+        {% endif %}
+    </ul>
+    <p>
+        Si vous avez besoin de modifier ou d'annuler votre réservation, veuillez nous contacter dès que possible.
+    </p>
+    <p>
+        Nous vous remercions de votre confiance et avons hâte de vous accueillir au restaurant Le Quai Antique.
+    </p>
+    <p>
+        Cordialement,<br>
+        L'équipe du Quai Antique
+    </p>
+
+    {% set logo_url = absolute_url(asset('https://crocobingo.fr/assets/images/Orange%20et%20Bordeaux%20Restaurant%20Logo.png')) %}
+<img style="width: 150px; height: auto; background-color: #1e1f20; padding: 10px; border-radius: 5px;" src="{{ logo_url }}" alt="Logo" />
+

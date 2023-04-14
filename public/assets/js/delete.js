@@ -1,10 +1,14 @@
-let productLinks = document.querySelectorAll("[data-delete][data-type='product']");
+let deleteLinks = document.querySelectorAll("[data-delete]");
 
-for (let link of productLinks) {
+for (let link of deleteLinks) {
     link.addEventListener("click", function (e) {
         e.preventDefault();
 
-        if (confirm("Voulez-vous supprimer ce produit ?")) {
+        let dataType = this.dataset.type;
+        let confirmMessage = dataType === "product" ? "Voulez-vous supprimer ce produit ?" : "Voulez-vous supprimer cette image ?";
+        let route = dataType === "product" ? "/admin/dishes" : "";
+
+        if (confirm(confirmMessage)) {
             fetch(this.getAttribute("href"), {
                 method: "DELETE",
                 headers: {
@@ -18,10 +22,12 @@ for (let link of productLinks) {
                 if (data.success) {
                     this.parentElement.remove();
 
-                      // Afficher le message flash
-                    alert(data.message);
-                    // Redirection vers la route 'admin_dishes_index'
-                    window.location.href = '/admin/dishes';
+                    if (dataType === "product") {
+                        // Afficher le message flash
+                        alert(data.message);
+                        // Redirection vers la route 'admin_dishes_index'
+                        window.location.href = route;
+                    }
                 } else {
                     alert(data.error);
                 }
