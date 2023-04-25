@@ -8,6 +8,7 @@ use App\Form\UsersFormType;
 use App\Form\ProfileFormType;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,11 +22,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ProfileController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(CalendarRepository $calendarRepository): Response
+    public function index(CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository): Response
     {
+        
+        $business_hours = $businessHoursRepository->findAll();
         return $this->render('profile/index.html.twig', [
             'calendars' => $calendarRepository->findBy([
                 'name' => $this->getUser(),
+                'business_hours' => $business_hours,
             ]),
         ]);
     }
@@ -65,7 +69,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/edit.html.twig', [
-
+            'business_hours' => $this->business_hours,
             'profileForm' => $profileForm->createView(),
 
         ]);

@@ -4,24 +4,28 @@ namespace App\Controller;
 
 use Exception;
 use App\Entity\Contact;
+use Psr\Log\LoggerInterface;
 use App\Form\ContactFormType;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Psr\Log\LoggerInterface;
 
 class ContactController extends AbstractController
 {
+    
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request, EntityManagerInterface $em, SendMailService $sendMailService, LoggerInterface $logger): Response
+    public function index(Request $request, EntityManagerInterface $em, SendMailService $sendMailService, LoggerInterface $logger, BusinessHoursRepository $businessHoursRepository): Response
     {
+        
         $contact = new Contact();
         $form = $this->createForm(ContactFormType::class, $contact);
         $form->handleRequest($request);
         $session = $request->getSession();
+        $business_hours = $businessHoursRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contact->setCreatedAt(new \DateTimeImmutable());
@@ -47,6 +51,7 @@ class ContactController extends AbstractController
 
         return $this->render('contact/index.html.twig', [
             'controller_name' => 'ContactController',
+            'business_hours' => $business_hours,
             'form' => $form->createView()
         ]);
     }

@@ -39,6 +39,13 @@ class CategoriesFormType extends AbstractType
                 ],
                 'label' => 'Parent',
             ])
+
+            ->add('image', FileType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+                'label' => 'Image',
+            ])
         
 
         ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {

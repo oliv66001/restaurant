@@ -73,7 +73,7 @@ class DishesFormType extends AbstractType
                 'constraints' => [
                     new All(
                         new Image([
-                            'maxWidth' => 1280,
+                            'maxWidth' => 3000,
                             'maxWidthMessage' => 'L\'image doit faire {{ max_width }} pixels de large au maximum'
                 ])
                 )

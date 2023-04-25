@@ -2,32 +2,37 @@
 
 namespace App\Controller;
 
-use App\Form\ResetPasswordRequestFormType;
+use App\Service\SendMailService;
 use App\Form\ResetPasswordFormType;
 use App\Repository\UsersRepository;
-use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\ResetPasswordRequestFormType;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
+    
     #[Route(path: '/connexion', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+   
+    public function login(AuthenticationUtils $authenticationUtils, BusinessHoursRepository $businessHoursRepository): Response
     {
 
+        $business_hours = $businessHoursRepository->findAll();
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
+            'business_hours' => $business_hours,
             'last_username' => $lastUsername, 
             'error' => $error
         ]);

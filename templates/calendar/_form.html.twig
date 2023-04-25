@@ -1,16 +1,17 @@
-
 <section class="container">
 <div class="row justify-content-center">
 <div class="col-md-12">
 {{ form_start(form) }}
    <div class="col-md-12 text-center">
-    {{ form_row(form.start) }} <!-- Sélecteur de date -->
+    {{ form_row(form.start) }} 
    <div class="col-md-12 text-center mt-3">
-    {{ form_row(form.numberOfGuests) }} <!-- Sélecteur de date -->
+    {{ form_row(form.numberOfGuests) }}
     <div class="col-md-12 text-center mt-3">
-     {{ form_row(form.name) }} <!-- Sélecteur de date -->
+     {{ form_row(form.name) }} 
+    <div class="col-md-12 text-center mt-3">
+     {{ form_row(form.allergie) }} 
    
-    <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+    <button class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
     </div>
 {{ form_end(form) }}
 </div>

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier les heures d'ouverture
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier les heures d'ouverture</h1>
+	<section class="container">
+		<div class="row justify-content-center">
+			<div class="col-6">
+				{{ form_start(form) }}
+				{{ form_widget(form) }}
+				<button class="btn btn3 mt-3" type="submit">
+					Sauvegarder les modifications
+				</button>
+				{{ form_end(form) }}
+
+				<a class="btn btn mt-3" href="{{ path('admin_business_hours_index') }}">Retour à la liste</a>
+			</div>
+		</div>
+	</section>
+{% endblock %}

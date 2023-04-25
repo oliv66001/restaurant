@@ -42,11 +42,11 @@ class UsersFixtures extends Fixture
 
          for ($usr =1; $usr <= 5; $usr++) {
             $user = new Users();
-            $user->setEmail($faker->email);
-            $user->setResetToken($faker->uuid);
-            $user->setLastName($faker->lastName);
-            $user->setFirstname($faker->firstName);
-            $user->setPhone(str_replace(' ', '', $faker->phoneNumber));
+            $user->setEmail($faker->email());
+            $user->setResetToken($faker->uuid());
+            $user->setLastName($faker->lastName());
+            $user->setFirstname($faker->firstName());
+            $user->setPhone(str_replace(' ', '', $faker->phoneNumber()));
             $user->setPassword($this->passwordEncoder->hashPassword($user, 'user'));
             $manager->persist($user);
          }

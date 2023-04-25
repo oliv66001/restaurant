@@ -33,10 +33,12 @@
 							</a>
 							<div class="dropdown-menu">
 								{% if is_granted('ROLE_DISHES_ADMIN') %}
-									 <a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
-                        <a class="dropdown-item" href="{{ path('admin_reservation') }}">Calendrier des<br> réservations</a>
-						 <a class="dropdown-item" href="{{ path('app_calendar_index') }}">Tableau des<br> réservations</a>
-                        <div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="{{ path('admin_index') }}">Administration</a>
+									<a class="dropdown-item" href="{{ path('admin_reservation') }}">Calendrier des<br>
+										réservations</a>
+									<a class="dropdown-item" href="{{ path('app_calendar_index') }}">Tableau des<br>
+										réservations</a>
+									<div class="dropdown-divider"></div>
 								{% endif %}
 								<a class="dropdown-item" href="{{ path('app_profil_index') }}">Compte</a>
 								<a class="dropdown-item" href="{{ path('app_logout') }}">Me déconnecter</a>
@@ -56,38 +58,37 @@
 	</div>
 </nav>
 
+
 <script>
-   $(document).ready(function () {
-    var navbar = $('#navbar');
-    var dropdownVisible = false;
+	$(document).ready(function () {
+var navbar = $('#navbar');
+var dropdownVisible = false;
 
-    function checkNavbarVisibility() {
-        if ($(window).scrollTop() === 0 || dropdownVisible || (event && event.clientY <= 80)) {
-            navbar.fadeIn();
-        } else {
-            navbar.fadeOut();
-        }
-    }
+function checkNavbarVisibility() {
+if ($(window).scrollTop() === 0 || dropdownVisible || (event && event.clientY <= 80)) {
+navbar.fadeIn();
+} else {
+navbar.fadeOut();
+}
+}
 
-    checkNavbarVisibility(); // Vérifiez la visibilité de la barre de navigation au chargement de la page
-    $(window).mousemove(function (event) {
-        checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du déplacement de la souris
-    });
-    $(window).scroll(function (event) {
-        checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du défilement de la page
-    });
-
-    // Ajoutez des écouteurs d'événements pour détecter l'ouverture et la fermeture du menu déroulant
-    $('body').on('show.bs.dropdown', function () {
-        dropdownVisible = true;
-        checkNavbarVisibility();
-    });
-
-    $('body').on('hide.bs.dropdown', function () {
-        dropdownVisible = false;
-        checkNavbarVisibility();
-    });
+checkNavbarVisibility(); // Vérifiez la visibilité de la barre de navigation au chargement de la page
+$(window).mousemove(function (event) {
+checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du déplacement de la souris
+});
+$(window).scroll(function (event) {
+checkNavbarVisibility(event); // Vérifiez la visibilité de la barre de navigation lors du défilement de la page
 });
 
-</script>
+// Ajoutez des écouteurs d'événements pour détecter l'ouverture et la fermeture du menu déroulant
+$('body').on('show.bs.dropdown', function () {
+dropdownVisible = true;
+checkNavbarVisibility();
+});
 
+$('body').on('hide.bs.dropdown', function () {
+dropdownVisible = false;
+checkNavbarVisibility();
+});
+});
+</script>

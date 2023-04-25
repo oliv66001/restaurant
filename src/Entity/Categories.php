@@ -37,8 +37,6 @@ class Categories
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Dishes::class)]
     private $dishes;
 
-   
-
     public function __construct()
     {
         $this->categories = new ArrayCollection();

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Horaires d'ouverture{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row">
+    {% include "_partials/_adminnav.html.twig" %}
+    <div class="col-9">
+    <h1>Horaires d'ouverture</h1>
+    <table class="table">
+        <thead class="text-center">
+            <tr>
+                <th>Jour</th>
+                <th>Ouvert de</th>
+                <th>à</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hour in hours %}
+             <tr>
+                <td>{{ hour.day }}</td>
+                <td>{{ hour.openTime }}</td>
+                <td>{{ hour.closeTime }}</td>
+                <td>
+                  <a class="btn btn3" href="{{ path('admin_business_hours_edit', {'id': hour.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+

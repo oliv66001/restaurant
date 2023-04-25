@@ -39,6 +39,11 @@ class CategoriesFixtures extends Fixture
 
         $this->createCategory('Boissons', $parent, 13, $manager);
         $this->createCategory('Vins et spiritieux', $parent, 14, $manager);
+
+        $parent = $this->createCategory('Images d\'accueil', null, 15, $manager);
+
+        $this->createCategory('Top image', $parent, 16, $manager);
+        $this->createCategory('Bottom image', $parent, 17, $manager);
         $manager->flush();
     }
 
