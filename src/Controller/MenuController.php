@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MenuController extends AbstractController
 {
     #[Route("/menus/{page}", name:"menu_index", requirements: ['page' => '\d+'])]
-    public function index(int $page = 1, MenuRepository $menuRepository, BusinessHoursRepository $businessHoursRepository): Response
+    public function index(MenuRepository $menuRepository, BusinessHoursRepository $businessHoursRepository, int $page = 1): Response
 {
     $menusPerPage = 1; // Nombre de menus à afficher par page
     $menus = $menuRepository->findWithPagination($page, $menusPerPage); // Récupère les menus paginés

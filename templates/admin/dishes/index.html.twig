@@ -25,7 +25,11 @@
 						<tr class="text-center">
 
 
-							<td><img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail"></td>
+							<td> {% if dishe.images|length > 0 %}
+                                    <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" width:'300px' height:'300px' alt="Image par défaut" class="img-thumbnail">
+                                {% endif %}</td>
 
 							<td class="align-middle">{{ dishe.name }}</td>
 							<td class="align-middle">{{ dishe.price }}€</td>

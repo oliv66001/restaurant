@@ -47,7 +47,12 @@ class MenuFormType extends AbstractType
                 'expanded' => true,
                 'choice_label' => 'name',
                 'label' => 'Plats du menu',
+                'attr' => ['class' => 'dishes-list'],
+                'choice_attr' => function() { // Ajoutez ces lignes
+                    return ['class' => 'col-md-4'];
+                },
             ])
+            
         ;
     }
 

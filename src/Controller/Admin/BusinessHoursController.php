@@ -25,7 +25,7 @@ class BusinessHoursController extends AbstractController
     }
 
 
-    #[Route("/", name: "admin_business_hours_index")]
+    #[Route("/", name: "index")]
 
     public function index(): Response
     {
@@ -39,7 +39,7 @@ class BusinessHoursController extends AbstractController
 
 
     // Ajoutez {id} à la route pour accepter l'identifiant en tant que paramètre
-    #[Route("/edit/{id}", name: "admin_business_hours_edit", methods: ["GET", "POST"])]
+    #[Route("/edit/{id}", name: "edit", methods: ["GET", "POST"])]
 
     public function edit(Request $request, int $id): Response
     {
