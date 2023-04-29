@@ -1,57 +1,72 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Liste des menus
+    Liste des menus
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<div class="row">
-			<main class="col-12">
-				<h1 class="text-center">Liste des menus</h1>
-				<table class="table">
-					<thead>
-						<tr class="text-center">
-							<th>Nom</th>
-							<th>Description</th>
-							<th>Image</th>
-							<th>Prix en €</th>
-							<th>Details</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					{% for menu in menus %}
-						<tr
-							class="text-center">
-							{# Affichez la première image du premier plat dans le menu #}
-							<td class="align-middle">{{ menu.name }}</td>
-							<td class="align-middle">{{ menu.description }}</td>
-							<td><img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ menu.dishes[0].images[0].name ) }}" alt="{{ menu.dishes[0].name }}" class="img-thumbnail"></td>
-							<td class="align-middle">{{ menu.price }}€</td>
-							<td class="align-middle">
-								<a type="button" href="{{ path('menu_show', {id: menu.id}) }}" class="btn btn mt-3">Voir</a>
-							</td>
-							<td class="align-middle">
-								{% if app.user %}
-									<a type="button" href="{{ path('app_calendar_new') }}" class="btn btn mt-3">Réserver</a>
-								{% else %}
-									<p>Connectez-vous pour réserver</p>
-									<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
-									<a type="button" href="{{ path('app_register') }}" class="btn mt-3">S'inscrire</a>
-								{% endif %}
-							</td>
-						</tr>
-					{% endfor %}
-				</table>
-
-				{% include "_partials/_pagination.html.twig" with {
-                    'path': 'menu_index',
-                    'slug': null,
-                    'pages': totalPages,
-                    'currentPage': currentPage,
-                } %}
-
-			</main>
-		</div>
-	</div>
+    <div class="container">
+        <h1 class="text-center">Liste des menus</h1>
+        <div class="row text-center d-none d-md-flex">
+            <div class="col-md-2">
+                <h4>Nom</h4>
+            </div>
+            <div class="col-md-3">
+                <h4>Description</h4>
+            </div>
+            <div class="col-md-2">
+                <h4>Image</h4>
+            </div>
+            <div class="col-md-1">
+                <h4>Prix en €</h4>
+            </div>
+            <div class="col-md-2">
+                <h4>Détails</h4>
+            </div>
+            <div class="col-md-2">
+                <h4>Actions</h4>
+            </div>
+        </div>
+        {% for menu in menus %}
+            <div class="row text-center mb-4 border-bottom pb-4">
+                <div class="col-12 col-md-2 align-self-center">
+                    <h4 class="d-md-none">Nom :</h4>
+                    <h3>{{ menu.name }}</h3>
+                </div>
+                <div class="col-12 col-md-3 align-self-center">
+                    <h4 class="d-md-none">Description :</h4>
+                    <p>{{ menu.description }}</p>
+                </div>
+                <div class="col-12 col-md-2">
+                    <h4 class="d-md-none">Image :</h4>
+                    <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ menu.dishes[0].images[0].name ) }}"
+                         alt="{{ menu.dishes[0].name }}" class="img-thumbnail">
+                </div>
+                <div class="col-12 col-md-1 align-self-center">
+                    <h4 class="d-md-none">Prix en € :</h4>
+                    <p>{{ menu.price }}€</p>
+                </div>
+                <div class="col-12 col-md-2 align-self-center">
+                    <h4 class="d-md-none">Détails :</h4>
+                    <a type="button" href="{{ path('menu_show', {id: menu.id}) }}" class="btn btn mt-3">Voir</a>
+                </div>
+                <div class="col-12 col-md-2 align-self-center">
+                    <h4 class="d-md-none">Actions :</h4>
+                    {% if app.user %}
+                        <a type="button" href="{{ path('app_calendar_new') }}" class="btn btn mt-3">Réserver</a>
+                    {% else %}
+                        <p>Connectez-vous pour réserver</p>
+                        <a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
+                        <a type="button" href="{{ path('app_register') }}" class="btn mt-3">S'inscrire</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        {% include "_partials/_pagination.html.twig" with {
+            'path': 'menu_index',
+            'slug': null,
+            'pages': totalPages,
+            'currentPage': currentPage,
+        } %}
+    </div>
 {% endblock %}

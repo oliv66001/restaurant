@@ -9,11 +9,12 @@
 		<div class="row justify-content-center">
 
 			{% include "_partials/_adminnav.html.twig" %}
-			<main class="col-12 ">
+			<main class="col-12">
 				<h1 class="text-center">Liste des menus</h1>
 				<table class="table">
 					<thead class="text-center">
 						<tr class="text-center">
+						<th>Image</th>
 							<th>Nom</th>
 							<th>Description</th>
 							<th>Prix en €</th>
@@ -23,7 +24,11 @@
 					{% for menu in menus %}
 						<tr class="text-center">
 							{# Ajoutez cette ligne pour afficher la première image de chaque plat dans le menu #}
-							<td><img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ menu.dishes[0].images[0].name ) }}" alt="{{ menu.dishes[0].name }}" class="img-thumbnail"></td>
+							<td> {% if dishe.images|length > 0 %}
+                                    <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="Image par défaut" class="img-thumbnail">
+                                {% endif %}</td>
 
 							<td class="align-middle">{{ menu.name }}</td>
 							<td class="align-middle">{{ menu.description }}</td>

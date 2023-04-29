@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Menu;
+use App\Entity\Dishes;
 use App\Form\MenuFormType;
 use App\Repository\MenuRepository;
 use App\Repository\CategoriesRepository;
@@ -16,6 +17,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/admin/menus', name: 'admin_menus_')]
 class MenuController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'index')]
     public function index(Request $request, MenuRepository $menuRepository): Response
     {
@@ -29,10 +37,24 @@ class MenuController extends AbstractController
         $menu = new Menu();
 
         $categories = $categoriesRepository->findAll();
+        $dishes = $this->entityManager->getRepository(Dishes::class)->findAll();
         $form = $this->createForm(MenuFormType::class, $menu);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $groupedDishes = [];
+        foreach ($dishes as $dish) {
+            $category = $dish->getCategories()->getName();
+            if (!isset($groupedDishes[$category])) {
+                $groupedDishes[$category] = [];
+            }
+            $groupedDishes[$category][] = $dish;
+        }
+
+        // Créer et gérer le formulaire
+        $menuForm = $this->createForm(MenuFormType::class);
+        $menuForm->handleRequest($request);
+
+        if ($menuForm->isSubmitted() && $menuForm->isValid()) {
             $em->persist($menu);
             $em->flush();
 
@@ -43,16 +65,28 @@ class MenuController extends AbstractController
 
         return $this->render('admin/menus/add.html.twig', [
             'menuForm' => $form->createView(),
+            'groupedDishes' => $groupedDishes,
             'categories' => $categories,
         ]);
     }
 
-    #[Route("/edit/{id}", name:"edit", methods:["GET", "POST"])]
+    #[Route("/edit/{id}", name: "edit", methods: ["GET", "POST"])]
 
-    public function edit(Request $request, Menu $menu, EntityManagerInterface $em): Response
+    public function edit(Request $request, Menu $menu, EntityManagerInterface $em, CategoriesRepository $categoriesRepository): Response
     {
+        $categories = $categoriesRepository->findAll();
         $form = $this->createForm(MenuFormType::class, $menu);
         $form->handleRequest($request);
+        $dishes = $this->entityManager->getRepository(Dishes::class)->findAll();
+        $groupedDishes = [];
+        foreach ($dishes as $dish) {
+            $category = $dish->getCategories()->getName();
+            if (!isset($groupedDishes[$category])) {
+                $groupedDishes[$category] = [];
+            }
+            $groupedDishes[$category][] = $dish;
+        }
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
@@ -65,12 +99,14 @@ class MenuController extends AbstractController
         return $this->render('admin/menus/edit.html.twig', [
             'menu' => $menu,
             'menuForm' => $form->createView(),
+            'groupedDishes' => $groupedDishes,
+            'categories' => $categories,
         ]);
     }
-   
-    #[Route("/delete/{id}", name:"delete", methods:["DELETE"])]
 
-    public function delete(Request $request, Menu $menu, EntityManagerInterface $em): Response
+    #[Route("/delete/{id}", name: "delete_menu", methods: ["DELETE"])]
+
+    public function deleteMenu(Request $request, Menu $menu, EntityManagerInterface $em): Response
     {
         $data = json_decode($request->getContent(), true);
 
