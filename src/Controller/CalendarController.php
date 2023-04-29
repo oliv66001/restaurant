@@ -8,6 +8,7 @@ use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UsersRepository;
 use App\Repository\CalendarRepository;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CalendarController extends AbstractController
 {
     #[Route('/', name: 'app_calendar_index', methods: ['GET'])]
+   
     public function index(CalendarRepository $calendarRepository): Response
     {
         $user = $this->getUser();
@@ -35,9 +37,11 @@ class CalendarController extends AbstractController
         ]);
     }
 
+   
     #[Route('/new', name: 'app_calendar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CalendarRepository $calendarRepository, Security $security, MailerInterface $mailer): Response
+    public function new(Request $request, CalendarRepository $calendarRepository, Security $security, MailerInterface $mailer, BusinessHoursRepository $businessHoursRepository): Response
     {
+        $business_hours = $businessHoursRepository->findAll();
         $user = $security->getUser();
         $userId = $user->getId();
         $calendar = new Calendar();
@@ -45,6 +49,7 @@ class CalendarController extends AbstractController
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
 
+        
         $existingReservations = $calendarRepository->findByUserOrAll($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -90,6 +95,7 @@ class CalendarController extends AbstractController
 
         return $this->render('calendar/new.html.twig', [
             'calendar' => $calendar,
+            'business_hours' => $business_hours,
             'form' => $form->createView(),
             'existingReservations' => $existingReservations,
         ]);
@@ -97,8 +103,9 @@ class CalendarController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_calendar_show', methods: ['GET'])]
-    public function show(Calendar $calendar): Response
+    public function show(Calendar $calendar, BusinessHoursRepository $businessHoursRepository): Response
     {
+        $business_hours = $businessHoursRepository->findAll();
         $dateFormatter = new IntlDateFormatter(
             'fr_FR',
             IntlDateFormatter::SHORT,
@@ -108,6 +115,7 @@ class CalendarController extends AbstractController
         $formattedStartDate = $dateFormatter->format($calendar->getStart());
 
         return $this->render('calendar/show.html.twig', [
+            'business_hours' => $business_hours,
             'calendar' => $calendar,
             'formattedStartDate' => $formattedStartDate,
         ]);

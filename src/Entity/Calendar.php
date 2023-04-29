@@ -31,6 +31,12 @@ class Calendar
     #[Assert\Positive(message: 'Le nombre de personnes doit être supérieur à 0')]
     private ?int $numberOfGuests = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $allergie = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $allergieOfGuests = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,4 +79,52 @@ class Calendar
     }
 
     
+
+    /**
+     * Get the value of allergie
+     *
+     * @return ?string
+     */
+    public function getAllergie(): ?string
+    {
+        return $this->allergie;
+    }
+
+    /**
+     * Set the value of allergie
+     *
+     * @param ?string $allergie
+     *
+     * @return self
+     */
+    public function setAllergie(?string $allergie): self
+    {
+        $this->allergie = $allergie;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of allergieOfGuests
+     *
+     * @return ?string
+     */
+    public function getAllergieOfGuests(): ?string
+    {
+        return $this->allergieOfGuests;
+    }
+
+    /**
+     * Set the value of allergieOfGuests
+     *
+     * @param ?string $allergieOfGuests
+     *
+     * @return self
+     */
+    public function setAllergieOfGuests(?string $allergieOfGuests): self
+    {
+        $this->allergieOfGuests = $allergieOfGuests;
+
+        return $this;
+    }
 }

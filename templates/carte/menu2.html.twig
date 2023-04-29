@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Le Quai-Antique | Menu 2
+{% endblock %}
+
+{% block body %}
+{% set menu = { 'name': 'Menu 2', 'entrées': 3, 'plats': 3, 'desserts': 3 } %}
+
+{% include 'menu_template.html.twig' with { 'menu': menu, 'categories': category } %}
+{% endblock %}

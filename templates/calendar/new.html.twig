@@ -11,12 +11,15 @@
         <h3>Vos réservations existantes :</h3>
         {% include 'calendar/reservation_list.html.twig' %}
     {% endif %}
-   
 
-
-    {{ include('calendar/_form.html.twig') }}
+   {{ include('calendar/_form.html.twig') }}
+    {#{% if remainingReservations %}
+    <div class="alert alert-info">
+        Il reste {{ remainingReservations }} place(s) de réservation pour cette date et heure.
+    </div>
+{% endif %}#}
 <div class="mt-3">
-        <a class="btn btn" href="{{ path('app_calendar_index') }}">Retour</a>
+        <a class="btn btn mt-3" href="{{ path('app_calendar_index') }}">Retour</a>
         </div>
    </div>
 

@@ -7,3 +7,23 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+admin_business_hours_index:
+    path: /admin/business-hours
+    controller: App\Controller\Admin\BusinessHoursController::indexBusinessHours
+
+admin_business_hours_edit:
+    path: /admin/business-hours/edit/{id}
+    controller: App\Controller\Admin\BusinessHoursController::editBusinessHours
+    methods: ['GET', 'POST']
+
+footer_data:
+  path: /footer-data
+  controller: App\Controller\AdminController::footerData
+
+app_calendar_index:
+    path: /calendar
+    controller: App\Controller\CalendarController::index
+
+
+

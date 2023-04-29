@@ -1,0 +1,33 @@
+<article class="container-fluid text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-sm-12">
+
+            <section class="container" id="carte">
+                <div>
+                    <h1>{{ menu.name }}<br/> Le Quai-Antique</h1>
+                </div>
+
+                {% for menu_category, menu_limit in menu|slice(1) %}
+                    {% set dishes_displayed = 0 %}
+                    {% for category in categories %}
+                        {% if 'entrées' in menu_category and category.name == 'Entrées' %}
+                            {% for dishes in category.dishes %}
+                                {% if dishes_displayed < menu_limit %}
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 px-20">
+                                            <h3>{{ dishes.name }}</h3>
+                                            <p class="text-center px-50">{{ dishes.description }}</p>
+                                            <p class="price">{{ dishes.price }} €</p>
+                                        </div>
+                                    </div>
+                                    {% set dishes_displayed = dishes_displayed + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        {% elseif 'plats' in menu_category and category.name == 'Plats' %}
+                            {% for dishes in category.dishes %}
+                                {% if dishes_displayed < menu_limit %}
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 px-20">
+                                            <h3>{{ dishes.name }}</h3>
+                                            <p class="text-center px-50">{{ dishes.description }}</p>
+                                            <p class="price">{{ dishes.price }} €</p>

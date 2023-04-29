@@ -1,8 +1,9 @@
 
 <h1>Nouvelle réservation</h1>
-<p>Bonjour {{ reservation.name.firstname }},</p>
+<p>Bonjour Mr{{ reservation.name.lastname.firstname }},</p>
 <p>Votre réservation a été créée avec succès.</p>
 <p>Date et heure de réservation : {{ reservation.start|date('d-m-Y H:i') }}</p>
+ <li>Nombre de personnes : {{ reservation.numberOfGuests }}</li>
 <p>Merci de votre confiance et à bientôt.</p>
 
 {% set logo_url = absolute_url(asset('https://crocobingo.fr/assets/images/Orange%20et%20Bordeaux%20Restaurant%20Logo.png')) %}

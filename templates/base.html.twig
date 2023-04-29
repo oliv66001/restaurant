@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang:"fr-FR">
+<html lang:"fr-fr">
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -7,7 +7,7 @@
 			{% endblock %}
 		</title>
 		<link rel="icon" href="/assets/images/Orange et Bordeaux Restaurant Logo.png">
-		<meta name="google-site-verification" content="9RV_qmYuHq6ZNH21m_dtUJeyO0UuinSKiygTNh0o8mU" />
+		<meta name="google-site-verification" content="9RV_qmYuHq6ZNH21m_dtUJeyO0UuinSKiygTNh0o8mU"/>
 		<meta
 		name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -54,6 +54,8 @@
 
 		{% block body %}{% endblock %}
 
-		{% include "_partials/_footer.html.twig" %}
+		{% include '_partials/_footer.html.twig' with {'opening_hours': business_hours} %}
+		{#{% include '_partials/_footer.html.twig' with {'business_hours': app.request.attributes.get('business_hours')} %}#}
+
 	</body>
 </html>

@@ -7,6 +7,7 @@ use TimeInterval;
 use DateTimeInterface;
 use IntlDateFormatter;
 use App\Entity\Calendar;
+use App\Validator\Constraints\NotMonday;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class CalendarType extends AbstractType
@@ -28,12 +30,13 @@ class CalendarType extends AbstractType
         $this->security = $security;
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Récupérer l'utilisateur connecté
         $current_user_id = $this->security->getUser();
         $current_user_name = $current_user_id ? $current_user_id->getLastname() : null;
+        $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
+
 
         $builder
             ->add('start', DateTimeType::class, [
@@ -41,8 +44,8 @@ class CalendarType extends AbstractType
                 'widget' => 'choice',
                 'model_timezone' => 'Europe/Paris',
                 'years' => range(date('Y'), date('Y') + 1),
-                'hours' => [12, 13, 14, 19, 20, 21, 22],
-                'minutes' => [0, 30],
+                'hours' => [12, 13, 14, 19, 20, 21],
+                'minutes' => [0, 15, 30, 45],
                 'attr' => [
                     'class' => 'js-datepicker',
                     'id' => 'calendar_date',
@@ -63,6 +66,7 @@ class CalendarType extends AbstractType
                         'value' => new \DateTime('today'),
                         'message' => 'L\'heure de début doit être supérieure à l\'heure actuelle',
                     ]),
+                    new NotMonday(),
                 ]
                 
             ])
@@ -81,6 +85,18 @@ class CalendarType extends AbstractType
                     ]),
                 ]
             ])
+            ->add('allergie', TextareaType::class, [
+                
+                'attr' => [
+                    'class' => 'form-control'
+                    
+                ],
+                'label' => 'Allergie',
+                'required' => false,
+                'data' => $current_user_allergies,
+                
+            ])
+            
             ->add('name', TextType::class, [
                 'label' => 'Nom : ',
                 'data' => $current_user_name,
