@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CalendarRepository::class)]
 class Calendar
 {
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -36,6 +37,13 @@ class Calendar
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $allergieOfGuests = null;
+
+    #[ORM\Column]
+
+    private ?int $availablePlaces = null;
+
+
+
 
     public function getId(): ?int
     {
@@ -124,6 +132,30 @@ class Calendar
     public function setAllergieOfGuests(?string $allergieOfGuests): self
     {
         $this->allergieOfGuests = $allergieOfGuests;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of availablePlaces
+     *
+     * @return ?int
+     */
+    public function getAvailablePlaces(): ?int
+    {
+        return $this->availablePlaces;
+    }
+
+    /**
+     * Set the value of availablePlaces
+     *
+     * @param ?int $availablePlaces
+     *
+     * @return self
+     */
+    public function setAvailablePlaces(?int $availablePlaces): self
+    {
+        $this->availablePlaces = $availablePlaces;
 
         return $this;
     }

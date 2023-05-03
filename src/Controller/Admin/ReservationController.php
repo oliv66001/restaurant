@@ -29,6 +29,7 @@ class ReservationController extends AbstractController
 
             $rdvs[] = [
                 'id' => $event->getId(),
+                'name' => $event->getName()->getId(),
                 'start' => $startDate->format('Y-m-d\TH:i:s'),
                 'end' => $endDate->format('Y-m-d\TH:i:s'),
                 'title' => $event->getName()->getFirstName().' '.$event->getName()->getLastName(),

@@ -25,10 +25,14 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 class CalendarType extends AbstractType
 {
     private $security;
+    
     public function __construct(Security $security)
     {
         $this->security = $security;
+        
     }
+
+   
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -36,6 +40,7 @@ class CalendarType extends AbstractType
         $current_user_id = $this->security->getUser();
         $current_user_name = $current_user_id ? $current_user_id->getLastname() : null;
         $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
+
 
 
         $builder
@@ -68,12 +73,27 @@ class CalendarType extends AbstractType
                     ]),
                     new NotMonday(),
                 ]
-                
+
             ])
 
-            ->add('numberOfGuests', IntegerType::class, [
+            ->add('numberOfGuests', ChoiceType::class, [
                 'label' => 'Nombre de personnes : ',
-
+                'choices' => [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    
+                ],
                 'required' => true,
                 'constraints' => [
                     new Range([
@@ -85,18 +105,29 @@ class CalendarType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('allergie', TextareaType::class, [
+
+            ->add('allergie', TextType::class, [
+                'label' => 'Allergie : ',
+                'data' => $current_user_allergies,
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'form-group',
+                    'required' => false,
+                ],
                 
+
+            ])
+
+            ->add('allergieOfGuests', TextareaType::class, [
+                'label' => 'Allergie des invités : ',
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control'
-                    
+
                 ],
-                'label' => 'Allergie',
-                'required' => false,
-                'data' => $current_user_allergies,
                 
             ])
-            
+
             ->add('name', TextType::class, [
                 'label' => 'Nom : ',
                 'data' => $current_user_name,

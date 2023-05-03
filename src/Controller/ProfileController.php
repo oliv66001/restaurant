@@ -27,9 +27,10 @@ class ProfileController extends AbstractController
         
         $business_hours = $businessHoursRepository->findAll();
         return $this->render('profile/index.html.twig', [
+            'business_hours' => $business_hours,
             'calendars' => $calendarRepository->findBy([
                 'name' => $this->getUser(),
-                'business_hours' => $business_hours,
+                
             ]),
         ]);
     }
@@ -40,8 +41,9 @@ class ProfileController extends AbstractController
         Users $users,
         Request $request,
         EntityManagerInterface $em,
-        UserInterface $currentUser
+        UserInterface $currentUser, BusinessHoursRepository $businessHoursRepository
     ): Response {
+        $business_hours = $businessHoursRepository->findAll();
         if ($users !== $currentUser) {
             // Vous pouvez renvoyer une erreur 403 ou rediriger l'utilisateur vers une autre page
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier le profil d\'un autre utilisateur.');
@@ -69,7 +71,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/edit.html.twig', [
-            'business_hours' => $this->business_hours,
+            'business_hours' => $business_hours,
             'profileForm' => $profileForm->createView(),
 
         ]);

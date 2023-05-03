@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
+use App\Repository\CategoriesRepository;
 use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +35,9 @@ class MenuController extends AbstractController
 public function show(Menu $menu, BusinessHoursRepository $businessHoursRepository): Response
 {
     $business_hours = $businessHoursRepository->findAll();
+    
+   
+
     return $this->render('menu/show.html.twig', [
         'business_hours' => $business_hours,
         'menu' => $menu,

@@ -1,40 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réservation{% endblock %}
+{% block title %}Réservation
+{% endblock %}
 
 {% block body %}
-    <h1 class="text-center">Réserver une table</h1>
-<div class="text-center">
+	<h1 class="text-center">Réserver une table</h1>
+	<div
+		class="text-center">
 
-    {# Afficher les réservations existantes de l'utilisateur #}
-    {% if existingReservations|length > 0 %}
-        <h3>Vos réservations existantes :</h3>
-        {% include 'calendar/reservation_list.html.twig' %}
-    {% endif %}
+		{# Afficher les réservations existantes de l'utilisateur #}
+		{% if existingReservations|length > 0 %}
+			<h3>Vos réservations existantes :</h3>
+			{% include 'calendar/reservation_list.html.twig' %}
+			<hr>
+		{% endif %}
 
-   {{ include('calendar/_form.html.twig') }}
-    {#{% if remainingReservations %}
-    <div class="alert alert-info">
-        Il reste {{ remainingReservations }} place(s) de réservation pour cette date et heure.
-    </div>
-{% endif %}#}
-<div class="mt-3">
-        <a class="btn btn mt-3" href="{{ path('app_calendar_index') }}">Retour</a>
-        </div>
-   </div>
+		{# Afficher le formulaire de réservation #}
+		{{ include('calendar/_form.html.twig') }}
 
+
+		<div class="mt-3">
+			<a class="btn btn mt-3" href="{{ path('app_calendar_index') }}">Retour</a>
+		</div>
+	</div>
 
 
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("#calendar_date", {
-            enableTime: true,
-            dateFormat: "dd-mm-YYYY HH:mm",
-        });
 
-        
-    </script>
-{% endblock %}
