@@ -13,7 +13,13 @@ app_calendar_index:
     path: /calendar
     controller: App\Controller\CalendarController::index
 
+footer_data:
+  path: /footer-data
+  controller: App\Controller\AdminController::footerData
 
+app_calendar_available:
+    path: /calendar/available
+    controller: App\Controller\CalendarController::available
 
 
 

@@ -1,30 +1,56 @@
 <section class="container">
-<div class="row justify-content-center">
-<div class="col-md-12">
-{{ form_start(form) }}
-   <div class="col-md-12 text-center">
-    {{ form_row(form.start) }} 
-   <div class="col-md-12 text-center mt-3">
-    {{ form_row(form.numberOfGuests) }}
-    <div class="col-md-12 text-center mt-3">
-     {{ form_row(form.name) }} 
-    <div class="col-md-12 text-center mt-3">
-     {{ form_row(form.allergie) }} 
-   
-    <button class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
-    </div>
-{{ form_end(form) }}
-</div>
-</div>
-</div>
+	<div class="row justify-content-center">
+		<div class="col-md-12">
+			{{ form_start(form) }}
+			<div class="col-md-12 text-center">
+				{{ form_row(form.start) }}
+				<div class="col-md-12 text-center mt-3">
+					{{ form_row(form.numberOfGuests) }}
+					<div class="col-md-12 text-center mt-3">
+						<h4 id="available-places">{{ remainingPlaces }}</h4> places disponibles
+						<div class="col-md-12 text-center mt-3">
+							{{ form_row(form.name) }}
+							<div class="col-md-12 text-center mt-3">
+								{{ form_row(form.allergie) }}
+								<div class="col-md-12 text-center mt-3">
+								{{ form_row(form.allergieOfGuests)}}
+								<button class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
+							</div>
+						</div>
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
 </section>
 
+<script>
+
+const numberOfGuestsInput = document.querySelector('#calendar_numberOfGuests');
+const availablePlaces = document.querySelector('#available-places');
+
+numberOfGuestsInput.addEventListener('input', () => {
+  const url = `{{ path('app_calendar_available_places') }}`;
+  const numberOfGuests = numberOfGuestsInput.value;
+  const start = startInput.value;
+
+  fetch(`${url}?numberOfGuests=${numberOfGuests}&start=${start}`)
+    .then(response => response.json())
+    .then(data => {
+      availablePlaces.textContent = data.remainingPlaces;
+
+      if (data.remainingPlaces < numberOfGuests) {
+        availablePlaces.style.color = 'red';
+      } else {
+        availablePlaces.style.color = 'blue';
+      }
+    })
+    .catch(error => console.log(error))
+})
 
 
 
 
-
-
-
-
-
+</script>
