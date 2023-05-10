@@ -44,7 +44,7 @@
  
   }
 
-  #calendar_name, #calendar_allergie, #calendar_email, #calendar_phone, #calendar_{
+  #calendar_name, #calendar_allergie, #calendar_availablePlaces, #calendar_email, #calendar_phone, #calendar_{
     background-color: var(--templates-color);
     color: var(--text-color);
     border-radius: 8px solid var(--text-color);
@@ -89,6 +89,7 @@
 #calendar_start_date_year,
 #calendar_start_time_hour,
 #calendar_start_time_minute,
+#calendar_availablePlaces,
 #calendar_name,
 #calendar_allergie,
 #calendar_email,

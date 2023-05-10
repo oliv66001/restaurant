@@ -20,6 +20,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class CalendarRepository extends ServiceEntityRepository
 {
+    // Total des places disponibles - À déplacer dans un fichier de configuration
+    const TOTAL_AVAILABLE_PLACES = 30;
+    const MAX_CAPACITY = 30;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Calendar::class);
@@ -32,6 +36,34 @@ class CalendarRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findAvailability(DateTimeInterface $start, int $numberOfGuests): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb->andWhere('c.start = :start')
+            ->setParameter('start', $start)
+            ->andWhere('c.numberOfSeats >= :numberOfGuests')
+            ->setParameter('numberOfGuests', $numberOfGuests)
+            ->orderBy('c.start', 'ASC');
+
+        $calendars = $qb->getQuery()->getResult();
+
+        if (empty($calendars)) {
+            return ['error' => 'Aucune disponibilité trouvée pour cette date.'];
+        }
+
+        $remainingPlaces = 0;
+        foreach ($calendars as $calendar) {
+            $remainingPlaces += $calendar->getNumberOfSeats();
+        }
+
+        $response = [
+            'remainingPlaces' => $remainingPlaces,
+        ];
+
+        return $response;
     }
 
     public function remove(Calendar $entity, bool $flush = false): void
@@ -65,7 +97,7 @@ class CalendarRepository extends ServiceEntityRepository
 
     public function countReservationsByDate(DateTimeInterface $dateTime): int
     {
-        $dateTimeStart = \DateTime::createFromFormat('Y-m-d H:i', $dateTime->format('Y-m-d H:i'));
+        $dateTimeStart = \DateTime::createFromFormat('d/m/Y', $dateTime->format('d/m/Y'));
         $dateTimeEnd = clone $dateTimeStart;
         $dateTimeEnd->modify('+1 hour');
 
@@ -99,7 +131,7 @@ class CalendarRepository extends ServiceEntityRepository
 
     public function countReservationsAtDateTime(\DateTime $dateTime)
     {
-        $startDateTime = \DateTime::createFromFormat('Y-m-d H:i', $dateTime->format('Y-m-d H:i'));
+        $startDateTime = \DateTime::createFromFormat('d/m/Y', $dateTime->format('d/m/Y'));
         $endDateTime = clone $startDateTime;
         $endDateTime->modify('+1 hour');
 
@@ -166,7 +198,7 @@ class CalendarRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function findAvailableSlots(\DateTimeInterface $start, \DateTimeInterface $end): array
+    public function findAvailableSlots(DateTimeInterface $start, DateTimeInterface $end): array
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.start >= :start')
@@ -177,44 +209,27 @@ class CalendarRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    public function countOccupiedPlaces(DateTimeInterface $dateTime, $numberOfGuests): int
+
+    public function countOccupiedPlaces(DateTimeInterface $dateTime): int
     {
         $qb = $this->createQueryBuilder('c')
             ->select('SUM(c.numberOfGuests)')
             ->where('c.start = :start')
             ->setParameter('start', $dateTime)
             ->getQuery();
-
+    
         $result = $qb->getSingleScalarResult();
-
+    
         return $result ? $result : 0;
     }
-
-    public function getAvailablePlaces(DateTimeInterface $start, $numberOfGuests)
-{
-    $occupiedPlaces = $this->countOccupiedPlaces($start, $numberOfGuests);
-    $availablePlaces = 30;
-    $remainingPlaces = $availablePlaces - $occupiedPlaces;
-
-    return $remainingPlaces;
-}
-
-public function getRemainingPlaces($numberOfGuests, $start)
-{
-    $calendar = new Calendar();
-    $calendar->setNumberOfGuests($numberOfGuests ?? 0); // Utilisation de ?? pour fournir une valeur par défaut de 0 si $numberOfGuests est nul
-    $calendar->setStart(new DateTime($start));
-    $calendar->setAvailablePlaces(30);
-
-    return $calendar->getAvailablePlaces();
-}
-
-public function getOccupiedPlacesForReservation(Calendar $reservation)
-{
-    $reservationsCount = $this->countReservationsAtDateTime($reservation->getStart());
-    return $reservationsCount;
-}
-
-
-
+    
+    
+    public function getAvailablePlaces(DateTimeInterface $dateTime, int $numberOfGuests): int
+    {
+        $occupiedPlaces = $this->countOccupiedPlaces($dateTime);
+        $availablePlaces = self::MAX_CAPACITY - $occupiedPlaces - $numberOfGuests;
+    
+        return $availablePlaces;
+    }
+    
 }

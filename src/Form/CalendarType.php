@@ -7,6 +7,9 @@ use TimeInterval;
 use DateTimeInterface;
 use IntlDateFormatter;
 use App\Entity\Calendar;
+use Symfony\Component\Form\FormEvent;
+use App\Repository\CalendarRepository;
+use Symfony\Component\Form\FormEvents;
 use App\Validator\Constraints\NotMonday;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,14 +29,15 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 class CalendarType extends AbstractType
 {
     private $security;
-    
-    public function __construct(Security $security)
+    private $calendarRepository;
+
+    public function __construct(Security $security, CalendarRepository $calendarRepository)
     {
         $this->security = $security;
-        
+        $this->calendarRepository = $calendarRepository;
     }
 
-   
+
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -53,7 +58,6 @@ class CalendarType extends AbstractType
                 'minutes' => [0, 15, 30, 45],
                 'attr' => [
                     'class' => 'js-datepicker',
-                    'id' => 'calendar_date',
                     'data-provide' => 'datepicker',
                     'data-date-language' => 'fr_FR',
                     'data-date-autoclose' => 'true',
@@ -62,10 +66,11 @@ class CalendarType extends AbstractType
                     'data-date-start-date' => '0d',
                     'auto_initialize' => true,
                     'required' => true,
-                    'data-date-format' => 'dd/MM/yyyy',
-                    'html5' => false,
-
+                    'id' => 'calendar_start',
                 ],
+               
+                'format' => 'dd/MM/yyyy HH:mm',
+                'html5' => false,
                 'constraints' => [
                     new GreaterThan([
                         'value' => new \DateTime('today'),
@@ -73,26 +78,12 @@ class CalendarType extends AbstractType
                     ]),
                     new NotMonday(),
                 ]
-
             ])
 
-            ->add('numberOfGuests', ChoiceType::class, [
+            ->add('numberOfGuests', IntegerType::class, [
                 'label' => 'Nombre de personnes : ',
-                'choices' => [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    
+                'attr' => [
+                    'id' => 'calendar_numberOfGuests',
                 ],
                 'required' => true,
                 'constraints' => [
@@ -114,7 +105,7 @@ class CalendarType extends AbstractType
                     'class' => 'form-group',
                     'required' => false,
                 ],
-                
+
 
             ])
 
@@ -125,7 +116,7 @@ class CalendarType extends AbstractType
                     'class' => 'form-control'
 
                 ],
-                
+
             ])
 
             ->add('name', TextType::class, [
@@ -136,9 +127,41 @@ class CalendarType extends AbstractType
                     'class' => 'form-group',
                     'required' => false,
                 ],
-            ]);
-    }
+            ])
 
+            ->add('availablePlaces', IntegerType::class, [
+                'label' => 'Places disponibles : ',
+                'disabled' => true,
+                'attr' => [
+                    'required' => false,
+                    'id' => 'calendar_availablePlaces',
+                ],
+            ]);
+
+           /* ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
+                $year = isset($data['start']['date']['year']) ? $data['start']['date']['year'] : null;
+                $month = isset($data['start']['date']['month']) ? $data['start']['date']['month'] : null;
+                $day = isset($data['start']['date']['day']) ? $data['start']['date']['day'] : null;
+                $hour = isset($data['start']['time']['hour']) ? $data['start']['time']['hour'] : null;
+                $minute = isset($data['start']['time']['minute']) ? $data['start']['time']['minute'] : null;
+            
+                if ($year && $month && $day && $hour && $minute) {
+                    $start = \DateTime::createFromFormat('Y-m-d H:i', "$year-$month-$day $hour:$minute");
+                } else {
+                    $start = null;
+                }
+            
+                $numberOfGuests = isset($data['numberOfGuests']) ? $data['numberOfGuests'] : null;
+            
+                if ($start && $numberOfGuests) {
+                    $availablePlaces = $this->calendarRepository->getAvailablePlaces($start, $numberOfGuests);
+                    $form->get('availablePlaces')->setData($availablePlaces);
+                }
+            });*/
+            
+    }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

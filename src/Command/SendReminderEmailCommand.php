@@ -53,7 +53,7 @@ foreach ($reservations as $reservation) {
                     'reservation' => $reservation,
                     'user' => $user,
                 ],
-                false // Ne pas ajouter le préfixe "emails/"
+                false 
             );
         }
 

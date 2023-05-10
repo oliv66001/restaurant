@@ -17,9 +17,29 @@ footer_data:
   path: /footer-data
   controller: App\Controller\AdminController::footerData
 
-app_calendar_available:
-    path: /calendar/available
-    controller: App\Controller\CalendarController::available
+app_calendar_available_places:
+    path: /calendar/available-places
+    controller: App\Controller\CalendarController::availablePlaces
+
+app_calendar_remaining_places:
+    path: /calendar/remaining-places-api
+    controller: App\Controller\CalendarController::remainingPlaces
+    methods: GET
+
+
+app_calendar_show:
+    path: /calendar/show/{id}
+    controller: App\Controller\CalendarController::show
+
+app_calendar_edit:
+    path: /calendar/{id}/edit
+    controller: App\Controller\CalendarController::edit
+
+app_calendar_delete:
+    path: /calendar/delete/{id}
+    controller: App\Controller\CalendarController::delete
+
+
 
 
 

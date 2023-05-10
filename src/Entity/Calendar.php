@@ -23,14 +23,12 @@ class Calendar
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank(message: 'Veuillez renseigner une date de début')]
     #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
-    #[Assert\GreaterThan('today', message: 'La date de début doit être supérieure à la date du jour')]
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Veuillez renseigner un nombre de personnes')]
     #[Assert\Range(min: 1, max: 12, notInRangeMessage: 'Le nombre de personnes doit être compris entre 1 et 12')]
     #[Assert\Positive(message: 'Le nombre de personnes doit être supérieur à 0')]
-    private ?int $numberOfGuests = null;
+    private ?int $numberOfGuests = null;    
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $allergie = null;
@@ -39,11 +37,7 @@ class Calendar
     private ?string $allergieOfGuests = null;
 
     #[ORM\Column]
-
     private ?int $availablePlaces = null;
-
-
-
 
     public function getId(): ?int
     {
