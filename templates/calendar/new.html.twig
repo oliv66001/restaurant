@@ -17,7 +17,7 @@
 
 		{# Afficher le formulaire de réservation #}
 		{{ include('calendar/_form.html.twig') }}
-
+		
 
 		<div class="mt-3">
 			<a class="btn btn mt-3" href="{{ path('app_calendar_index') }}">Retour</a>
@@ -27,3 +27,7 @@
 
 {% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('assets/js/calendar.js') }}" defer></script>
+{% endblock %}

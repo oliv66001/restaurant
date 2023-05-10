@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Users;
+use DateTimeInterface;
 use IntlDateFormatter;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
+use Psr\Log\LoggerInterface;
 use App\Repository\UsersRepository;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,10 +22,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route('/calendar')]
 class CalendarController extends AbstractController
 {
+    const RESTAURANT_CAPACITY = 30;
+
     private $managerRegistry;
 
     public function __construct(ManagerRegistry $managerRegistry)
@@ -50,42 +57,66 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/new', name: 'app_calendar_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CalendarRepository $calendarRepository, Security $security, MailerInterface $mailer, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, CalendarRepository $calendarRepository, Security $security, MailerInterface $mailer, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+
     {
         $business_hours = $businessHoursRepository->findAll();
         $user = $security->getUser();
-        $userId = $user->getId();
-        // Récupérer les paramètres de la requête
-        $numberOfGuests = $request->query->get('numberOfGuests');
-        $start = $request->query->get('start');
-        $remainingPlaces = $calendarRepository->getRemainingPlaces($numberOfGuests, $start);
+    
+      if ($request->isXmlHttpRequest()) {
+            // Si c'est une requête AJAX, on renvoie la réponse JSON
+            $start = \DateTime::createFromFormat('d/m/Y', $request->get('start'));
+            $numberOfGuests = $request->query->get('numberOfGuests') ?? 0;
+            
+            $capacity = self::RESTAURANT_CAPACITY;
+            $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
+            
+            $availablePlaces = max($capacity - $occupiedPlaces, 0);
+            $logger->info('Appel de la méthode countOccupiedPlaces');
+            $logger->info("Date de début : {$start->format('Y-m-d H:i:s')}");
+            $logger->info("Nombre d'invités : {$numberOfGuests}");
+            $logger->info("Places occupées : {$occupiedPlaces}");
+            $logger->info("Places disponibles : {$availablePlaces}");
 
-
+            return $this->json(['remainingPlaces' => $availablePlaces]);
+        }
+        
+        
         $calendar = new Calendar();
-        $calendar->setAvailablePlaces(30);
-
-        $calendar->setName($user);
-        $calendar->setStart(new \DateTime());
+    $calendar->setName($user);
+    $calendar->setStart(new \DateTime());
+    // Récupérer le nombre de places disponibles pour la date et l'heure sélectionnées
+    $start = $calendar->getStart();
+    $capacity = self::RESTAURANT_CAPACITY;
+    $numberOfGuests = $calendar->getNumberOfGuests() ?? 0;
+    $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
+    $availablePlaces = max($capacity - $occupiedPlaces, 0);
+    $calendar->setAvailablePlaces($availablePlaces);
         $form = $this->createForm(CalendarType::class, $calendar);
-
+    
         $form->handleRequest($request);
-
+    
         $existingReservations = $calendarRepository->findByUserOrAll($user);
-
-
+    
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $numberOfGuests = $calendar->getNumberOfGuests();
             $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $numberOfGuests);
-            $remainingPlaces = $calendar->getAvailablePlaces() - $occupiedPlaces;
-
+            $availablePlaces = $form->get('availablePlaces')->getData() - $occupiedPlaces;
+    
             if ($numberOfGuests > 12) {
                 $this->addFlash('danger', 'Vous ne pouvez pas réserver plus de 12 places.');
-            } else if ($numberOfGuests > $remainingPlaces) {
+            } else if ($numberOfGuests > $availablePlaces) {
                 $this->addFlash('danger', 'Il ne reste pas suffisamment de places pour votre réservation.');
             } else {
+                // Mettre à jour la quantité de places disponibles
+                $availablePlaces -= $numberOfGuests;
+                $calendar->setAvailablePlaces($availablePlaces);
+    
                 $entityManager = $this->managerRegistry->getManager();
-
                 $entityManager->persist($calendar);
+    
+                // Enregistrer la nouvelle quantité de places disponibles dans la base de données
                 $entityManager->flush();
 
                 $emailAdmin = (new TemplatedEmail())
@@ -119,7 +150,6 @@ class CalendarController extends AbstractController
         return $this->render('calendar/new.html.twig', [
             'form' => $form->createView(),
             'button_label' => 'Enregistrer',
-            'remainingPlaces' => $remainingPlaces,
             'existingReservations' => $existingReservations,
             'calendar' => $calendar,
             'availablePlaces' => $calendar->getAvailablePlaces(),
@@ -128,43 +158,50 @@ class CalendarController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_calendar_show', methods: ['GET'])]
-    public function show(Calendar $calendar, BusinessHoursRepository $businessHoursRepository): Response
-    {
-        $business_hours = $businessHoursRepository->findAll();
-        $dateFormatter = new IntlDateFormatter(
-            'fr_FR',
-            IntlDateFormatter::SHORT,
-            IntlDateFormatter::SHORT
-        );
-        $dateFormatter->setPattern('dd-MM-yyyy');
-        $formattedStartDate = $dateFormatter->format($calendar->getStart());
-
-        return $this->render('calendar/show.html.twig', [
-            'business_hours' => $business_hours,
-            'calendar' => $calendar,
-            'formattedStartDate' => $formattedStartDate,
-        ]);
+    #[Route('/show/{id}', name: 'app_calendar_show', methods: ['GET'])]
+    public function show(Calendar $calendar, BusinessHoursRepository $businessHoursRepository, AuthorizationCheckerInterface $authChecker): Response
+{
+    // Vérifier si l'utilisateur actuel est autorisé à accéder à cet objet Calendar
+    if (!$authChecker->isGranted('view', $calendar)) {
+        throw new AccessDeniedException('Vous n\'êtes pas autorisé à accéder à ce calendrier.');
     }
+
+    // Vérifier si l'objet Calendar est récupéré correctement
+    if (!$calendar) {
+        throw $this->createNotFoundException('Calendrier non trouvé.');
+    }
+
+    $business_hours = $businessHoursRepository->findAll();
+    $dateFormatter = new IntlDateFormatter(
+        'fr_FR',
+        IntlDateFormatter::SHORT,
+        IntlDateFormatter::SHORT
+    );
+    $dateFormatter->setPattern('dd-MM-yyyy');
+    $formattedStartDate = $dateFormatter->format($calendar->getStart());
+
+    return $this->render('calendar/show.html.twig', [
+        'business_hours' => $business_hours,
+        'calendar' => $calendar,
+        'formattedStartDate' => $formattedStartDate,
+    ]);
+}
+
 
     #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security): Response
     {
 
-
-        $remainingPlaces = 0;
-        $calendar->setAvailablePlaces(30);
+        
 
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
         $user = $security->getUser();
-
+        $calendar->setAvailablePlaces(30);
         $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $calendar->getNumberOfGuests());
         $occupiedPlaces -= $calendar->getNumberOfGuests();
         $remainingPlaces = 30 - $occupiedPlaces;
-        if ($remainingPlaces < 0) {
-            $remainingPlaces = 0;
-        }
+      
 
         if ($form->isSubmitted() && $form->isValid()) {
             $calendarRepository->save($calendar, true);
@@ -207,7 +244,7 @@ class CalendarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_calendar_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_calendar_delete', methods: ['POST'])]
     public function delete(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security): Response
     {
         $user = $security->getUser();
@@ -241,46 +278,29 @@ class CalendarController extends AbstractController
         return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/remaining-places', name: 'app_calendar_remaining_places', methods: ['POST'])]
-    public function setRemainingPlaces(Request $request, EntityManagerInterface $entityManager, CalendarRepository $calendarRepository): JsonResponse
+    #[Route('/remaining-places-api', name: 'app_calendar_remaining_places', methods: ['POST', 'GET'])]
+    public function remainingPlaces(Request $request, CalendarRepository $calendarRepository, LoggerInterface $logger): JsonResponse
     {
-        $calendar = $calendarRepository->find($request->get('calendar_id'));
+        $start = new DateTime($request->query->get('start'));
+        $numberOfGuests = $request->query->get('numberOfGuests') ?? 0;
     
-        $restaurantCapacity = 30; // mettre la capacité de votre restaurant ici
-        $calendarRepository->setRemainingPlaces($entityManager, $calendar);
-
-        // Récupérer le nombre de places occupées pour la date et l'heure sélectionnées
-        $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $calendar->getNumberOfGuests());
+        $availablePlaces = $calendarRepository->getAvailablePlaces($start, $numberOfGuests);
     
-        // Calculer le nombre de places disponibles
-        $availablePlaces = max($restaurantCapacity - $occupiedPlaces, 0);
-    
-        $calendar->setAvailablePlaces($availablePlaces);
-    
-        // Mettre à jour le champ remainingPlaces en base de données
-        $entityManager->flush();
-    
-        return $this->json(['remainingPlaces' => $availablePlaces]);
+        return new JsonResponse(['remainingPlaces' => $availablePlaces]);
     }
     
-
-
 
     #[Route('/available-places', name: 'app_calendar_available_places')]
-    public function getAvailablePlaces(Request $request, CalendarRepository $calendarRepository): JsonResponse
+    public function getAvailablePlaces(DateTimeInterface $start, int $numberOfGuests, CalendarRepository $calendarRepository): int
     {
-        $start = new \DateTime($request->get('start'));
-        $numberOfGuests = $request->get('numberOfGuests');
-
-        // Nombre de places disponibles
-        $capacity = 30; 
-
-        // Récupérer le nombre de places occupées pour la date et l'heure sélectionnées
+        
+        $availablePlaces = 30; // Définissez ici la capacité maximale de votre restaurant
         $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
-
-        // Calculer le nombre de places disponibles
-        $availablePlaces = max($capacity - $occupiedPlaces, 0);
-
-        return $this->json(['remainingPlaces' => $availablePlaces]);
+    
+        $remainingPlaces = $availablePlaces - $occupiedPlaces;
+        
+        return $remainingPlaces;
     }
+    
+
 }
