@@ -12,9 +12,11 @@ use App\Repository\CalendarRepository;
 use Symfony\Component\Form\FormEvents;
 use App\Validator\Constraints\NotMonday;
 use Symfony\Component\Form\AbstractType;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Range;
+use App\Validator\Constraints\OneHourBeforeClosing;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
@@ -30,45 +33,36 @@ class CalendarType extends AbstractType
 {
     private $security;
     private $calendarRepository;
+    private $businessHoursRepository;
 
-    public function __construct(Security $security, CalendarRepository $calendarRepository)
+    
+    public function __construct(Security $security, CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository)
     {
         $this->security = $security;
         $this->calendarRepository = $calendarRepository;
+        $this->businessHoursRepository = $businessHoursRepository;
     }
 
-
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        // Récupérer l'utilisateur connecté
-        $current_user_id = $this->security->getUser();
-        $current_user_name = $current_user_id ? $current_user_id->getLastname() : null;
-        $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
+{
+    // Récupérer l'utilisateur connecté
+    $current_user_id = $this->security->getUser();
+    $current_user_name = $current_user_id ? $current_user_id->getLastname() : null;
+    $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
 
-
-
+    
+    // Récupérer les heures d'ouverture
+    $business_hours = $options['hours'] ?? [];
+   
+        
         $builder
             ->add('start', DateTimeType::class, [
                 'label' => 'Date et heure de la réservation : ',
                 'widget' => 'choice',
                 'model_timezone' => 'Europe/Paris',
                 'years' => range(date('Y'), date('Y') + 1),
-                'hours' => [12, 13, 14, 19, 20, 21],
+                'hours' => $options['hours'],
                 'minutes' => [0, 15, 30, 45],
-                'attr' => [
-                    'class' => 'js-datepicker',
-                    'data-provide' => 'datepicker',
-                    'data-date-language' => 'fr_FR',
-                    'data-date-autoclose' => 'true',
-                    'data-date-today-highlight' => 'true',
-                    'data-date-week-start' => '1',
-                    'data-date-start-date' => '0d',
-                    'auto_initialize' => true,
-                    'required' => true,
-                    'id' => 'calendar_start',
-                ],
-               
                 'format' => 'dd/MM/yyyy HH:mm',
                 'html5' => false,
                 'constraints' => [
@@ -76,14 +70,30 @@ class CalendarType extends AbstractType
                         'value' => new \DateTime('today'),
                         'message' => 'L\'heure de début doit être supérieure à l\'heure actuelle',
                     ]),
-                    new NotMonday(),
+                    new OneHourBeforeClosing(),
                 ]
             ])
 
-            ->add('numberOfGuests', IntegerType::class, [
+            ->add('numberOfGuests', ChoiceType::class, [
                 'label' => 'Nombre de personnes : ',
                 'attr' => [
                     'id' => 'calendar_numberOfGuests',
+                ],
+                'choices' => [
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7,
+                    '8' => 8,
+                    '9' => 9,
+                    
+                   
+            '10' => 10,
+                    '11' => 11,
+                    '12' => 12,
                 ],
                 'required' => true,
                 'constraints' => [
@@ -138,35 +148,15 @@ class CalendarType extends AbstractType
                 ],
             ]);
 
-           /* ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-                $form = $event->getForm();
-                $data = $event->getData();
-                $year = isset($data['start']['date']['year']) ? $data['start']['date']['year'] : null;
-                $month = isset($data['start']['date']['month']) ? $data['start']['date']['month'] : null;
-                $day = isset($data['start']['date']['day']) ? $data['start']['date']['day'] : null;
-                $hour = isset($data['start']['time']['hour']) ? $data['start']['time']['hour'] : null;
-                $minute = isset($data['start']['time']['minute']) ? $data['start']['time']['minute'] : null;
-            
-                if ($year && $month && $day && $hour && $minute) {
-                    $start = \DateTime::createFromFormat('Y-m-d H:i', "$year-$month-$day $hour:$minute");
-                } else {
-                    $start = null;
-                }
-            
-                $numberOfGuests = isset($data['numberOfGuests']) ? $data['numberOfGuests'] : null;
-            
-                if ($start && $numberOfGuests) {
-                    $availablePlaces = $this->calendarRepository->getAvailablePlaces($start, $numberOfGuests);
-                    $form->get('availablePlaces')->setData($availablePlaces);
-                }
-            });*/
-            
+       
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,
-            'user' => null, // Ajoutez une nouvelle option pour l'utilisateur
+            'user' => null, 
+            'hours' => [], 
         ]);
     }
+
 }

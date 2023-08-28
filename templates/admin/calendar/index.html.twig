@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier{% endblock %}
+
+{% block body %}
+<h1>Calendrier</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Date et heure de la réservation</th>
+            <th>Nombre de personnes</th>
+            <th>Allergies</th>
+            <th>Nom</th>
+            <th>Places disponibles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for calendar in calendars %}
+        <tr>
+            <td>{{ calendar.id }}</td>
+            <td>{{ calendar.start|date('d/m/Y H:i') }}</td>
+            <td>{{ calendar.numberOfGuests }}</td>
+            <td>{{ calendar.allergie }}</td>
+            <td>{{ calendar.name }}</td>
+            <td>{{ calendar.availablePlaces }}</td>
+            <td>
+                <a href="{{ path('admin_calendar_edit', {'id': calendar.id}) }}">edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

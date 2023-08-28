@@ -22,14 +22,14 @@
 	{% endif %}
 {% endfor %}
 
-<img class="img-fluid" id="front" src="{{ topImage }}" alt={{ image.name }}>
+<img class="img-fluid" id="front" src="{{ topImage }}" alt="Images de présentaion du restaurant le Quia-Antique">
 
 <main class="container">
 	<section class="row justify-content-center">
 		<div class="col-12">
 			<h1 class="text-center mt-4">Le Quai-Antique</h1>
 		</div>
-		<hr>
+		
 
 		{% for category in categories %}
 			{% if category.parent == null and category.name != 'Top image' and category.name != 'Bottom image' %}
@@ -70,4 +70,6 @@
 		</article>
 
 	</div>
-</div>{% endif %}{% endfor %}</section></main><img class="img-fluid" id="bottom" src="{{ bottomImage }}" alt={{ image.name }}>{% endblock %}
+</div>{% endif %}{% endfor %}</section></main>
+<img class="img-fluid" id="bottom" src="{{ bottomImage }}" alt="Images de présentaion du restaurant le Quia-Antique">
+{% endblock %}

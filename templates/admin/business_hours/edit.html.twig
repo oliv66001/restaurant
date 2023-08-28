@@ -9,7 +9,10 @@
 		<div class="row justify-content-center">
 			<div class="col-6">
 				{{ form_start(form) }}
-				{{ form_widget(form) }}
+				{{ form_row(form.day)}}
+				{{ form_row(form.openTime) }}
+				{{ form_row(form.closeTime) }}
+				{{ form_row(form.closed)}}
 				<button class="btn btn3 mt-3" type="submit">
 					Sauvegarder les modifications
 				</button>

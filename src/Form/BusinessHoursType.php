@@ -15,28 +15,36 @@ class BusinessHoursType extends AbstractType
         $builder
             ->add('day', ChoiceType::class, [
                 'label' => 'Jour : ',
+                'model_timezone' => 'Europe/Paris',
                 'choices' => [
-                    'Mardi' => 'Mardi',
-                    'Mercredi' => 'Mercredi',
-                    'Jeudi' => 'Jeudi',
-                    'Vendredi' => 'Vendredi',
-                    'Samedi' => 'Samedi',
-                    'Dimanche' => 'Dimanche'
+                    'Lundi' => 0,
+                    'Mardi' => 1,
+                    'Mercredi' => 2,
+                    'Jeudi' => 3,
+                    'Vendredi' => 4,
+                    'Samedi' => 5,
+                    'Dimanche' => 6
                 ],
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('openTime', ChoiceType::class, [
-                'label' => 'Heure d\'ouverture',
-                'choices' => $this->generateTimeChoices(),
-                'attr' => [
-                    'class' => 'form-control'
-                ]
+            ->add('openTime', TimeType::class, [
+                'widget' => 'choice',
+                'input'  => 'datetime',
+                'with_seconds' => false,
             ])
-            ->add('closeTime', ChoiceType::class, [
-                'label' => 'Heure de fermeture',
-                'choices' => $this->generateTimeChoices(),
+            ->add('closeTime', TimeType::class, [
+                'widget' => 'choice',
+                'input'  => 'datetime',
+                'with_seconds' => false,
+            ])
+            ->add('closed', ChoiceType::class, [
+                'label' => 'Fermé ?',
+                'choices' => [
+                    'Non' => false,
+                    'Oui' => true
+                ],
                 'attr' => [
                     'class' => 'form-control'
                 ]
