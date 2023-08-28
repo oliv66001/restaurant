@@ -1,40 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Horaires d'ouverture{% endblock %}
-
-
-{% block body %}
-<div class="container">
-    <div class="row justify-content-center">
-    {% include "_partials/_adminnav.html.twig" %}
-    <div class="col-9 col-lg-12">
-    <h1 class="text-center">Horaires d'ouverture</h1>
-    <table class="table">
-        <thead class="text-center">
-            <tr>
-                <th>Jour</th>
-                <th>Ouvert de</th>
-                <th>à</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for hour in hours %}
-             <tr>
-                <td>{{ hour.day }}</td>
-                <td>{{ hour.openTime }}</td>
-                <td>{{ hour.closeTime }}</td>
-                <td>
-                  <a class="btn btn3" href="{{ path('admin_business_hours_edit', {'id': hour.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    </div>
-    </div>
-</div>
+{% block title %}Horaires d'ouverture
 {% endblock %}
 
+{% block body %}
+	<div class="container">
+		<div class="row justify-content-center">
+			{% include "_partials/_adminnav.html.twig" %}
+			<div class="col-9 col-lg-12">
+				<h1 class="text-center">Horaires d'ouverture</h1>
+				<table class="table">
+					<thead class="text-center">
+						<tr>
+							<th>Jour</th>
+							<th>Ouvert de</th>
+							<th>à</th>
+							<th>ouvert/fermé</th>
+							<th>actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for hour in hours %}
+							<tr>
+								<td>{{ hour.getDayName }}</td>
+								<td>{{ hour.openTime|date('H:i') }}</td>
+								<td>{{ hour.closeTime|date('H:i') }}</td>
 
+
+								<td>
+
+									<div class="form-check form-switch">
+
+										<input class="form-check-input" type="checkbox" role="switch" id="switch" {{ hour.closed ? "checked" : "" }} disabled>
+										<label class="form-check-label" for="switch">{{ hour.closed }}</label>
+									</div>
+								</td>
+
+
+								<td>
+									<a class="btn btn3" href="{{ path('admin_business_hours_edit', {'id': hour.id}) }}">Modifier</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -8,65 +8,74 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BusinessHoursRepository::class)]
 class BusinessHours
 {
-
     public const DAYS = [
-    0 => 'Lundi',
-    1 => 'Mardi',
-    2 => 'Mercredi',
-    3 => 'Jeudi',
-    4 => 'Vendredi',
-    5 => 'Samedi',
-    6 => 'Dimanche'];
+        0 => 'Lundi',
+        1 => 'Mardi',
+        2 => 'Mercredi',
+        3 => 'Jeudi',
+        4 => 'Vendredi',
+        5 => 'Samedi',
+        6 => 'Dimanche',
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $day = null;
+    #[ORM\Column(type: 'integer')]
+    private ?int $day = null;
 
-    #[ORM\Column(length: 30)]
-    private ?string $openTime = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $openTime = null;
 
-    #[ORM\Column(length: 30)]
-    private ?string $closeTime = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $closeTime = null;
+
+     #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $openTimeEvening = null;
+
+     #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $closeTimeEvening = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $closed = false;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDay(): ?string
+    public function getDay(): ?int
     {
         return $this->day;
     }
 
-    public function setDay(string $day): self
+    public function setDay(int $day): self
     {
         $this->day = $day;
-
+    
         return $this;
     }
 
-    public function getOpenTime(): ?string
+    public function getOpenTime(): ?\DateTime
     {
         return $this->openTime;
     }
 
-    public function setOpenTime(string $openTime): self
+    public function setOpenTime(\DateTime $openTime): self
     {
         $this->openTime = $openTime;
 
         return $this;
     }
 
-    public function getCloseTime(): ?string
+    public function getCloseTime(): ?\DateTime
     {
         return $this->closeTime;
     }
 
-    public function setCloseTime(string $closeTime): self
+    public function setCloseTime(\DateTime $closeTime): self
     {
         $this->closeTime = $closeTime;
 
@@ -75,9 +84,78 @@ class BusinessHours
 
     public function getDayName(): ?string
     {
+        if ($this->closed) {
+            return 'Fermé';
+        }
+
         return isset(self::DAYS[$this->day]) ? self::DAYS[$this->day] : null;
+    }
+
+    public function isOpen(): bool
+    {
+        return !$this->closed;
+    }
+
+    public function setClosed(bool $closed): self
+    {
+        $this->closed = $closed;
+
+        return $this;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closed;
     }
     
 
+    
 
+    /**
+     * Get the value of openTimeEvening
+     *
+     * @return ?\DateTime
+     */
+    public function getOpenTimeEvening(): ?\DateTime
+    {
+        return $this->openTimeEvening;
+    }
+
+    /**
+     * Set the value of openTimeEvening
+     *
+     * @param ?\DateTime $openTimeEvening
+     *
+     * @return self
+     */
+    public function setOpenTimeEvening(?\DateTime $openTimeEvening): self
+    {
+        $this->openTimeEvening = $openTimeEvening;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of closeTimeEvening
+     *
+     * @return ?\DateTime
+     */
+    public function getCloseTimeEvening(): ?\DateTime
+    {
+        return $this->closeTimeEvening;
+    }
+
+    /**
+     * Set the value of closeTimeEvening
+     *
+     * @param ?\DateTime $closeTimeEvening
+     *
+     * @return self
+     */
+    public function setCloseTimeEvening(?\DateTime $closeTimeEvening): self
+    {
+        $this->closeTimeEvening = $closeTimeEvening;
+
+        return $this;
+    }
 }

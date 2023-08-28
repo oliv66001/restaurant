@@ -14,6 +14,9 @@ services:
         resource: '../src/DataFixtures/*'
         tags: ['doctrine.fixture.orm']
 
+    App\EventListener\TimezoneListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
      
 # default configuration for services in *this* file
     _defaults:

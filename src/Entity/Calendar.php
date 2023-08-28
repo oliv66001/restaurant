@@ -23,6 +23,7 @@ class Calendar
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank(message: 'Veuillez renseigner une date de début')]
     #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
+
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column]
@@ -38,6 +39,11 @@ class Calendar
 
     #[ORM\Column]
     private ?int $availablePlaces = null;
+
+    #[ORM\ManyToOne(targetEntity: BusinessHours::class, inversedBy: "calendars")]
+    #[ORM\JoinColumn(nullable:false)]
+    #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
+    private $businessHours;
 
     public function getId(): ?int
     {
@@ -61,14 +67,28 @@ class Calendar
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
-    {
-        $this->start = $start;
+   public function setStart(\DateTimeInterface $start): self
+{
+    $businessHours = $this->getBusinessHours();
+    if ($businessHours !== null) {
+        $openTime = $businessHours->getOpenTime();
+        $closeTime = $businessHours->getCloseTime();
 
-        return $this;
+        if ($openTime instanceof \DateTime && $closeTime instanceof \DateTime) {
+            $closeTime = \DateTime::createFromFormat('H:i:s', $closeTime->format('H:i:s'))->modify('-1 hour');
+
+          // if ($start < $openTime || $start >= $closeTime) {
+          //     throw new \InvalidArgumentException('La réservation doit être pendant les heures d\'ouverture.');
+          // }
+        }
     }
 
-    public function getNumberOfGuests(): ?int
+    $this->start = $start;
+
+    return $this;
+}
+    
+       public function getNumberOfGuests(): ?int
     {
         return $this->numberOfGuests;
     }
@@ -150,6 +170,30 @@ class Calendar
     public function setAvailablePlaces(?int $availablePlaces): self
     {
         $this->availablePlaces = $availablePlaces;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of businessHours
+     *
+     * @return ?BusinessHours
+     */
+    public function getBusinessHours(): ?BusinessHours
+    {
+        return $this->businessHours;
+    }
+
+    /**
+     * Set the value of businessHours
+     *
+     * @param ?BusinessHours $businessHours
+     *
+     * @return self
+     */
+    public function setBusinessHours(?BusinessHours $businessHours): self
+    {
+        $this->businessHours = $businessHours;
 
         return $this;
     }

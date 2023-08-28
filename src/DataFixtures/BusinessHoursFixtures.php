@@ -5,30 +5,24 @@ namespace App\DataFixtures;
 use App\Entity\BusinessHours;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use DateTime;
 
 class BusinessHoursFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $days = ['Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-        $openTime1 = '12:00';
-        $closeTime1 = '14:00';
-        $openTime2 = '19:00';
-        $closeTime2 = '22:00';
+        // 0 pour Lundi, 1 pour Mardi, etc.
+        $days = [0, 1, 2, 3, 4, 5, 6];
 
         foreach ($days as $day) {
-            $hour1 = new BusinessHours();
-            $hour1->setDay($day);
-            $hour1->setOpenTime($openTime1);
-            $hour1->setCloseTime($closeTime1);
-            
-            $hour2 = new BusinessHours();
-            $hour2->setDay($day);
-            $hour2->setOpenTime($openTime2);
-            $hour2->setCloseTime($closeTime2);
+            $businessHour = new BusinessHours();
+            $businessHour->setDay($day);
+            $businessHour->setOpenTime(new DateTime('12:00'));
+            $businessHour->setCloseTime(new DateTime('15:00'));
+            $businessHour->setOpenTimeEvening(new DateTime('19:00'));
+            $businessHour->setCloseTimeEvening(new DateTime('23:00'));
 
-            $manager->persist($hour1);
-            $manager->persist($hour2);
+            $manager->persist($businessHour);
         }
 
         $manager->flush();

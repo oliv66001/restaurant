@@ -18,14 +18,17 @@ class MainController extends AbstractController
     #[Route('/', name: 'app_main')]
     public function index(CategoriesRepository $categoriesRepository, DishesRepository $dishesRepository, EntityManagerInterface $entityManager, BusinessHoursRepository $businessHoursRepository): Response
     {
-        
+
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $dishes = $dishesRepository->findAll();
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
-      
-        return $this->render('main/index.html.twig', compact('dishes', 'categories', 'category', 'business_hours'));
-       
-            
+
+        return $this->render('main/index.html.twig', [ 
+            'business_hours' => $business_hours, 
+            'dishes' => $dishes, 
+            'categories' => $categories, 
+            'category' => $category
+        ]);
     }
 }

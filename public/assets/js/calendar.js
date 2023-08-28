@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let day = document.querySelector("#calendar_start [name='calendar[start][date][day]']").value;
     let hour = document.querySelector("#calendar_start [name='calendar[start][time][hour]']").value;
     let minute = document.querySelector("#calendar_start [name='calendar[start][time][minute]']").value;
-
+          
     let start = `${year}-${month}-${day} ${hour}:${minute}`;
 
     let numberOfGuests = numberOfGuestsInput.value;
