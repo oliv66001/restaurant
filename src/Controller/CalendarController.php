@@ -92,8 +92,8 @@ class CalendarController extends AbstractController
             $hoursByDay[$dayOfWeek] = ['open' => $openHour, 'close' => $closeHour];
         }
 
- 
-      
+
+
         $dayOfWeek = (new DateTime())->format('N') - 1;
 
         $hoursByDay = [
@@ -103,7 +103,7 @@ class CalendarController extends AbstractController
             ],
 
         ];
-     
+
         if (is_array($hoursByDay[$dayOfWeek])) {
             $hoursForToday = $hoursByDay[$dayOfWeek];
         } else {
@@ -132,7 +132,7 @@ class CalendarController extends AbstractController
         // Supprimer les doublons si nécessaire et trier le tableau
         $hours = array_unique($hours);
         sort($hours);
-        
+
 
 
         if ($request->isXmlHttpRequest()) {
@@ -150,7 +150,7 @@ class CalendarController extends AbstractController
             $logger->info("Places occupées : {$occupiedPlaces}");
             $logger->info("Places disponibles : {$availablePlaces}");
 
-            
+
             return $this->json(['remainingPlaces' => $availablePlaces]);
         }
 
@@ -161,25 +161,25 @@ class CalendarController extends AbstractController
 
         // Récupérer le nombre de places disponibles pour la date et l'heure sélectionnées
         $start = $calendar->getStart();
-       
+
         $capacity = self::RESTAURANT_CAPACITY;
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 0;
         $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
         $availablePlaces = max($capacity - $occupiedPlaces, 0);
         $calendar->setAvailablePlaces($availablePlaces);
         $form = $this->createForm(CalendarType::class, $calendar, ['hours' => $hours]);
-       
+
 
 
         $form->handleRequest($request);
 
         $existingReservations = $calendarRepository->findByUserOrAll($user);
-      
+
         if ($form->isSubmitted() && $form->isValid()) {
             $numberOfGuests = $calendar->getNumberOfGuests();
             $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $numberOfGuests);
             $availablePlaces = $form->get('availablePlaces')->getData() - $occupiedPlaces;
-              
+
             if ($numberOfGuests > 12) {
                 $this->addFlash('danger', 'Vous ne pouvez pas réserver plus de 12 places.');
             } else if ($numberOfGuests > $availablePlaces) {
@@ -191,7 +191,7 @@ class CalendarController extends AbstractController
 
                 $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($calendar);
-                 
+
                 // Enregistrer la nouvelle quantité de places disponibles dans la base de données
                 $entityManager->flush();
 
@@ -265,19 +265,58 @@ class CalendarController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security): Response
+    public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository): Response
     {
+        $business_hours = $businessHoursRepository->findAll();
 
         $form = $this->createForm(CalendarType::class, $calendar);
-        $form->handleRequest($request);
+        $remainingPlaces = $calendar->getNumberOfGuests();
         $user = $security->getUser();
-        $calendar->setAvailablePlaces(30);
-        $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $calendar->getNumberOfGuests());
-        $occupiedPlaces -= $calendar->getNumberOfGuests();
-        $remainingPlaces = 30 - $occupiedPlaces;
+        $form->handleRequest($request);
 
 
+        $dayOfWeek = (new DateTime())->format('N') - 1;
+
+        $hoursByDay = [
+            0 => [
+                ['open' => 12, 'close' => 14],
+                ['open' => 19, 'close' => 21]
+            ],
+
+        ];
+        if (is_array($hoursByDay[$dayOfWeek])) {
+            $hoursForToday = $hoursByDay[$dayOfWeek];
+        } else {
+            // Ajoutez une instruction de débogage ici
+            dd('$hoursByDay[$dayOfWeek] is not an array');
+        }
+
+
+        $businessHours = $businessHoursRepository->findOneBy(['day' => $dayOfWeek]);
+
+        if (!$businessHours) {
+            // Gérer cette situation
+            throw new \Exception("No business hours found for the specified day");
+        }
+
+        $hours = [];
+        foreach ($hoursForToday as $timeRange) {
+            if (isset($timeRange['open']) && isset($timeRange['close'])) {
+                $hours = array_merge($hours, range($timeRange['open'], $timeRange['close']));
+            } else {
+                // Ajoutez une instruction de débogage ici
+                dd("open or close doesn't exist or is not an integer");
+            }
+        }
+
+        // Supprimer les doublons si nécessaire et trier le tableau
+        $hours = array_unique($hours);
+        sort($hours);
+
+        $form = $this->createForm(CalendarType::class, $calendar, ['hours' => $hours]); // Assure-toi que le formulaire utilise ces heures
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // Pas de mise à jour des places disponibles
             $calendarRepository->save($calendar, true);
 
 
@@ -313,8 +352,10 @@ class CalendarController extends AbstractController
 
         return $this->render('calendar/edit.html.twig', [
             'remainingPlaces' => $remainingPlaces,
+            'business_hours' => $business_hours,
             'calendar' => $calendar,
             'form' => $form,
+            'hours' => $hours
         ]);
     }
 

@@ -36,7 +36,7 @@ security:
         - { path: ^/profil, roles: ROLE_USER }
 
     role_hierarchy:
-        ROLE_DISHES_ADMIN: ROLE_USER
+        ROLE_USER: ROLE_USER
         ROLE_ADMIN: ROLE_DISHES_ADMIN
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 

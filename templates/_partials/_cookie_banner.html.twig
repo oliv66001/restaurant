@@ -1,0 +1,23 @@
+{% if not app.session.get('cookies_accepted') %}
+	<section class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-6 col-sm-12 text-center">
+				<div id="cookie-banner">
+					<h3>Politique de cookies</h3>
+					<p style="font-weight:bold; margin: 0; padding: 10px; max-width: 800px; font-size: 0.9em;">
+						Nous utilisons des cookies pour améliorer votre expérience. En continuant à utiliser ce site, vous acceptez notre politique en matière de cookies pour en savoir plus vous pouvez consulter nos<a class="nav-link" href="{{ path('app_mention_legal') }}">Mentions légales</a>
+						<button id="accept-cookies" class="btn" style="margin-left: 15px; padding: 10px; cursor: pointer;">Accepter</button>
+						<button id="refuse-cookies" class="btn" style="margin-left: 15px; padding: 10px; cursor: pointer;">Refuser</button>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endif %}
+</br>
+
+{% block javascripts %}
+
+	<script src="{{ asset('assets/js/cookies.js') }}" defer></script>
+
+{% endblock %}

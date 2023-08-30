@@ -51,10 +51,12 @@
 		{% endif %}
 
 		{% include "_partials/_flash.html.twig" %}
-
+		{% include '_partials/_cookie_banner.html.twig' %}
 		{% block body %}{% endblock %}
-
+{% if not is_granted('ROLE_DISHES_ADMIN') %}
 		{% include '_partials/_footer.html.twig' with {'opening_hours': business_hours} %}
+{% endif %}
+		
 		{#{% include '_partials/_footer.html.twig' %}#}
 
 	</body>

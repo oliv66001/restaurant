@@ -28,7 +28,7 @@
                     {% endif %}
                     <td>
                         <a class="btn btn2" href="{{ path('app_calendar_show', {'id': calendar.id}) }}">Voir</a>
-                        <a class="btn btn3" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
+                    <a class="btn btn3" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}" data-calendar-id="{{ calendar.id }}">Modifier</a>
                     </td>
                 </tr>
             {% else %}

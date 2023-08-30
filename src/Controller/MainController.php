@@ -31,4 +31,22 @@ class MainController extends AbstractController
             'category' => $category
         ]);
     }
+
+    #[Route("/accept-cookies", name: "accept_cookies", methods: ["POST"])]
+
+    public function acceptCookies(Request $request): JsonResponse
+    {
+        $request->getSession()->set('cookies_accepted', true);
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
+    #[Route("/refuse-cookies", name: "refuse_cookies", methods: ["POST"])]
+
+    public function refuseCookies(Request $request): JsonResponse
+    {
+        $request->getSession()->set('cookies_refused', true);
+
+        return new JsonResponse(['status' => 'success']);
+    }
 }
