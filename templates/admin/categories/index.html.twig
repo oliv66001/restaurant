@@ -6,38 +6,40 @@
 
 {% block body %}
 	<div class="container">
-		<div class="row justify-content-center">
+		<div class="row">
 			{% include "_partials/_adminnav.html.twig" %}
-			<main class="col-9 p-2">
+			<main class="col-lg-12 col-md-12 col-sm-12 p-2 text-center">
 				<h1 class="text-center">Liste des catégories</h1>
-				<table class="table">
-					<thead>
-						<tr class="text-center">
-							<th class="text-center">Nom</th>
-							<th class="text-center">Parent</th>
-							<th class="text-center">N°</th>
-							<th class="text-center">Action</th>
-						</tr>
-					</thead>
-					{% for categorie in categories %}
-						<tr class="text-center">
-							
-							<td>{{ categorie.name }}</td>
-							<td>
-								{% if categorie.parent is not null %}
-									{{ categorie.parent.name }}
-								{% endif %}
-							</td>
-							<td>{{ categorie.categoryOrder }}</td>
-								<td class="align-middle">
-								<a href="{{ path('admin_categories_edit', {'id': categorie.id}) }}" class="btn btn2">Modifier</a>
-								
-							</td>
-						</tr>
+				<div class="table-responsive">
+					<table class="table">
+						<thead class="thead-dark">
+							<tr class="text-center">
+								<th class="text-center align-middle">Nom</th>
+								<th class="text-center align-middle">Parent</th>
+								<th class="text-center align-middle">N°</th>
+								<th class="text-center align-middle">Action</th>
+							</tr>
+						</thead>
+						{% for categorie in categories %}
+							<tr class="text-center">
 
-					{% endfor %}
-				</table>
-			</main>
+								<td class="align-middle">{{ categorie.name }}</td>
+								<td class="align-middle">
+									{% if categorie.parent is not null %}
+										{{ categorie.parent.name }}
+									{% endif %}
+								</td>
+								<td class="align-middle">{{ categorie.categoryOrder }}</td>
+								<td class="align-middle">
+									<a href="{{ path('admin_categories_edit', {'id': categorie.id}) }}" class="btn btn2">Modifier</a>
+
+								</td>
+							</tr>
+
+						{% endfor %}
+					</table>
+				</div>
+				</main>
+			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}

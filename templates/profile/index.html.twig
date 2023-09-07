@@ -49,10 +49,10 @@
 				<tbody>
 					{% for calendar in calendars %}
 						<tr>
-							<td>{{ calendar.start ? calendar.start|date('d-m-Y H:i') : '' }}</td>
-							<td>{{ calendar.name}}
-							<td>{{ calendar.numberOfGuests }}</td>
-							<td>
+							<td class="align-middle">{{ calendar.start ? calendar.start|date('d-m-Y H:i') : '' }}</td>
+							<td class="align-middle">{{ calendar.name}}
+							<td class="align-middle">{{ calendar.numberOfGuests }}</td>
+							<td class="align-middle">
 								<a class="btn btn2" href="{{ path('app_calendar_edit', {'id': calendar.id}) }}">Modifier</a>
 							</td>
 						</tr>

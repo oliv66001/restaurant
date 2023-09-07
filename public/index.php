@@ -2,7 +2,7 @@
 
 use App\Kernel;
 
-date_default_timezone_set(getenv('TIMEZONE'));
+//date_default_timezone_set(getenv('TIMEZONE'));
 
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';

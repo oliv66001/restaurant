@@ -43,13 +43,12 @@ class BusinessHoursRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT b
-            FROM App\Entity\BusinessHours b
-            ORDER BY b.day ASC, b.openTime ASC'
+            'SELECT b FROM App\Entity\BusinessHours b ORDER BY b.day ASC, b.openTime ASC'
         );
     
         return $query->getResult();
     }
+    
 
     public function findBusinessHoursByDay(string $day): ?BusinessHours
     {
@@ -62,32 +61,23 @@ class BusinessHoursRepository extends ServiceEntityRepository
     
         return $query->getOneOrNullResult();
     }
-    
-    
 
+    public function findValidBusinessHoursForTime(\DateTime $dateTime): ?BusinessHours
+{
+    $dayOfWeek = $dateTime->format('l'); // Obtenir le jour de la semaine
 
-//    /**
-//     * @return BusinessHours[] Returns an array of BusinessHours objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    $entityManager = $this->getEntityManager();
+    $query = $entityManager->createQuery(
+        'SELECT b
+        FROM App\Entity\BusinessHours b
+        WHERE b.day = :day AND b.openTime <= :time AND b.closeTime >= :time'
+    )
+    ->setParameter('day', $dayOfWeek)
+    ->setParameter('time', $dateTime->format('H:i:s'));
 
-//    public function findOneBySomeField($value): ?BusinessHours
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    return $query->getOneOrNullResult();
 }
+
+
+}
+    

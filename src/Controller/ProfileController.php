@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use App\Entity\Calendar;
+use App\Entity\Categories;
 use App\Form\UsersFormType;
 use App\Form\ProfileFormType;
 use App\Repository\CalendarRepository;
+use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +23,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 #[Route('/profil', name: 'app_profil_')]
 class ProfileController extends AbstractController
 {
+
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository): Response
+    public function index(CalendarRepository $calendarRepository, CategoriesRepository $categoriesRepository,  BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager): Response
     {
-        
+        $category = $entityManager->getRepository(Categories::class)->findAll();
+        $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
         return $this->render('profile/index.html.twig', [
             'business_hours' => $business_hours,
+            'categories' => $categories,
+            'category' => $category,
             'calendars' => $calendarRepository->findBy([
                 'name' => $this->getUser(),
                 
@@ -41,8 +47,10 @@ class ProfileController extends AbstractController
         Users $users,
         Request $request,
         EntityManagerInterface $em,
-        UserInterface $currentUser, BusinessHoursRepository $businessHoursRepository
+        UserInterface $currentUser, BusinessHoursRepository $businessHoursRepository, CategoriesRepository $categoriesRepository
     ): Response {
+        $category = $em->getRepository(Categories::class)->findAll();
+        $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
         if ($users !== $currentUser) {
             // Vous pouvez renvoyer une erreur 403 ou rediriger l'utilisateur vers une autre page
@@ -72,6 +80,8 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/edit.html.twig', [
             'business_hours' => $business_hours,
+            'category' => $category,
+            'categories' => $categories,
             'profileForm' => $profileForm->createView(),
 
         ]);

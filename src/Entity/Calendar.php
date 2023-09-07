@@ -38,13 +38,15 @@ class Calendar
     private ?string $allergieOfGuests = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThanOrEqual(
+        value : 0,
+        message : 'Le nombre de places disponibles doit être supérieur ou égal à 0')]
     private ?int $availablePlaces = null;
 
     #[ORM\ManyToOne(targetEntity: BusinessHours::class, inversedBy: "calendars")]
-    #[ORM\JoinColumn(nullable:false)]
-    #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
+    #[ORM\JoinColumn(name: "business_hours_id", referencedColumnName: "id", nullable: true)]
     private $businessHours;
-
+    
     public function getId(): ?int
     {
         return $this->id;

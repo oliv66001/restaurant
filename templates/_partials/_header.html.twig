@@ -1,14 +1,14 @@
 <article class="container text-center" style="padding-top:80px">
 	<div class="row h-100 justify-content-center align-items-center">
 		<div class="col-lg-6 col-sm-12">
-			<img class="logo" src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="logo">
+			<img class="logo" src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" alt="logo">
 			<h1>Le Quai-Antique</h1>
 			<h3 class="titre2">Découvrez</br>
 			notre cuisine</br>
 		moderne</h3>
 </div>
 <div class="col-lg-6 col-sm-12">
-	<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+	<div id="carouselExampleControls" class="carousel slide carousel-shadow" data-bs-ride="carousel">
 		<div class="carousel-inner">
 			{% set firstImageShown = false %}
 			{% for category in category|default([]) %}

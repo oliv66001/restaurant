@@ -1,64 +1,95 @@
 <div class="container">
-  <div class="row justify-content-center">
-    <aside class="col-lg-12 col-md-6 col-sm-12 mb-3">
-      <div class="d-flex flex-column flex-md-row justify-content-md-between">
-        <article class="card mb-3 mb-md-0">
-          <div class="card-header">
-            <h3 class="text-center">Catégories</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              <a class="btn" href="{{ path('admin_categories_index') }}">liste</a></p>
-            <p>
-              <a class="btn" href="{{ path('admin_categories_add') }}">Ajouter</a></p>
-          </div>
-        </article>
-        <article class="card mb-3 mb-md-0">
-          <div class="card-header">
-            <h3 class="text-center">Produits et images</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              <a class="btn" href="{{ path('admin_dishes_index') }}">liste</a></p>
-            <p>
-              <a class="btn" href="{{ path('admin_dishes_add') }}">Ajouter</a></p>
-          </div>
-        </article>
-        {% if is_granted('ROLE_ADMIN') %}
-        <article class="card mb-3 mb-md-0">
-          <div class="card-header">
-            <h3 class="text-center">Utilisateurs</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              <a class="btn" href="{{ path('admin_users_index') }}">Voir ou modifier</a></p>
-          </div>
-        </article>
-        {% endif %}
-      
-        <article class="card mb-3 mb-md-0">
-          <div class="card-header">
-            <h3 class="text-center">Menus</h3>
-          </div>
-         <div class="card-body">
-            <p>
-              <a class="btn" href="{{ path('admin_menus_index') }}">liste</a></p>
-            <p>
-              <a class="btn" href="{{ path('admin_menus_add') }}">Ajouter</a></p>
-          </div>
-        </article>
-        {% if is_granted('ROLE_ADMIN') %}
-         <article class="card mb-3 mb-md-0">
-          <div class="card-header">
-            <h3 class="text-center">Horraires</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              <a class="btn" href="{{ path('admin_business_hours_index') }}">Horraires d'ouverture</a></p>
-               </div>
-        </article>
-        {% endif %}
-      </div>
-    </aside>
-  </div>
+    <div class="row justify-content-center">
+        <aside class="col-lg-12 col-md-12 col-sm-12 mb-3">
+            <div class="row">
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Catégories</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_categories_index') }}">liste</a>
+                            </p>
+                            <p>
+                                <a class="btn" href="{{ path('admin_categories_add') }}">Ajouter</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Produits et images</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_dishes_index') }}">liste</a>
+                            </p>
+                            <p>
+                                <a class="btn" href="{{ path('admin_dishes_add') }}">Ajouter</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Réservation</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_calendar_index') }}">Voir ou modifier</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Utilisateurs</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_users_index') }}">Voir ou modifier</a>
+                            </p>
+                        </div>
+                    </article>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Menus</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_menus_index') }}">liste</a>
+                            </p>
+                            <p>
+                                <a class="btn" href="{{ path('admin_menus_add') }}">Ajouter</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-4 equal-height mt-3 mb-3">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <article class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">Horaires</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <a class="btn" href="{{ path('admin_business_hours_index') }}">Horaires d'ouverture</a>
+                            </p>
+                        </div>
+                    </article>
+                    {% endif %}
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>

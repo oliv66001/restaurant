@@ -6,6 +6,7 @@ use App\Entity\BusinessHours;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class BusinessHoursType extends AbstractType
@@ -15,7 +16,6 @@ class BusinessHoursType extends AbstractType
         $builder
             ->add('day', ChoiceType::class, [
                 'label' => 'Jour : ',
-                'model_timezone' => 'Europe/Paris',
                 'choices' => [
                     'Lundi' => 0,
                     'Mardi' => 1,
@@ -35,6 +35,16 @@ class BusinessHoursType extends AbstractType
                 'with_seconds' => false,
             ])
             ->add('closeTime', TimeType::class, [
+                'widget' => 'choice',
+                'input'  => 'datetime',
+                'with_seconds' => false,
+            ])
+            ->add('openTimeEvening', TimeType::class, [
+                'widget' => 'choice',
+                'input'  => 'datetime',
+                'with_seconds' => false,
+            ])
+            ->add('closeTimeEvening', TimeType::class, [
                 'widget' => 'choice',
                 'input'  => 'datetime',
                 'with_seconds' => false,

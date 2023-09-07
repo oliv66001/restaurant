@@ -4,6 +4,7 @@
 	Liste des menus
 {% endblock %}
 
+
 {% block body %}
 	<div class="container-fluid">
 		<div class="row justify-content-center">
@@ -11,42 +12,56 @@
 			{% include "_partials/_adminnav.html.twig" %}
 			<main class="col-12">
 				<h1 class="text-center">Liste des menus</h1>
-				<table class="table">
-					<thead class="text-center">
-						<tr class="text-center">
-						<th>Image</th>
-							<th>Nom</th>
-							<th>Description</th>
-							<th>Prix en €</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					{% for menu in menus %}
-						<tr class="text-center">
-							{# Ajoutez cette ligne pour afficher la première image de chaque plat dans le menu #}
-							<td> {% if dishe.images|length > 0 %}
-                                    <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail">
-                                {% else %}
-                                    <img src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" alt="Image par défaut" class="img-thumbnail">
-                                {% endif %}</td>
+				<div class="table-responsive">
+					<table class="table">
+						<thead class="thead-dark">
+							<tr class="text-center">
+								<th class="align-middle">Image</th>
+								<th class="align-middle">Nom des plats</th>
+								<th class="align-middle">Nom du menu</th>
+								<th class="align-middle">Description</th>
+								<th class="align-middle">Prix en €</th>
+								<th class="align-middle">Actions</th>
+							</tr>
+						</thead>
+						{% for menu in menus %}
+							<tr
+								class="text-center">
+								{# Ajoutez cette ligne pour afficher la première image de chaque plat dans le menu #}
+								<td class="align-middle">
+									{% for dish in menu.getDishes %}
 
-							<td class="align-middle">{{ menu.name }}</td>
-							<td class="align-middle">{{ menu.description }}</td>
-							<td class="align-middle">{{ menu.price }}€</td>
-							<td class="align-middle">
-								<a href="{{ path('admin_menus_edit', {'id': menu.id}) }}" class="btn btn2">Modifier</a>
+										{% if dish.images|length > 0 %}
+											<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dish.images[0].name ) }}" width:"150px" height:"150px" alt="{{ dish.name }}" class="img-fluid mb-3">
+										{% else %}
+											<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" alt="Image par défaut" class="img-fluid">
+										{% endif %}
+									{% endfor %}
+								</td>
+								<td class="align-middle">
+									{% for dish in menu.getDishes %}
+										{{ dish.name }}<br>
+									{% endfor %}
+								</td>
 
-							</td>
+								<td class="align-middle">{{ menu.name }}</td>
+								<td class="align-middle">{{ menu.description }}</td>
+								<td class="align-middle">{{ menu.price }}€</td>
+								<td class="align-middle">
+									<a href="{{ path('admin_menus_edit', {'id': menu.id}) }}" class="btn btn2">Modifier</a>
 
-						</tr>
+								</td>
 
-					{% endfor %}
+							</tr>
 
-				</table>
-				<div class="text-center">
-					<a href="{{ path('admin_menus_add') }}" class="btn btn">Ajouter</a>
+						{% endfor %}
+
+					</table>
 				</div>
-			</main>
+					<div class="text-center">
+						<a href="{{ path('admin_menus_add') }}" class="btn btn">Ajouter</a>
+					</div>
+				</main>
+			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}

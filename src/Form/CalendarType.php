@@ -35,7 +35,7 @@ class CalendarType extends AbstractType
     private $calendarRepository;
     private $businessHoursRepository;
 
-    
+
     public function __construct(Security $security, CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository)
     {
         $this->security = $security;
@@ -44,17 +44,14 @@ class CalendarType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
-{
-    // Récupérer l'utilisateur connecté
-    $current_user_id = $this->security->getUser();
-    $current_user_name = $current_user_id ? $current_user_id->getLastname() : null;
-    $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
+    {
+        // Récupérer l'utilisateur connecté
+        $current_user_id = $this->security->getUser();
+        $calendar = $builder->getData();
+        $reserving_user = $calendar->getName(); // Assure-toi d'avoir une méthode getUser() dans ton entité Calendar
+        $reserving_user_name = $reserving_user ? $reserving_user->getLastname() : null;
+        $current_user_allergies = $current_user_id ? $current_user_id->getAllergie() : null;
 
-    
-    // Récupérer les heures d'ouverture
-    $business_hours = $options['hours'] ?? [];
-   
-        
         $builder
             ->add('start', DateTimeType::class, [
                 'label' => 'Date et heure de la réservation : ',
@@ -89,9 +86,7 @@ class CalendarType extends AbstractType
                     '7' => 7,
                     '8' => 8,
                     '9' => 9,
-                    
-                   
-            '10' => 10,
+                    '10' => 10,
                     '11' => 11,
                     '12' => 12,
                 ],
@@ -131,7 +126,7 @@ class CalendarType extends AbstractType
 
             ->add('name', TextType::class, [
                 'label' => 'Nom : ',
-                'data' => $current_user_name,
+                'data' => $reserving_user_name,
                 'disabled' => true,
                 'attr' => [
                     'class' => 'form-group',
@@ -146,17 +141,21 @@ class CalendarType extends AbstractType
                     'required' => false,
                     'id' => 'calendar_availablePlaces',
                 ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Le nombre de places doit être supérieur ou égal à 0.'
+                    ])
+                ]
             ]);
-
-       
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,
-            'user' => null, 
-            'hours' => [], 
+            'user' => null,
+            'hours' => [],
+            'availableHours' => null,
         ]);
     }
-
 }

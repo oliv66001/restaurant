@@ -11,43 +11,47 @@
 			{% include "_partials/_adminnav.html.twig" %}
 			<main class="col-12 ">
 				<h1 class="text-center">Liste des plats</h1>
-				<table class="table">
-					<thead>
-						<tr class="text-center">
-							<th>Image</th>
-							<th>Nom</th>
-							<th>Prix en €</th>
-							<th>Catégorie</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					{% for dishe in dishes %}
-						<tr class="text-center">
+				<div class="table-responsive">
+					<table class="table">
+						<thead  class="thead-dark">
+							<tr class="text-center">
+								<th class="align-middle">Image</th>
+								<th class="align-middle">Nom</th>
+								<th class="align-middle">Prix en €</th>
+								<th class="align-middle">Catégorie</th>
+								<th class="align-middle">Actions</th>
+							</tr> 
+						</thead>
+						{% for dishe in dishes %}
+							<tr class="text-center">
 
 
-							<td> {% if dishe.images|length > 0 %}
-                                    <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" alt="{{ dishe.name }}" class="img-thumbnail">
-                                {% else %}
-                                    <img src="{{ asset('assets/images/Orange et Bordeaux Restaurant Logo.png') }}" width:'300px' height:'300px' alt="Image par défaut" class="img-thumbnail">
-                                {% endif %}</td>
+								<td class="align-middle">
+									{% if dishe.images|length > 0 %}
+										<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" width:'150px' height:'150px' alt="{{ dishe.name }}" class="img-fluid">
+									{% else %}
+										<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" width:'300px' height:'300px' alt="Image par défaut" class="img-thumbnail">
+									{% endif %}
+								</td>
 
-							<td class="align-middle">{{ dishe.name }}</td>
-							<td class="align-middle">{{ dishe.price }}€</td>
-							<td class="align-middle">{{ dishe.categories.name }}</td>
-							<td class="align-middle">
-								<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn2">Modifier</a>
-								
-							</td>
-						
-						</tr>
+								<td class="align-middle">{{ dishe.name }}</td>
+								<td class="align-middle">{{ dishe.price }}€</td>
+								<td class="align-middle">{{ dishe.categories.name }}</td>
+								<td class="align-middle">
+									<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn2">Modifier</a>
 
-					{% endfor %}
-				
-				</table>
-				<div class="text-center">
-					<a href="{{ path('admin_dishes_add') }}" class="btn btn">Ajouter</a>
+								</td>
+
+							</tr>
+
+						{% endfor %}
+
+					</table>
 				</div>
-			</main>
+					<div class="text-center">
+						<a href="{{ path('admin_dishes_add') }}" class="btn btn">Ajouter</a>
+					</div>
+				</main>
+			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}

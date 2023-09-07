@@ -26,20 +26,24 @@ class BusinessHours
     #[ORM\Column(type: 'integer')]
     private ?int $day = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'time', nullable: true)]
     private ?\DateTime $openTime = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'time', nullable: true)]
     private ?\DateTime $closeTime = null;
 
-     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'time', nullable: true)]
     private ?\DateTime $openTimeEvening = null;
 
-     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'time', nullable: true)]
     private ?\DateTime $closeTimeEvening = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $closed = false;
+
+    #[ORM\OneToMany(mappedBy: "businessHours", targetEntity: Calendar::class)]
+    private $calendars;
+
 
     public function getId(): ?int
     {
@@ -54,7 +58,7 @@ class BusinessHours
     public function setDay(int $day): self
     {
         $this->day = $day;
-    
+
         return $this;
     }
 
@@ -107,9 +111,6 @@ class BusinessHours
     {
         return $this->closed;
     }
-    
-
-    
 
     /**
      * Get the value of openTimeEvening
@@ -155,6 +156,24 @@ class BusinessHours
     public function setCloseTimeEvening(?\DateTime $closeTimeEvening): self
     {
         $this->closeTimeEvening = $closeTimeEvening;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of calendars
+     */
+    public function getCalendars()
+    {
+        return $this->calendars;
+    }
+
+    /**
+     * Set the value of calendars
+     */
+    public function setCalendars($calendars): self
+    {
+        $this->calendars = $calendars;
 
         return $this;
     }

@@ -3,16 +3,19 @@
 {% block title %}Calendrier{% endblock %}
 
 {% block body %}
-<h1>Calendrier</h1>
+{% include "_partials/_adminnav.html.twig" %}
+<h1 class="text-center">Calendrier</h1>
 
-<table class="table">
-    <thead>
-        <tr>
+ <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr class="text-center">
             <th>Id</th>
+            <th>Nom</th>
             <th>Date et heure de la réservation</th>
             <th>Nombre de personnes</th>
             <th>Allergies</th>
-            <th>Nom</th>
+            
             <th>Places disponibles</th>
             <th>Actions</th>
         </tr>
@@ -20,17 +23,19 @@
     <tbody>
     {% for calendar in calendars %}
         <tr>
-            <td>{{ calendar.id }}</td>
-            <td>{{ calendar.start|date('d/m/Y H:i') }}</td>
-            <td>{{ calendar.numberOfGuests }}</td>
-            <td>{{ calendar.allergie }}</td>
-            <td>{{ calendar.name }}</td>
-            <td>{{ calendar.availablePlaces }}</td>
-            <td>
-                <a href="{{ path('admin_calendar_edit', {'id': calendar.id}) }}">edit</a>
+            <td class="align-middle">{{ calendar.id }}</td>
+            <td class="align-middle">{{ calendar.name }}</td>
+            <td class="align-middle">{{ calendar.start|date('d/m/Y H:i') }}</td>
+            <td class="align-middle">{{ calendar.numberOfGuests }}</td>
+            <td class="align-middle">{{ calendar.allergie }}</td>
+            
+            <td class="align-middle">{{ calendar.availablePlaces }}</td>
+            <td class="align-middle">
+                <a class="btn btn2" href="{{ path('admin_calendar_edit', {'id': calendar.id}) }}">edit</a>
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

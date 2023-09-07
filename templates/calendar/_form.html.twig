@@ -11,7 +11,7 @@
 				{{ form_row(form.numberOfGuests) }}
 			
 
-				{{ form_row(form.availablePlaces) }}
+				{{ form_row(form.availablePlaces, {'attr': {'min': 0}}) }}
 			
 			</div>
 
@@ -27,7 +27,7 @@
 			<div class="col-md-12 text-center mt-3">
 				{{ form_row(form.allergieOfGuests) }}
 			</div>
-			<button class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
+			<button id="submit-button" class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
 		</div>
 	</div>
 	{{ form_end(form) }}

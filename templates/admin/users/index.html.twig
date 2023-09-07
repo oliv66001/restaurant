@@ -7,60 +7,62 @@
 
 
 	<div class="container">
-		<div class="row justify-content-center">
+		<div class="row">
 			{% include "_partials/_adminnav.html.twig" %}
 			<main class="col-12 p-2">
 				<h1 class="text-center">Listes des utilisateurs</h1>
-				<table class="table">
-					<thead>
-						<tr class="text-center">
-							<th>Nom</th>
-							<th>Téléphone</th>
-							<th>Rôles</th>
-							<th>Compte vérifié</th>
-							<th>Action</th>
-						</tr>
-					</thead>
+				<div class="table-responsive">
+					<table class="table">
+						<thead class="thead-dark">
+							<tr class="text-center">
+								<th class="align-middle">Nom</th>
+								<th class="align-middle">Téléphone</th>
+								<th class="align-middle">Rôles</th>
+								<th class="align-middle">Compte vérifié</th>
+								<th class="align-middle">Action</th>
+							</tr>
+						</thead>
 
 
-					{% for user in users %}
-						<tr class="text-center">
-							<td>{{ user.lastname }}</td>
-							<td>{{ user.phone }}</td>
+						{% for user in users %}
+							<tr class="text-center">
+								<td class="align-middle">{{ user.lastname }}</td>
+								<td class="align-middle">{{ user.phone }}</td>
 
-							<td>
-								{% for role in user.roles %}
-									{% if role == "ROLE_ADMIN" %}
-										{% set name = "Administrateur" %}
-										{% set color = "danger" %}
-									{% elseif role == "ROLE_DISHES_ADMIN" %}
-										{% set name = "Admin produits" %}
-										{% set color = "warning" %}
-									{% elseif role == "ROLE_USER" %}
-										{% set name = "Membre" %}
-										{% set color = "success" %}
-									{% endif %}
-									<span class="badge badge-{{ color }}">{{ name }}</span>
+								<td class="align-middle">
+									{% for role in user.roles %}
+										{% if role == "ROLE_ADMIN" %}
+											{% set name = "Administrateur" %}
+											{% set color = "danger" %}
+										{% elseif role == "ROLE_DISHES_ADMIN" %}
+											{% set name = "Admin produits" %}
+											{% set color = "warning" %}
+										{% elseif role == "ROLE_USER" %}
+											{% set name = "Membre" %}
+											{% set color = "success" %}
+										{% endif %}
+										<span class="badge badge-{{ color }}">{{ name }}</span>
 
 
-								{% endfor %}
-							</td>
-							
-							<td>
-							
-								<div class="form-check form-switch">
-								
-									<input class="form-check-input" type="checkbox" role="switch" id="switch {{ user.id }} " {{ user.isVerified ? "checked" : "" }} disabled>
-									<label class="form-check-label" for="switch {{ user.id }}">{{ user.isVerified }}</label>
-								</div>
-							</td>
-							<td>
-								<a href="{{ path('admin_users_edit', {'id': user.id}) }}" class="btn btn">Modifier</a>
-							</td>
-						</tr>
+									{% endfor %}
+								</td>
 
-					{% endfor %}
-				</table>
+								<td class="align-middle">
+
+									<div class="form-check form-switch">
+
+										<input class="form-check-input" type="checkbox" role="switch" id="switch {{ user.id }} " {{ user.isVerified ? "checked" : "" }} disabled>
+										<label class="form-check-label" for="switch {{ user.id }}">{{ user.isVerified }}</label>
+									</div>
+								</td>
+								<td class="align-middle">
+									<a href="{{ path('admin_users_edit', {'id': user.id}) }}" class="btn btn">Modifier</a>
+								</td>
+							</tr>
+
+						{% endfor %}
+					</table>
+				</div>
 
 			</main>
 		</div>

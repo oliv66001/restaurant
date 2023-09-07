@@ -1,66 +1,38 @@
 document.addEventListener("DOMContentLoaded", function () {
-    //const calendarId = document.querySelector("[data-calendar-id]").getAttribute("data-calendar-id"); // Remplacer avec l'ID de ton formulaire
-    //const startInput = document.getElementById("calendar_start");
-    const form = document.getElementById("calendar_start");
-    const numberOfGuestsInput = document.getElementById("calendar_numberOfGuests");
-
-    function updateAvailablePlaces() {
-        let year = document.querySelector("#calendar_start [name='calendar[start][date][year]']").value;
-        let month = document.querySelector("#calendar_start [name='calendar[start][date][month]']").value;
-        let day = document.querySelector("#calendar_start [name='calendar[start][date][day]']").value;
-        let hour = document.querySelector("#calendar_start [name='calendar[start][time][hour]']").value;
-        let minute = document.querySelector("#calendar_start [name='calendar[start][time][minute]']").value;
-        let start = `${year}-${month}-${day} ${hour}:${minute}`;
-        let numberOfGuests = numberOfGuestsInput.value;
-
-        if (start && numberOfGuests) {
-            fetch(`/calendar/remaining-places-api?start=${encodeURIComponent(start)}&numberOfGuests=${encodeURIComponent(numberOfGuests)}`)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                const remainingPlaces = data.remainingPlaces;
-                document.getElementById("calendar_availablePlaces").value = remainingPlaces;
-
-                // Afficher un message si le nombre de places disponibles est insuffisant
-                if (remainingPlaces < numberOfGuests) {
-                    alert("Le nombre de places demandé n'est pas disponible.");
-                }
-            });
-        } else {
-            document.getElementById("calendar_availablePlaces").value = '';
+    setTimeout(function () {
+      const submitButton = document.getElementById("submit-button");
+      const startInput = document.getElementById("calendar_start");
+      const numberOfGuestsInput = document.getElementById(
+        "calendar_numberOfGuests"
+      );
+      const availablePlacesInput = document.getElementById(
+        "calendar_availablePlaces"
+      );
+      const dayInput = document.querySelector(
+        "#calendar_start [name='calendar[start][date][day]']"
+      );
+      let abortController = new AbortController(); // Objet pour annuler les requêtes fetch
+      dayInput.addEventListener("change", function () {
+        const year = document.querySelector(
+          "#calendar_start [name='calendar[start][date][year]']"
+        ).value;
+        const month = document.querySelector(
+          "#calendar_start [name='calendar[start][date][month]']"
+        ).value;
+        const day = this.value;
+  
+        // Créer un objet Date
+        const selectedDate = new Date(year, month - 1, day); // Les mois dans l'objet Date vont de 0 à 11
+  
+        if (selectedDate.getDay() === 1) {
+          // 1 représente Lundi
+          alert(
+            "Le restaurant est fermé ce jour-là. Veuillez choisir un autre jour."
+          );
         }
-    }
+      });
 
-    form.addEventListener("submit", function(event) {
-        let year = document.querySelector("#calendar_start [name='calendar[start][date][year]']").value;
-        let month = document.querySelector("#calendar_start [name='calendar[start][date][month]']").value;
-        let day = document.querySelector("#calendar_start [name='calendar[start][date][day]']").value;
-        let hour = document.querySelector("#calendar_start [name='calendar[start][time][hour]']").value;
-        let minute = document.querySelector("#calendar_start [name='calendar[start][time][minute]']").value;
-        let start = `${year}-${month}-${day} ${hour}:${minute}`;
-        let numberOfGuests = numberOfGuestsInput.value;
-
-        if (start && numberOfGuests) {
-            fetch(`/calendar/remaining-places-api?start=${encodeURIComponent(start)}&numberOfGuests=${encodeURIComponent(numberOfGuests)}`)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                const remainingPlaces = data.remainingPlaces;
-
-                if (remainingPlaces < numberOfGuests) {
-                    alert("Le nombre de places demandé n'est pas disponible.");
-                    event.preventDefault(); // Annuler l'envoi du formulaire
-                }
-            });
-        } else {
-            // Condition si les champs sont vides ou invalides
-            event.preventDefault(); // Annuler l'envoi du formulaire
-        }
-        startInput.addEventListener("input", updateAvailablePlaces);
-        numberOfGuestsInput.addEventListener("input", updateAvailablePlaces);
+      startInput.addEventListener("input", updateAvailablePlaces);
+      numberOfGuestsInput.addEventListener("input", updateAvailablePlaces);
     }, 500);
-    });
-
-
+  });

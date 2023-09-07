@@ -30,4 +30,7 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script src="{{ asset('assets/js/calendar.js') }}" defer></script>
+	 <script>
+        let closedDays = {{ closedDaysArray | json_encode | raw }};
+    </script>
 {% endblock %}

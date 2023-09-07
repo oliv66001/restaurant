@@ -47,9 +47,9 @@ class CalendarRepository extends ServiceEntityRepository
             ->andWhere('c.numberOfSeats >= :numberOfGuests')
             ->setParameter('numberOfGuests', $numberOfGuests)
             ->orderBy('c.start', 'ASC');
-
+        
         $calendars = $qb->getQuery()->getResult();
-
+        
         if (empty($calendars)) {
             return ['error' => 'Aucune disponibilité trouvée pour cette date.'];
         }
@@ -97,20 +97,24 @@ class CalendarRepository extends ServiceEntityRepository
 
     public function countReservationsByDate(DateTimeInterface $dateTime): int
     {
-        $dateTimeStart = \DateTime::createFromFormat('d/m/Y', $dateTime->format('d/m/Y'));
-        $dateTimeEnd = clone $dateTimeStart;
-        $dateTimeEnd->modify('+1 hour');
-
+        // Crée de nouveaux objets DateTime à partir de l'objet DateTimeInterface
+        $dateTimeStart = new \DateTime($dateTime->format('Y-m-d H:i:s'));
+        $dateTimeEnd = new \DateTime($dateTime->format('Y-m-d H:i:s'));
+    
+        $dateTimeEnd->modify('+1 hour');  // Modifie le nouvel objet DateTime
+    
         $qb = $this->createQueryBuilder('c');
-
+    
         $qb->select('COUNT(c.id)')
             ->where('c.start >= :dateTimeStart')
             ->andWhere('c.start < :dateTimeEnd')
             ->setParameter('dateTimeStart', $dateTimeStart)
             ->setParameter('dateTimeEnd', $dateTimeEnd);
-
+    
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
+    
+    
 
     public function findAllByUserAndDate(Users $user, DateTimeInterface $date): array
     {
@@ -210,26 +214,30 @@ class CalendarRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countOccupiedPlaces(DateTimeInterface $dateTime): int
+    public function countOccupiedPlaces(DateTimeInterface $start, int $numberOfGuests)
     {
-        $qb = $this->createQueryBuilder('c')
-            ->select('SUM(c.numberOfGuests)')
-            ->where('c.start = :start')
-            ->setParameter('start', $dateTime)
-            ->getQuery();
-    
-        $result = $qb->getSingleScalarResult();
-    
-        return $result ? $result : 0;
+        $reservations = $this->createQueryBuilder('c')
+            ->andWhere('c.start = :start')
+            ->setParameter('start', $start)
+            ->getQuery()
+            ->getResult();
+        
+        $occupiedPlaces = 0;
+        foreach ($reservations as $reservation) {
+            $occupiedPlaces += $reservation->getNumberOfGuests();
+        }
+        error_log("DateTime: " . $start->format('Y-m-d H:i:s') . " - Occupied Places: " . $occupiedPlaces);
+
+        return $occupiedPlaces;
     }
-    
     
     public function getAvailablePlaces(DateTimeInterface $dateTime, int $numberOfGuests): int
     {
-        $occupiedPlaces = $this->countOccupiedPlaces($dateTime);
+        $occupiedPlaces = $this->countOccupiedPlaces($dateTime, $numberOfGuests);
         $availablePlaces = self::MAX_CAPACITY - $occupiedPlaces - $numberOfGuests;
-    
+
+        error_log("DateTime: " . $dateTime->format('Y-m-d H:i:s') . " - Available Places: " . $availablePlaces . " - Number of Guests: " . $numberOfGuests);
+      
         return $availablePlaces;
     }
-    
 }
