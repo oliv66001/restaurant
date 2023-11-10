@@ -30,7 +30,12 @@ class ProfileController extends AbstractController
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
-        return $this->render('profile/index.html.twig', [
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                return $this->render('profile/index.html.twig', [
             'business_hours' => $business_hours,
             'categories' => $categories,
             'category' => $category,
@@ -52,7 +57,12 @@ class ProfileController extends AbstractController
         $category = $em->getRepository(Categories::class)->findAll();
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
-        if ($users !== $currentUser) {
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                if ($users !== $currentUser) {
             // Vous pouvez renvoyer une erreur 403 ou rediriger l'utilisateur vers une autre page
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier le profil d\'un autre utilisateur.');
         }

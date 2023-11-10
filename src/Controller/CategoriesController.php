@@ -23,7 +23,12 @@ class CategoriesController extends AbstractController
     {
 
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         $dishes = $dishesRepository->findAll();
         $page = $request->query->getInt('page', 1);
         $dishes = $dishesRepository->findDishesPaginated($page, $categorie->getSlug(), 3);

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Exception;
 use App\Entity\Contact;
+use App\Entity\Categories;
 use Psr\Log\LoggerInterface;
 use App\Form\ContactFormType;
 use App\Service\SendMailService;
@@ -24,9 +25,15 @@ class ContactController extends AbstractController
         $contact = new Contact();
         $form = $this->createForm(ContactFormType::class, $contact);
         $form->handleRequest($request);
+        $category = $em->getRepository(Categories::class)->findAll();
         $session = $request->getSession();
         $business_hours = $businessHoursRepository->findAll();
-
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $contact->setCreatedAt(new \DateTimeImmutable());
             $em->persist($contact);
@@ -52,6 +59,7 @@ class ContactController extends AbstractController
         return $this->render('contact/index.html.twig', [
             'controller_name' => 'ContactController',
             'business_hours' => $business_hours,
+            'category' => $category,
             'form' => $form->createView()
         ]);
     }

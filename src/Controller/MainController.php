@@ -25,7 +25,12 @@ class MainController extends AbstractController
         $dishes = $dishesRepository->findAll();
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
-
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+        
         return $this->render('main/index.html.twig', [ 
             'business_hours' => $business_hours, 
             'dishes' => $dishes, 

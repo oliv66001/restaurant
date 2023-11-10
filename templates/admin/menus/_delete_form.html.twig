@@ -1,5 +1,4 @@
 <form method="post" action="{{ path('admin_menus_delete_menu', {'id': menu.id}) }}">
-
-  <a href="{{ path('admin_menus_delete_menu', {'id': menu.id}) }}" data-delete data-token="{{ csrf_token('delete_menu' ~ menu.id) }}" class="btn btn2 text-center" data-delete data-type="product">Supprimer</a>
+  <a href="{{ path('admin_menus_delete_menu', {'id': menu.id}) }}" data-delete data-token="{{ csrf_token('delete_menu' ~ menu.id) }}" class="btn btn2 text-center" data-delete data-type="menu">Supprimer</a>
 </form>
 

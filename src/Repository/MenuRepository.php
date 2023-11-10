@@ -41,39 +41,39 @@ class MenuRepository extends ServiceEntityRepository
 
     // src/Repository/MenuRepository.php
 
-public function findWithPagination(int $page, int $menusPerPage): array
-{
-    $queryBuilder = $this->createQueryBuilder('m')
-        ->orderBy('m.id', 'ASC')
-        ->setFirstResult(($page - 1) * $menusPerPage)
-        ->setMaxResults($menusPerPage);
+    public function findWithPagination(int $page, int $menusPerPage): array
+    {
+        $queryBuilder = $this->createQueryBuilder('m')
+            ->orderBy('m.id', 'ASC')
+            ->setFirstResult(($page - 1) * $menusPerPage)
+            ->setMaxResults($menusPerPage);
 
-    return $queryBuilder->getQuery()->getResult();
-}
+        return $queryBuilder->getQuery()->getResult();
+    }
 
 
-//    /**
-//     * @return Menu[] Returns an array of Menu objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Menu[] Returns an array of Menu objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Menu
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Menu
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

@@ -17,13 +17,14 @@ class BusinessHoursType extends AbstractType
             ->add('day', ChoiceType::class, [
                 'label' => 'Jour : ',
                 'choices' => [
-                    'Lundi' => 0,
-                    'Mardi' => 1,
-                    'Mercredi' => 2,
-                    'Jeudi' => 3,
-                    'Vendredi' => 4,
-                    'Samedi' => 5,
-                    'Dimanche' => 6
+                    'Dimanche' => 0,
+                    'Lundi' => 1,
+                    'Mardi' => 2,
+                    'Mercredi' => 3,
+                    'Jeudi' => 4,
+                    'Vendredi' => 5,
+                    'Samedi' => 6,
+                   
                 ],
                 'attr' => [
                     'class' => 'form-control'

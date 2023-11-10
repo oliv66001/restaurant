@@ -4,12 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\BusinessHours;
 use App\Form\BusinessHoursType;
-use App\Repository\BusinessHoursRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BusinessHoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/admin/business-hours", name: "admin_business_hours_")]
 class BusinessHoursController extends AbstractController
@@ -26,13 +27,20 @@ class BusinessHoursController extends AbstractController
 
 
     #[Route("/", name: "index")]
-
     public function index(): Response
     {
-        $day = $this->businessHoursRepository->findAllOrderedByDay();
-        $hours = $this->businessHoursRepository->findAll();
+        if (false === $this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Seuls les super administrateurs peuvent accéder à cette page.');
+        }
+        $hours = $this->businessHoursRepository->findAllOrderedByDay();
+        
+        usort($hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+       
         return $this->render('admin/business_hours/index.html.twig',  [
-            'day' => $day,
             'hours' => $hours,
         ]);
     }
@@ -43,6 +51,9 @@ class BusinessHoursController extends AbstractController
 
     public function edit(Request $request, int $id): Response
     {
+        if (false === $this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Seuls les super administrateurs peuvent modifier les horaires.');
+        }
         // Utilisez le BusinessHoursRepository pour récupérer l'entité BusinessHours par ID
         $hours = $this->businessHoursRepository->find($id);
 

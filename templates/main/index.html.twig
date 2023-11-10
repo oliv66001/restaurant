@@ -29,7 +29,7 @@
 		<div class="col-12">
 			<h1 class="text-center mt-4">Le Quai-Antique</h1>
 		</div>
-		
+
 
 		{% for category in categories %}
 			{% if category.parent == null and category.name != 'Top image' and category.name != 'Bottom image' %}
@@ -39,37 +39,33 @@
                         </div>
                     {% endif %}
                 {% elseif category.parent != null and category.name != 'Top image' and category.name != 'Bottom image' %}
-                    <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
-                        <div class="card-container">
-                            <article class="card h-100 mb-6">
-                                <div class="card-body">
-                                    {% set categoryImageFound = false %}
-                                    {% for dishe in dishes %}
-                                        {% if dishe.categories.id == category.id and not categoryImageFound %}
-                                            {% if dishe.images[0] is defined %}
-                                                <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" class="card-img-top" alt="{{ dishe.name }}">
-                                            {% else %}
-                                                <img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" class="card-img-top" alt="{{ dishe.name }}">
-                                            {% endif %}
-                                            {% set categoryImageFound = true %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    <div class="col-12 text-center">
-                                        <h3 class="card-title mt-5 mb-0">{{ category.name }}</h3>
-                                        <a  href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn btn mt-3">Voir le détails</a>
-                                        {% if app.user %}
-                                            <a type="button" href="{{ path('app_calendar_new') }}" class="btn btn mt-3">Réserver</a>
-                                        {% else %}
-                                            <p>Connectez-vous pour réserver</p>
-											<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
-											<a type="button" href="{{ path('app_register') }}" class="btn mt-3">S'inscrire</a>
-										{% endif %}
+    <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+        <div class="card-container">
+            <article class="card h-100 mb-6">
+                <div class="card-body">
+                    {% set categoryImageFound = false %}
+                    {% for dishe in dishes %}
+                        {% if dishe.categories.id == category.id and not categoryImageFound %}
+                            {% if dishe.images[0] is defined %}
+                                <img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" class="card-img-top" alt="{{ dishe.name }}">
+                            {% else %}
+                                <img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" class="card-img-top" alt="{{ dishe.name }}">
+                            {% endif %}
+                            {% set categoryImageFound = true %}
+                        {% endif %}
+                    {% endfor %}
+                    <div class="col-12 text-center">
+                        <h3 class="card-title mt-5 mb-0">{{ category.name }}</h3>
+                        <a  href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn btn mt-3">Voir le détails</a>
+                        {% if app.user %}
+                            <a type="button" href="{{ path('app_calendar_new') }}" class="btn btn mt-3">Réserver</a>
+                        {% else %}
+                            <p>Connectez-vous pour réserver</p>
+			        		<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
+			        		<a type="button" href="{{ path('app_register') }}" class="btn mt-3">S'inscrire</a>
+			        	{% endif %}
 				</div>
 			</div>
-
 		</article>
-
 	</div>
-</div>{% endif %}{% endfor %}</section></main>
-<img class="img-fluid" id="bottom" src="{{ bottomImage }}" alt="Images de présentaion du restaurant le Quia-Antique">
-{% endblock %}
+</div>{% endif %}{% endfor %}</section></main><img class="img-fluid" id="bottom" src="{{ bottomImage }}" alt="Images de présentaion du restaurant le Quia-Antique">{% endblock %}

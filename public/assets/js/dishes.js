@@ -22,8 +22,10 @@ for (let link of productLinks) {
                     alert(data.message);
                     // Redirection vers la route 'admin_dishes_index'
                     window.location.href = '/admin/dishes';
+                } else if (data.error === "Token invalide") {
+                    alert("Token invalide, impossible de supprimer le produit.");
                 } else {
-                    alert(data.error);
+                    alert("Vous n'avez pas les droits nécessaires pour supprimer ce produit.");
                 }
             })
             .catch(error => {

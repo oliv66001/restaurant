@@ -7,6 +7,7 @@ use App\Entity\Users;
 use DateTimeInterface;
 use IntlDateFormatter;
 use App\Entity\Calendar;
+use App\Entity\Categories;
 use App\Form\CalendarType;
 use Psr\Log\LoggerInterface;
 use App\Entity\BusinessHours;
@@ -47,6 +48,11 @@ class CalendarController extends AbstractController
     {
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
+        usort($business_hours, function ($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
         $user = $this->getUser();
         if ($this->isGranted('ROLE_ADMIN')) {
             $calendars = $calendarRepository->findAll(); // L'administrateur voit toutes les réservations
@@ -74,9 +80,15 @@ class CalendarController extends AbstractController
         CalendarService $calendarService
     ): Response {
 
+        $category = $entityManager->getRepository(Categories::class)->findAll();
         $business_hours = $businessHoursRepository->findAll();
+        usort($business_hours, function ($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
         $user = $security->getUser();
-        $anyDayClosed = false;
+
         $openDays = [];
         foreach ($business_hours as $hour) {
             if (!$hour->isClosed()) {
@@ -97,20 +109,29 @@ class CalendarController extends AbstractController
         $nextOpenDate = (new \DateTime())->add(new \DateInterval('P' . $daysUntilNextOpenDay . 'D'));
 
         $closedDays = $businessHoursRepository->findBy(['closed' => true]);
+
         $closedDaysArray = array_map(function ($hour) {
             return $hour->getDay();
         }, $closedDays);
-
+       
         $calendar = new Calendar();
         $calendar->setName($user);
-        $calendar->setStart($nextOpenDate);
+        $calendar->setStart(null);
 
         // Récupération des places disponibles
-        $numberOfGuests = $calendar->getNumberOfGuests() ?? 1;
+        $start = $calendar->getStart();
+
+        $capacity = self::RESTAURANT_CAPACITY;
+        $numberOfGuests = $calendar->getNumberOfGuests() ?? 0;
+        
+        $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
+        //dd($start, $numberOfGuests);
+        $availablePlaces = max($capacity - $occupiedPlaces, 0);
+        $calendar->setAvailablePlaces($availablePlaces);
         $remainingPlaces = $calendarService->getAvailablePlaces($calendar->getStart(), $numberOfGuests);
-
+       
         $calendar->setAvailablePlaces($remainingPlaces);
-
+        
 
         //Récupération des heures d'ouverture du restaurant
         $start = [];
@@ -145,36 +166,53 @@ class CalendarController extends AbstractController
         $existingReservations = $calendarRepository->findByUserOrAll($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
+          
             // On démarre une transaction
             $entityManager->beginTransaction();
 
             try {
+                $numberOfGuests = $calendar->getNumberOfGuests();
+                $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $numberOfGuests);
+                $availablePlaces = $form->get('availablePlaces')->getData() - $occupiedPlaces;
+                
                 // Mettons à jour $calendar avec les nouvelles valeurs du formulaire
                 $start = $calendar->getStart();
-                $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
-
-                if ($dayOfWeek === 1) { // Si c'est un lundi
-                    $this->addFlash('danger', 'Le restaurant est fermé . Veuillez choisir un autre jour.');
+                //dd($availablePlaces);
+                //dd($start, $numberOfGuests);
+                // Compte le nombre de réservations pour cette heure
+                $count = $calendarRepository->countReservationsByHour($start);
+                
+                if ($count >= 30) {
+                    $this->addFlash('error', 'Désolé, il y a déjà 30 réservations pour cette heure.');
                     $entityManager->rollback();
                     return $this->redirectToRoute('app_calendar_new');
                 }
-
-
-                $numberOfGuests = $calendar->getNumberOfGuests();
-
+                //dd($availablePlaces);
                 // Obtenir le nombre de places disponibles
+                $numberOfGuests = $calendar->getNumberOfGuests();
                 $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
-
+                 
                 // Si le nombre de places restantes est insuffisant, retourner une erreur
                 if ($remainingPlaces < $numberOfGuests) {
+                    //dd($remainingPlaces, $numberOfGuests);
                     $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
                     $entityManager->rollback();
                     return $this->redirectToRoute('app_calendar_new');
                 }
 
                 $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
+                
+                
+                $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
 
-                // Persister et flusher les données
+                if ($dayOfWeek === $closedDays) {
+
+                    $this->addFlash('danger', 'Le restaurant est fermé . Veuillez choisir un autre jour.');
+                    $entityManager->rollback();
+                    return $this->redirectToRoute('app_calendar_new');
+                }
+
+              // Persister et flusher les données
                 $entityManager->persist($calendar);
                 $entityManager->flush();
                 //dd($calendar);
@@ -206,8 +244,8 @@ class CalendarController extends AbstractController
                         'user' => $user,
                     ]);
 
-                //$mailer->send($emailAdmin);
-                //$mailer->send($emailUser);
+                $mailer->send($emailAdmin);
+                $mailer->send($emailUser);
 
                 $this->addFlash('success', 'La réservation a été enregistrée avec succès.');
                 return $this->redirectToRoute('app_calendar_index');
@@ -224,6 +262,7 @@ class CalendarController extends AbstractController
             'calendar' => $calendar,
             'business_hours' => $business_hours,
             'start' => $start,
+            'category' => $category,
             'closedDaysArray' => $closedDaysArray,
             'remainingPlaces' => $remainingPlaces,
             'form' => $form->createView(),
@@ -233,9 +272,10 @@ class CalendarController extends AbstractController
 
 
     #[Route('/show/{id}', name: 'app_calendar_show', methods: ['GET'])]
-    public function show(Calendar $calendar, BusinessHoursRepository $businessHoursRepository, AuthorizationCheckerInterface $authChecker, Security $security): Response
+    public function show(Calendar $calendar, BusinessHoursRepository $businessHoursRepository, AuthorizationCheckerInterface $authChecker, Security $security, EntityManagerInterface $entityManager): Response
     {
         $user = $security->getUser();
+        $category = $entityManager->getRepository(Categories::class)->findAll();
 
         // Vérifier si l'objet Calendar est récupéré correctement
         if (!$calendar) {
@@ -252,6 +292,11 @@ class CalendarController extends AbstractController
         }
 
         $business_hours = $businessHoursRepository->findAll();
+        usort($business_hours, function ($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
         $dateFormatter = new IntlDateFormatter(
             'fr_FR',
             IntlDateFormatter::SHORT,
@@ -262,6 +307,7 @@ class CalendarController extends AbstractController
 
         return $this->render('calendar/show.html.twig', [
             'business_hours' => $business_hours,
+            'category' => $category,
             'calendar' => $calendar,
             'formattedStartDate' => $formattedStartDate,
         ]);
@@ -271,8 +317,13 @@ class CalendarController extends AbstractController
     #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager,  CalendarService $calendarService): Response
     {
+        $category = $entityManager->getRepository(Categories::class)->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $anyDayClosed = false;
+        usort($business_hours, function ($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
         $openDays = [];
         foreach ($business_hours as $hour) {
             if (!$hour->isClosed()) {
@@ -294,8 +345,6 @@ class CalendarController extends AbstractController
         $closedDaysArray = array_map(function ($hour) {
             return $hour->getDay();
         }, $closedDays);
-
-        $form = $this->createForm(CalendarType::class, $calendar);
 
         $user = $security->getUser();
 
@@ -335,8 +384,6 @@ class CalendarController extends AbstractController
             return $this->redirectToRoute('app_calendar_index');
         }
 
-
-
         $form = $this->createForm(CalendarType::class, $calendar, [
             'hours' => $start,
 
@@ -353,10 +400,11 @@ class CalendarController extends AbstractController
                 $start = $calendar->getStart();
                 $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
 
-                if ($dayOfWeek === 1) { // Si c'est un lundi
+                if ($dayOfWeek === $closedDays) {
+
                     $this->addFlash('danger', 'Le restaurant est fermé . Veuillez choisir un autre jour.');
                     $entityManager->rollback();
-                    return $this->redirectToRoute('app_calendar_edit', ['id' => $calendar->getId()]);
+                    return $this->redirectToRoute('app_calendar_new');
                 }
 
 
@@ -366,7 +414,7 @@ class CalendarController extends AbstractController
                 $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
 
                 // Si le nombre de places restantes est insuffisant, retourner une erreur
-                if ($remainingPlaces < $numberOfGuests) {
+                if ($remainingPlaces < $numberOfGuests - $numberOfGuests) {
                     $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
                     $entityManager->rollback();
                     return $this->redirectToRoute('app_calendar_new');
@@ -382,45 +430,42 @@ class CalendarController extends AbstractController
                 // Commit de la transaction
                 $entityManager->commit();
 
+                $emailAdmin = (new TemplatedEmail())
+                    ->from('quai-antique@crocobingo.fr')
+                    ->to('quai.antiquead@gmail.com')
+                    ->subject('Réservation modifiée')
+                    ->htmlTemplate('emails/modified_reservation.html.twig')
+                    ->context([
+                        'reservation' => $calendar,
+                    ]);
+
+                $emailUser = (new TemplatedEmail())
+                    ->from('quai-antique@crocobingo.fr')
+                    ->to($user->getEmail())
+                    ->subject('Réservation modifiée')
+                    ->htmlTemplate('emails/modifiedUser_reservation.html.twig')
+                    ->context([
+                        'reservation' => $calendar,
+                    ]);
+
+                $mailer->send($emailAdmin);
+                $mailer->send($emailUser);
+
+                $this->addFlash('success', 'La réservation a été modifiée avec succès.');
 
 
-            $emailAdmin = (new TemplatedEmail())
-                ->from('quai-antique@crocobingo.fr')
-                ->to('quai.antiquead@gmail.com')
-                ->subject('Réservation modifiée')
-                ->htmlTemplate('emails/modified_reservation.html.twig')
-                ->context([
-                    'reservation' => $calendar,
-                ]);
-
-            $emailUser = (new TemplatedEmail())
-                ->from('quai-antique@crocobingo.fr')
-                ->to($user->getEmail())
-                ->subject('Réservation modifiée')
-                ->htmlTemplate('emails/modifiedUser_reservation.html.twig')
-                ->context([
-                    'reservation' => $calendar,
-                ]);
-
-            //$mailer->send($emailAdmin);
-            //$mailer->send($emailUser);
-
-            $this->addFlash('success', 'La réservation a été modifiée avec succès.');
-
-
-            return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
-        } catch (\Exception $e) {
-            if ($entityManager->getConnection()->isTransactionActive()) {
-                $entityManager->rollback();
+                return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                if ($entityManager->getConnection()->isTransactionActive()) {
+                    $entityManager->rollback();
+                }
+                throw $e;
             }
-            throw $e;
         }
-    }
-
-
-
         return $this->render('calendar/edit.html.twig', [
             'calendar' => $calendar,
+            'category' => $category,
+            'closedDaysArray' => $closedDaysArray,
             'business_hours' => $business_hours,
             'form' => $form,
         ]);

@@ -28,7 +28,12 @@ class CarteController extends AbstractController
     {
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         
         return $this->render('carte/index.html.twig', 
             [
@@ -46,7 +51,12 @@ class CarteController extends AbstractController
     {
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         
         return $this->render('carte/menu1.html.twig', 
             [
@@ -64,7 +74,12 @@ class CarteController extends AbstractController
     {
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         
         return $this->render('carte/menu2.html.twig', 
             [
@@ -82,7 +97,12 @@ class CarteController extends AbstractController
     {
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         
         return $this->render('carte/menu3.html.twig', 
             [
@@ -100,7 +120,12 @@ class CarteController extends AbstractController
     {
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        $category = $entityManager->getRepository(Categories::class)->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                $category = $entityManager->getRepository(Categories::class)->findAll();
         
         return $this->render('carte/menu_template.html.twig', 
             [

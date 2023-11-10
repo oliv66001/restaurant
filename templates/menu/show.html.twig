@@ -13,16 +13,19 @@
                     <h1> {{ menu.name }}</h1>
                 </div>
 
-                {% for dish in menu.dishes %}
+              {% for sortedMenu in sortedMenus %}
+            {% if sortedMenu.menu.id == menu.id %}
+                {% for sortedDish in sortedMenu.sortedDishes %}
                     <div class="row justify-content-center">
                         <div class="col-lg-12 col-sm-12 px-20">
-                            <h3>{{ dish.name }}</h3>
-                            <p class="text-center px-50">{{ dish.description }}</p>
-                            <p class="price">{{ dish.price }}€</p>
+                            <h3>{{ sortedDish.name }}</h3>
+                            <p class="text-center px-50">{{ sortedDish.description }}</p>
+                            <p class="price">{{ sortedDish.price }}€</p>
                         </div>
                     </div>
                 {% endfor %}
-
+                {% endif %}
+                {% endfor %}
                 {#{% include "_partials/_pagination.html.twig" with {
                     'menu_index': 'menu_show',
                     'currentPage': 1,
@@ -47,7 +50,9 @@
                       <div class="nav-item">
                       <a class="btn btn mt-3" href="{{ path('menu_index') }}">Retour</a>
                     </div>
+                   
                 {% endif %}
+               
             </section>
         </div>
     </div>

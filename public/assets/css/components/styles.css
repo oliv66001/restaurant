@@ -6,6 +6,7 @@
         object-fit: cover;
     }
 }
+  
 
 body {
     background-color: var(--templates-color);
@@ -186,7 +187,7 @@ hr {
 
 /*Carousel*/
 
-.carousel-inner {
+.front-caroussel {
     height: 30rem;
     overflow: hidden;
 }
@@ -325,4 +326,34 @@ ol.text-center{
     text-align: center;
 }
 
+/*Message javascript*/
+.error-message {
+    position: relative;
+    color: white;
+    font-size: 15px;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid red;
+    background-color: red;
+    font-family: 'Roboto' , sans-serif; 
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
 
+.error-message::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent red transparent;
+}
+
+/*Image produit admin*/
+.product-img{
+    width: 150px;
+    height: 150px;
+    
+}

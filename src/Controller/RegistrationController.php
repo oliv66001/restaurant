@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\Users;
+use App\Entity\Categories;
 use App\Service\JWTService;
 use App\Service\SendMailService;
 use App\Form\RegistrationFormType;
@@ -31,13 +32,21 @@ class RegistrationController extends AbstractController
     UserAuthenticatorInterface $userAuthenticator, 
     UsersAuthenticator $authenticator, 
     EntityManagerInterface $entityManager, 
-    SendMailService $mail, JWTService $jwt, BusinessHoursRepository $businessHoursRepository): Response
+    SendMailService $mail, 
+    JWTService $jwt, 
+    BusinessHoursRepository $businessHoursRepository): Response
     {
         $user = new Users();
+        $category = $entityManager->getRepository(Categories::class)->findAll();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
         $business_hours = $businessHoursRepository->findAll();
-
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+        
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -85,6 +94,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'business_hours' => $business_hours,
+            'category' => $category,
             'registrationForm' => $form->createView(),
         ]);
     }
@@ -122,10 +132,11 @@ class RegistrationController extends AbstractController
             }
         }
        //Message d'erreur token
-       {
-           $this->addFlash('danger', 'Le lien d\'activation est invalide ou a expiré');
-           return $this->redirectToRoute('app_login');
-       }
+       else {
+        $this->addFlash('danger', 'Le lien d\'activation est invalide ou a expiré');
+        return $this->redirectToRoute('app_login');
+    }
+    
     }   
 
         #[Route('/renvoiverif', name: 'app_resend_verif')]

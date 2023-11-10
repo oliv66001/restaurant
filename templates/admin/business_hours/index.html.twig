@@ -24,32 +24,34 @@
 						</thead>
 						<tbody>
 							{% for hour in hours %}
-								<tr>
-									<td class="align-middle">{{ hour.getDayName }}</td>
-									<td class="align-middle">{{ hour.openTime|date('H:i') }}</td>
-									<td class="align-middle">{{ hour.closeTime|date('H:i') }}</td>
-									<td class="align-middle">{{ hour.openTimeEvening|date('H:i') }}</td>
-									<td class="align-middle">{{ hour.closeTimeEvening|date('H:i') }}</td>
+								
+									<tr>
+										<td class="align-middle">{{ hour.getDayName }}</td>
+										<td class="align-middle">{{ hour.openTime|date('H:i') }}</td>
+										<td class="align-middle">{{ hour.closeTime|date('H:i') }}</td>
+										<td class="align-middle">{{ hour.openTimeEvening|date('H:i') }}</td>
+										<td class="align-middle">{{ hour.closeTimeEvening|date('H:i') }}</td>
 
-									<td class="align-middle">
+										<td class="align-middle">
 
-										<div class="form-check form-switch">
+											<div class="form-check form-switch">
 
-											<input class="form-check-input" type="checkbox" role="switch" id="switch" {{ hour.closed ? "checked" : "" }} disabled>
-											<label class="form-check-label" for="switch">{{ hour.closed }}</label>
-										</div>
-									</td>
+												<input class="form-check-input" type="checkbox" role="switch" id="switch" {{ hour.closed ? "checked" : "" }} disabled>
+												<label class="form-check-label" for="switch">{{ hour.closed }}</label>
+											</div>
+										</td>
 
 
-									<td class="align-middle">
-										<a class="btn btn3" href="{{ path('admin_business_hours_edit', {'id': hour.id}) }}">Modifier</a>
-									</td>
-								</tr>
-							{% endfor %}
+										<td class="align-middle">
+											<a class="btn btn3" href="{{ path('admin_business_hours_edit', {'id': hour.id}) }}">Modifier</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
 						</tbody>
 					</table>
-					</div>
 				</div>
 			</div>
 		</div>
-	{% endblock %}
+	</div>
+{% endblock %}

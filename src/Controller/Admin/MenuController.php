@@ -87,7 +87,7 @@ class MenuController extends AbstractController
             $groupedDishes[$category][] = $dish;
         }
 
-
+       
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
@@ -106,14 +106,17 @@ class MenuController extends AbstractController
 
     #[Route("/delete/{id}", name: "delete_menu", methods: ["DELETE"])]
 
-    public function deleteMenu(Request $request, Menu $menu, EntityManagerInterface $em): Response
+    public function deleteMenu(Request $request, Menu $menu, EntityManagerInterface $em): JsonResponse
     {
+         //Vérification si l'user peut éditer avec le voter
+         $this->denyAccessUnlessGranted('ROLE_DISHES_ADMIN', $menu);
         $data = json_decode($request->getContent(), true);
-
-        if ($this->isCsrfTokenValid('delete' . $menu->getId(), $data['_token'])) {
+     
+        if ($this->isCsrfTokenValid('delete_menu' . $menu->getId(), $data['_token'])) {
+          
             $em->remove($menu);
             $em->flush();
-
+            
             $this->addFlash('success', 'Menu supprimé avec succès.');
 
             return new JsonResponse(['success' => true, 'message' => 'Menu supprimé avec succès'], 200);

@@ -21,6 +21,10 @@ class Contact
     #[Length(
         min: 3,
         minMessage: 'Votre nom doit contenir au minimum {{ limit }} characters',)]
+    #[Assert\Regex(
+        pattern:"/[<>.+\$%\/;:!?@€*-]/",
+        match:false,
+        message:"Votre nom ne peut pas contenir de caractères spéciaux")]
     #[ORM\Column(length: 255)]
     private ?string $full_name = null;
 
@@ -34,12 +38,20 @@ class Contact
     #[Length(
         min: 10,
         minMessage: 'Votre sujet doit contenir au minimum {{ limit }} characters',)]
+        #[Assert\Regex(
+            pattern:"/[<>+\$%\/@€*-]/",
+            match:false,
+            message:"Votre sujet ne peut pas contenir de caractères spéciaux")]
     #[ORM\Column(length: 255)]
     private ?string $subject = null;
 
     #[Length(
         min: 50,
         minMessage: 'Votre message doit contenir au minimum {{ limit }} characters',)]
+        #[Assert\Regex(
+            pattern:"/[<>+\$%\/@€*-]/",
+            match:false,
+            message:"Votre message ne peut pas contenir de caractères spéciaux")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $message = null;
 

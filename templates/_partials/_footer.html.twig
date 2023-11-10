@@ -13,35 +13,44 @@
 								<th>Heures Soir</th>
 							</tr>
 						</thead>
-						{% set days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+				{% set days = { 
+    1: 'Lundi',
+    2: 'Mardi',
+    3: 'Mercredi',
+    4: 'Jeudi',
+    5: 'Vendredi',
+    6: 'Samedi',
+    0: 'Dimanche'
+} %}
 
-						<tbody>
-							{% for hour in opening_hours %}
-								<tr>
-									<td class="align-middle">{{ days[hour.getDay] }}</td>
-									<td class="align-middle">
-										{% if hour.closed %}Fermé
-										{% else %}
-											{{ hour.openTime.format('H:i') }}
-											<!-- Remarquez l'utilisation de la méthode format -->
-											-
-											{{ hour.closeTime.format('H:i') }}
-											<!-- Remarquez l'utilisation de la méthode format -->
-										{% endif %}
-									</td>
-									<td class="align-middle">
-										{% if hour.closed %}Fermé
-										{% else %}
-											{{ hour.openTimeEvening.format('H:i') }}
-											<!-- Remarquez l'utilisation de la méthode format -->
-											-
-											{{ hour.closeTimeEvening.format('H:i') }}
-											<!-- Remarquez l'utilisation de la méthode format -->
-										{% endif %}
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
+
+<tbody>
+  {% for hour in business_hours %}
+    <tr>
+      <td class="align-middle">{{ days[hour.day]  }}</td>
+
+      <td class="align-middle">
+        {% if hour.isClosed %}
+          Fermé
+        {% else %}
+          {{ hour.openTime|date('H:i') }}
+          -
+          {{ hour.closeTime|date('H:i') }}
+        {% endif %}
+      </td>
+      <td class="align-middle">
+        {% if hour.isClosed %}
+          Fermé
+        {% else %}
+          {{ hour.openTimeEvening|date('H:i') }}
+          -
+          {{ hour.closeTimeEvening|date('H:i') }}
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</tbody>
+
 
 					</table>
 				</div>

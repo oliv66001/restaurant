@@ -1,10 +1,11 @@
-<div class="container">
-    <div class="row justify-content-center">
-        <aside class="col-lg-12 col-md-12 col-sm-12 mb-3">
-            <div class="row">
-                <div class="col-md-4 equal-height mt-3 mb-3">
-                    <article class="card mb-3">
-                        <div class="card-header">
+<section class="container">
+   
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
+                    <article class="card h-100 mb-6">
+                    
+                        <div class="card-body">
                             <h3 class="text-center">Catégories</h3>
                         </div>
                         <div class="card-body">
@@ -16,9 +17,11 @@
                             </p>
                         </div>
                     </article>
+                    </div>
                 </div>
-                <div class="col-md-4 equal-height mt-3 mb-3">
-                    <article class="card mb-3">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
+                    <article class="card h-100 mb-6">
                         <div class="card-header">
                             <h3 class="text-center">Produits et images</h3>
                         </div>
@@ -31,9 +34,11 @@
                             </p>
                         </div>
                     </article>
+                    </div>
                 </div>
-                <div class="col-md-4 equal-height mt-3 mb-3">
-                    <article class="card mb-3">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
+                    <article class="card h-100 mb-6">
                         <div class="card-header">
                             <h3 class="text-center">Réservation</h3>
                         </div>
@@ -43,12 +48,14 @@
                             </p>
                         </div>
                     </article>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 equal-height mt-3 mb-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
                     {% if is_granted('ROLE_ADMIN') %}
-                    <article class="card mb-3">
+                    <article class="card h-100 mb-6">
                         <div class="card-header">
                             <h3 class="text-center">Utilisateurs</h3>
                         </div>
@@ -59,9 +66,11 @@
                         </div>
                     </article>
                     {% endif %}
+                    </div>
                 </div>
-                <div class="col-md-4 equal-height mt-3 mb-3">
-                    <article class="card mb-3">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
+                    <article class="card h-100 mb-6">
                         <div class="card-header">
                             <h3 class="text-center">Menus</h3>
                         </div>
@@ -74,10 +83,12 @@
                             </p>
                         </div>
                     </article>
+                    </div>
                 </div>
-                <div class="col-md-4 equal-height mt-3 mb-3">
+                <div class="col-lg-6 col-md-6 col-sm-10 mb-3 ">
+                <div class="card-container">
                     {% if is_granted('ROLE_ADMIN') %}
-                    <article class="card mb-3">
+                    <article class="card h-100 mb-6">
                         <div class="card-header">
                             <h3 class="text-center">Horaires</h3>
                         </div>
@@ -88,8 +99,8 @@
                         </div>
                     </article>
                     {% endif %}
+                    </div>
                 </div>
             </div>
-        </aside>
-    </div>
-</div>
+    
+</section>

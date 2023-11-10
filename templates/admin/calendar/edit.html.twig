@@ -24,3 +24,32 @@
 </div>
 </section>
 {% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('assets/js/adminEditCalendar.js') }}" defer></script>
+<script>
+		/*
+let closedDays = {{ closedDaysArray | json_encode | raw }};
+
+
+$(document).ready(function () {
+  const startField = $('#calendar_start_date_day');
+  startField.on('change', function () {
+    const selectedDayOfMonth = $(this).val();
+    const selectedMonth = $('#calendar_start_date_month').val() - 1; // Ajuste pour JavaScript
+    const selectedYear = $('#calendar_start_date_year').val();
+    const selectedDate = new Date(Date.UTC(selectedYear, selectedMonth, selectedDayOfMonth));
+    const selectedDayOfWeek = selectedDate.getUTCDay(); // Utilise UTC ici aussi pour la cohérence
+    console.log("Jour de la semaine calculé :", selectedDayOfWeek);
+	console.log('Jour fermé:', closedDays);
+    console.log('Jour sélectionné:', selectedDayOfWeek); // Utilise selectedDayOfWeek, pas selectedDay
+    if (closedDays.includes(selectedDayOfWeek)) {
+      alert('Le restaurant est fermé ce jour-là. Veuillez choisir un autre jour.');
+      $(this).val(''); // Réinitialise le champ
+    }
+  });
+});
+*/
+	</script>
+{% endblock %}

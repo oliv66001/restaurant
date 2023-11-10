@@ -14,7 +14,7 @@ class CalendarService
         $this->calendarRepository = $calendarRepository;
     }
 
-    public function getAvailablePlaces(DateTimeInterface $start, int $numberOfGuests): int
+    public function getAvailablePlaces(?DateTimeInterface $start, int $numberOfGuests): int
     {
         $availablePlaces = 30;
         $occupiedPlaces = $this->calendarRepository->countOccupiedPlaces($start, $numberOfGuests);

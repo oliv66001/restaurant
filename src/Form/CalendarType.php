@@ -59,13 +59,14 @@ class CalendarType extends AbstractType
                 'model_timezone' => 'Europe/Paris',
                 'years' => range(date('Y'), date('Y') + 1),
                 'hours' => $options['hours'],
-                'minutes' => [0, 15, 30, 45],
+                'minutes' => [00, 15, 30, 45],
+                //'data' => new \DateTime(date('Y-m-d H:i:s')),
                 'format' => 'dd/MM/yyyy HH:mm',
                 'html5' => false,
                 'constraints' => [
                     new GreaterThan([
-                        'value' => new \DateTime('today'),
-                        'message' => 'L\'heure de début doit être supérieure à l\'heure actuelle',
+                        'value' => new \DateTime (" "),
+                        'message' => 'L\'heure et la date de début doit être supérieure à l\'heure et la date actuelle',
                     ]),
                     new OneHourBeforeClosing(),
                 ]
@@ -77,6 +78,7 @@ class CalendarType extends AbstractType
                     'id' => 'calendar_numberOfGuests',
                 ],
                 'choices' => [
+                    '0' => 0,
                     '1' => 1,
                     '2' => 2,
                     '3' => 3,
@@ -93,7 +95,7 @@ class CalendarType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Range([
-                        'min' => 1,
+                        'min' => 0,
                         'max' => 12,
                         'minMessage' => 'Vous devez sélectionner au moins 1 personne',
                         'maxMessage' => 'Vous ne pouvez pas sélectionner plus de 12 personnes',
@@ -110,8 +112,6 @@ class CalendarType extends AbstractType
                     'class' => 'form-group',
                     'required' => false,
                 ],
-
-
             ])
 
             ->add('allergieOfGuests', TextareaType::class, [
@@ -119,9 +119,7 @@ class CalendarType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control'
-
                 ],
-
             ])
 
             ->add('name', TextType::class, [

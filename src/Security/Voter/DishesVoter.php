@@ -37,12 +37,12 @@ class DishesVoter extends Voter
     {
         // On récupère l'utilisateur à partir du token
         $user = $token->getUser();
-
+        
         if(!$user instanceof UserInterface) return false;
 
         // On vérifie si l'utilisateur est admin
         if($this->security->isGranted('ROLE_ADMIN')) return true;
-
+        dd($user);
         // On vérifie les permissions
         switch($attribute){
             case self::EDIT:
@@ -57,6 +57,7 @@ class DishesVoter extends Voter
     }
 
     private function canEdit(){
+
         return $this->security->isGranted('ROLE_DISHES_ADMIN');
     }
     private function canDelete(){

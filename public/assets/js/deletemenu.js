@@ -1,10 +1,9 @@
-let links = document.querySelectorAll("[data-delete]");
+let menuLinks = document.querySelectorAll("[data-delete][data-type='menu']");
 
-for (let link of links) {
+for (let link of menuLinks) {
     link.addEventListener("click", function (e) {
         e.preventDefault();
-
-        if (confirm("Voulez-vous supprimer cet utilisateur ?")) {
+        if (confirm("Voulez-vous supprimer ce menu ?")) {
             fetch(this.getAttribute("href"), {
                 method: "DELETE",
                 headers: {
@@ -13,6 +12,7 @@ for (let link of links) {
                 },
                 body: JSON.stringify({ "_token": this.dataset.token })
             })
+           
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -20,10 +20,12 @@ for (let link of links) {
 
                       // Afficher le message flash
                     alert(data.message);
-                    // Redirection vers la route 'admin_index'
-                    window.location.href = '/admin/utilisateurs';
+                    // Redirection vers la route 'admin_dishes_index'
+                    window.location.href = '/admin/menus';
+                } else if (data.error === "Token invalide") {
+                    alert("Token invalide, impossible de supprimer le menu.");
                 } else {
-                    alert(data.error);
+                    alert("Vous n'avez pas les droits nécessaires pour supprimer ce menu.");
                 }
             })
             .catch(error => {

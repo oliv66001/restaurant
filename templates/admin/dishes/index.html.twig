@@ -22,29 +22,25 @@
 								<th class="align-middle">Actions</th>
 							</tr> 
 						</thead>
-						{% for dishe in dishes %}
-							<tr class="text-center">
-
-
-								<td class="align-middle">
-									{% if dishe.images|length > 0 %}
-										<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}" width:'150px' height:'150px' alt="{{ dishe.name }}" class="img-fluid">
-									{% else %}
-										<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" width:'300px' height:'300px' alt="Image par défaut" class="img-thumbnail">
-									{% endif %}
-								</td>
-
-								<td class="align-middle">{{ dishe.name }}</td>
-								<td class="align-middle">{{ dishe.price }}€</td>
-								<td class="align-middle">{{ dishe.categories.name }}</td>
-								<td class="align-middle">
-									<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn2">Modifier</a>
-
-								</td>
-
-							</tr>
-
-						{% endfor %}
+{% for dishe in dishes %}
+	<tr class="text-center">
+		<td class="align-middle">
+			{% if dishe.images|length > 0 %}
+				<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dishe.images[0].name ) }}"
+				 alt="{{ dishe.name }}" class="img-fluid product-img">
+			{% else %}
+				<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}"
+				 alt="Image par défaut" class="img-fluid product-img">
+			{% endif %}
+		</td>
+		<td class="align-middle">{{ dishe.name }}</td>
+		<td class="align-middle">{{ dishe.price }}€</td>
+		<td class="align-middle">{{ dishe.categories.name }}</td>
+		<td class="align-middle">
+			<a href="{{ path('admin_dishes_edit', {'id': dishe.id}) }}" class="btn btn2">Modifier</a>
+		</td>
+	</tr>
+{% endfor %}
 
 					</table>
 				</div>

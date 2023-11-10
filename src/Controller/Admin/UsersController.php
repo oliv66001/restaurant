@@ -4,23 +4,28 @@ namespace App\Controller\Admin;
 
 use App\Entity\Users;
 use App\Form\UsersFormType;
+use Psr\Log\LoggerInterface;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/admin/utilisateurs', name: 'admin_users_')]
 class UsersController extends AbstractController
 {
  
     #[Route('/', name: 'index')]
-    public function index(UsersRepository $usersRepository): Response
+    public function index(UsersRepository $usersRepository, Users $users): Response
     {
+        
+         if (false === $this->isGranted('ROLE_ADMIN', $users)) {
+            throw new AccessDeniedException('Seuls les super administrateurs peuvent accéder à cette page.');
+        }
         $users = $usersRepository->findAll([], ['firstname', 'ASC'] );
         return $this->render('admin/users/index.html.twig', compact('users'));
     }
@@ -33,7 +38,7 @@ class UsersController extends AbstractController
        ): Response
     {
         //Vérification si l'user peut éditer avec le voter
-        $this->denyAccessUnlessGranted('USER_EDIT', $users);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', $users);
 
         // Création du formulaire
         $usersForm = $this->createForm(UsersFormType::class, $users);
@@ -65,12 +70,16 @@ class UsersController extends AbstractController
 #[Route('/suppression/user/{id}', name: 'delete_user', methods: ['DELETE'])]
 public function deleteUser(
     Request $request,
+    Users $users,
     EntityManagerInterface $em,
     int $id,
     UsersRepository $userRepository,
     LoggerInterface $logger // Ajoutez ceci
 ): JsonResponse {
 
+    if (false === $this->isGranted('ROLE_ADMIN', $users)) {
+        throw new AccessDeniedException('Seuls les super administrateurs peuvent supprimer un utilisateur.');
+    }
     // Récupérer l'utilisateur à supprimer
     $userToDelete = $userRepository->find($id);
    

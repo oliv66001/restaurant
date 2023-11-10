@@ -24,3 +24,7 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/deletemenu.js') }}" defer></script>
+{% endblock %}

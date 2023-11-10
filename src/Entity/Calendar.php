@@ -22,8 +22,6 @@ class Calendar
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank(message: 'Veuillez renseigner une date de début')]
-    #[Assert\GreaterThanOrEqual(message: 'L\'heure de début doit être supérieure à l\'heure actuelle', value: 'now')]
-
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column]
@@ -35,17 +33,26 @@ class Calendar
     private ?string $allergie = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Regex(
+        pattern:"/[<>.+\$%\/;:!?@€*-]/",
+        match:false,
+        message:"Vos allergies ne peuvent pas contenir de caractères spéciaux")]
     private ?string $allergieOfGuests = null;
 
     #[ORM\Column]
     #[Assert\GreaterThanOrEqual(
-        value : 0,
-        message : 'Le nombre de places disponibles doit être supérieur ou égal à 0')]
+        value : 30,
+        message : 'Le nombre de places disponibles doit être supérieur ou égal à 1')]
     private ?int $availablePlaces = null;
 
     #[ORM\ManyToOne(targetEntity: BusinessHours::class, inversedBy: "calendars")]
     #[ORM\JoinColumn(name: "business_hours_id", referencedColumnName: "id", nullable: true)]
     private $businessHours;
+    
+    public function __construct() {
+        $this->start = null;
+        
+    }
     
     public function getId(): ?int
     {
@@ -69,7 +76,7 @@ class Calendar
         return $this->start;
     }
 
-   public function setStart(\DateTimeInterface $start): self
+   public function setStart(?\DateTimeInterface $start): self
 {
     $businessHours = $this->getBusinessHours();
     if ($businessHours !== null) {

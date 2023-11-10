@@ -5,15 +5,16 @@ namespace App\Controller\Admin;
 use App\Entity\Dishes;
 use App\Entity\Images;
 use App\Form\DishesFormType;
-use App\Repository\DishesRepository;
 use App\Service\PictureService;
+use App\Repository\DishesRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/admin/dishes', name: 'admin_dishes_')]
 /**
@@ -44,7 +45,7 @@ class DishesController extends AbstractController
         SluggerInterface $slugger,
         PictureService $pictureService
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_DISHES_ADMIN');
 
         // Création d'un nouveau plat
         $dishes = new Dishes();
@@ -99,7 +100,7 @@ class DishesController extends AbstractController
         PictureService $pictureService
     ): Response {
         //Vérification si l'user peut éditer avec le voter
-        $this->denyAccessUnlessGranted('DISHE_EDIT', $dishes);
+        $this->denyAccessUnlessGranted('ROLE_DISHES_ADMIN', $dishes);
 
         // Création du formulaire
         $dishesForm = $this->createForm(DishesFormType::class, $dishes);
@@ -152,10 +153,12 @@ class DishesController extends AbstractController
         Request $request,
         EntityManagerInterface $em
     ): JsonResponse {
-       
-
+        //Vérification si l'user peut supprimer avec le voter
+        if (false === $this->isGranted('ROLE_ADMIN', $dishes)) {
+            throw new AccessDeniedException('Seuls les administrateurs peuvent supprimer ce produit.');
+        }
         $data = json_decode($request->getContent(), true);
-
+          
         // On vérifie si le token est valide
         if ($this->isCsrfTokenValid('delete_dishe' . $dishes->getId(), $data['_token'])) {
 
@@ -168,7 +171,6 @@ class DishesController extends AbstractController
 
 
             return new JsonResponse(['success' => true, 'message' => 'Produit supprimé avec succès'], 200);
-
         }
 
         // Echec de la suppréssion
@@ -184,7 +186,7 @@ class DishesController extends AbstractController
         PictureService $pictureService
     ): JsonResponse {
         //Vérification si l'user peut supprimer avec le voter
-        // $this->denyAccessUnlessGranted('DISHE_EDIT', $image->getDishes());
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', $image->getDishes());
 
         $data = json_decode($request->getContent(), true);
 

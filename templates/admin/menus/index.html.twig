@@ -27,14 +27,14 @@
 						{% for menu in menus %}
 							<tr
 								class="text-center">
-								{# Ajoutez cette ligne pour afficher la première image de chaque plat dans le menu #}
+								{# Affichage de la première image de chaque plat dans le menu #}
 								<td class="align-middle">
 									{% for dish in menu.getDishes %}
 
 										{% if dish.images|length > 0 %}
-											<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dish.images[0].name ) }}" width:"150px" height:"150px" alt="{{ dish.name }}" class="img-fluid mb-3">
+											<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dish.images[0].name ) }}" alt="{{ dish.name }}" class="img-fluid product-img">
 										{% else %}
-											<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" alt="Image par défaut" class="img-fluid">
+											<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" alt="Image par défaut" class="img-fluid product-img">
 										{% endif %}
 									{% endfor %}
 								</td>
@@ -58,10 +58,10 @@
 
 					</table>
 				</div>
-					<div class="text-center">
-						<a href="{{ path('admin_menus_add') }}" class="btn btn">Ajouter</a>
-					</div>
-				</main>
-			</div>
+				<div class="text-center">
+					<a href="{{ path('admin_menus_add') }}" class="btn btn">Ajouter</a>
+				</div>
+			</main>
 		</div>
-	{% endblock %}
+	</div>
+{% endblock %}

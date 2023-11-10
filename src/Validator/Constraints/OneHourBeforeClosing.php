@@ -9,5 +9,6 @@ use Symfony\Component\Validator\Constraint;
  */
 class OneHourBeforeClosing extends Constraint
 {
+    
     public $message = 'L\'heure de réservation doit être au moins une heure avant l\'heure de fermeture.';
 }

@@ -22,13 +22,23 @@ class DishesController extends AbstractController
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $dishes = $dishesRepository->findAll();
         $business_hours = $businessHoursRepository->findAll();
-        return $this->render('dishes/index.html.twig', compact('dishes', 'category', 'business_hours'));
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                return $this->render('dishes/index.html.twig', compact('dishes', 'category', 'business_hours'));
     }
 
     #[Route('/{slug}', name: 'details')]
-    public function details(Dishes $dishe
-    ): Response
+    public function details(Dishes $dishe, BusinessHoursRepository $businessHoursRepository): Response
     {
-        return $this->render('dishes/details.html.twig', compact('dishe', 'business_hours'));
+        $business_hours = $businessHoursRepository->findAll();
+        usort($business_hours, function($a, $b) {
+            $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
+            $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
+            return $dayA <=> $dayB;
+        });
+                return $this->render('dishes/details.html.twig', compact('dishe', 'business_hours'));
     }
 }

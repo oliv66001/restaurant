@@ -36,7 +36,7 @@ class SendReminderEmailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-       // ...
+       
 $reservations = $this->calendarRepository->findReservationsStartingInNext24Hours();
 error_log("Réservations trouvées : " . count($reservations));
 

@@ -1,35 +1,29 @@
 <section class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-12">
+			<span id="error-message" style="color: red; display: none;">Vos allergies ne peuvent pas contenir de caractères spéciaux.</span>
+
 			{{ form_start(form) }}
 			<div class="col-md-12 text-center mt-3">
-
 				{{ form_row(form.start) }}
-				
 			</div>
 			<div class="col-md-12 text-center mt-3">
 				{{ form_row(form.numberOfGuests) }}
-			
-
-				{{ form_row(form.availablePlaces, {'attr': {'min': 0}}) }}
-			
 			</div>
-
-
+				<div class="col-md-12 text-center mt-3">
+				{{ form_row(form.availablePlaces, {'attr': {'min': 0}}) }}
+			</div>
 			<div class="col-md-12 text-center mt-3">
 				{{ form_row(form.name) }}
 			</div>
-
 			<div class="col-md-12 text-center mt-3">
 				{{ form_row(form.allergie) }}
 			</div>
-
 			<div class="col-md-12 text-center mt-3">
 				{{ form_row(form.allergieOfGuests) }}
 			</div>
-			<button id="submit-button" class="btn btn mt-3">{{ button_label|default('Enregistrer') }}</button>
+			<button id="submit-button" class="btn btn3 mt-3">{{ button_label|default('Enregistrer') }}</button>
 		</div>
 	</div>
 	{{ form_end(form) }}
 </div></div></section>
-

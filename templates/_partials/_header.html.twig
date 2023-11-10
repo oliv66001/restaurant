@@ -9,7 +9,7 @@
 </div>
 <div class="col-lg-6 col-sm-12">
 	<div id="carouselExampleControls" class="carousel slide carousel-shadow" data-bs-ride="carousel">
-		<div class="carousel-inner">
+		<div class="carousel-inner front-caroussel">
 			{% set firstImageShown = false %}
 			{% for category in category|default([]) %}
 				{% if category.name != 'Images d\'accueil' and category.name != 'Top image' and category.name != 'Bottom image' %}

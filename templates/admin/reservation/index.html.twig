@@ -9,16 +9,19 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	<script>
+		const csrfToken = '{{ calendar_token }}'; // Utilise la variable Twig que tu as passée
+	</script>
 	<script type='importmap'>
 		{
-							"imports": {
-								"@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.4",
-								"@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.4",
-								"@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.4",
-								"@fullcalendar/core/locales/fr": "https://cdn.skypack.dev/@fullcalendar/core/locales/fr",
-								"@fullcalendar/interaction": "https://cdn.skypack.dev/@fullcalendar/interaction"
-															}
-														}
+				"imports": {
+					"@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.4",
+					"@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.4",
+					"@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.4",
+					"@fullcalendar/core/locales/fr": "https://cdn.skypack.dev/@fullcalendar/core/locales/fr",
+					"@fullcalendar/interaction": "https://cdn.skypack.dev/@fullcalendar/interaction"
+																	}
+																}
 	</script>
 	<script type='module'>
 		import {Calendar} from '@fullcalendar/core';
@@ -55,14 +58,14 @@ allDaySlot: false, // Masquer la colonne "Toute la journée"
 events: {{ data|raw }},
 editable: true,
 slotMinTime: '11:00', // Limiter l'affichage de l'heure de début
-slotMaxTime: '23:00', // Limiter l'affichage de l'heure de fin
+slotMaxTime: '23:45', // Limiter l'affichage de l'heure de fin
 
 });
 
 
 calendar.on('eventClick', (eventClickInfo) => {
 let eventId = eventClickInfo.event.id;
-window.location.href = `/calendar/${eventId}/edit`;
+window.location.href = `/admin/calendar/${eventId}/edit`;
 });
 
 calendar.on('eventChange', (e) => {
@@ -76,10 +79,11 @@ let data = {
 };
 
 let xhr = new XMLHttpRequest();
-
 xhr.open("PUT", url);
-xhr.setRequestHeader('Content-Type', 'application/json'); // Ajoutez cette ligne pour définir le type de contenu
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.setRequestHeader('X-CSRF-Token', csrfToken); // Utilise la constante JavaScript
 xhr.send(JSON.stringify(data));
+
 });
 
 

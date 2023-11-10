@@ -25,13 +25,7 @@ class OneHourBeforeClosingValidator extends ConstraintValidator
         $dayOfWeek = $value->format('w'); // 0 (pour dimanche) à 6 (pour samedi)
 
 
-        // Ajustez pour que 0 corresponde à lundi
-        if ($dayOfWeek == 0) {
-            $dayOfWeek = 6; // Dimanche
-        } else {
-            $dayOfWeek -= 1; // Du lundi au samedi
-        }
-
+       
         $businessHours = $this->businessHoursRepository->findOneBy(['day' => $dayOfWeek]);
 
         if (!$businessHours) {
@@ -39,8 +33,6 @@ class OneHourBeforeClosingValidator extends ConstraintValidator
                 ->addViolation();
             return;
         }
-
-
 
       // Pour les horaires de la matinée
 $closingTimeMorning = clone $businessHours->getCloseTime();
@@ -67,6 +59,7 @@ $closingTimeEvening->setDate(
    
 $modifiedValue->format('d')
 );
+
 
 // Validation
 if (($closingTimeMorning <= $modifiedValue && $modifiedValue < $businessHours->getOpenTimeEvening()) || $closingTimeEvening <= $modifiedValue) {

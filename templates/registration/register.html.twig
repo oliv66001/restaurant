@@ -5,12 +5,12 @@
 
 {% block body %}
 
-	<section class="container text-center">
+	<section class="container">
 		<div class="row justify-content-center">
-			<div class="col-lg-6 col-md-8 col-sm-12">
-				
+			<div class="col-lg-6 col-md-8 col-sm-12 text-center">
+
 				{{ form_start(registrationForm) }}
-                <h1>Inscription</h1>
+				<h1>Inscription</h1>
 				<fieldset class="mb-3">
 					<legend>Mon identité</legend>
 					{{ form_row(registrationForm.lastname) }}
@@ -23,23 +23,26 @@
 					{{ form_row(registrationForm.phone) }}
 					{{ form_row(registrationForm.allergie) }}
 				</fieldset>
+
 				{{ form_row(registrationForm.plainPassword, {
             label: 'Mot de passe'}) }}
-				{{ form_row(registrationForm.RGPDConsent, {
+				<div class="form-group">
+					{{ form_row(registrationForm.RGPDConsent, {
 					label: 'J\'accepte que mes données personnelles soient utilisées 
                  pour la gestion de mes réservations.
-                Je peux à tout moment me désinscrire en envoyant un mail à 
-                l\'adresse suivante : developpement.solution@gmail.com . Voir les conditions d\'utilisation et la politique de confidentialité .'
+                Je peux à tout moment me désinscrire en allant dans mon profil ou en envoyant un mail à 
+                l\'adresse suivante : developpement.solution@gmail.com . Voir les conditions d\'utilisation et/ou les mentions légales:'
 				}) }}
-				<a class="nav-link" href="{{ path('app_mention_legal') }}">Mentions légales</a> 
-
+				
+				<a class="form-group" href="{{ path('app_mention_legal') }}">Mentions légales</a> 
+				</div>
 				<button type="submit" class="btn btn-lg my-3">M'inscrire</button>
 				<a href=" {{ path('app_login')}} " class="btn btn-lg btn2 my-3">Me connecter</a>
 				{{ form_end(registrationForm) }}
+				</div>
 			</div>
-		</div>
 
-	</section>
+		</section>
 
 
-{% endblock %}
+	{% endblock %}

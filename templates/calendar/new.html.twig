@@ -15,11 +15,12 @@
 			<hr>
 		{% endif %}
 
+
 		{# Afficher le formulaire de réservation #}
 		{{ include('calendar/_form.html.twig') }}
 		
 
-		<div class="mt-3">
+		<div class="mt-3 text-center">
 			<a class="btn btn mt-3" href="{{ path('app_calendar_index') }}">Retour</a>
 		</div>
 	</div>
@@ -28,9 +29,40 @@
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
 	<script src="{{ asset('assets/js/calendar.js') }}" defer></script>
-	 <script>
-        let closedDays = {{ closedDaysArray | json_encode | raw }};
-    </script>
+	<script>
+		
+let closedDays = {{ closedDaysArray | json_encode | raw }};
+
+function validateDate() {
+	console.log("Fonction validateDate appelée");
+  const selectedDayOfMonth = $('#calendar_start_date_day').val();
+  const selectedMonth = $('#calendar_start_date_month').val() - 1;
+  const selectedYear = $('#calendar_start_date_year').val();
+  const selectedTime = $('#calendar_start_time_hour').val();
+  const selectedDate = new Date(Date.UTC(selectedYear, selectedMonth, selectedDayOfMonth));
+  const selectedDayOfWeek = selectedDate.getUTCDay();
+
+  console.log("Jour de la semaine calculé:", selectedDayOfWeek);
+  console.log('Jours fermés:', closedDays);
+  console.log('Jour sélectionné:', selectedDayOfWeek);
+  console.log('Heure sélectionnée:', selectedTime);
+
+  if (closedDays.includes(selectedDayOfWeek)) {
+    alert('Le restaurant est fermé ce jour-là. Veuillez choisir un autre jour.');
+    $('#calendar_start_date_day').val('');  // Réinitialise le champ du jour
+  }
+}
+
+
+$(document).ready(function () {
+  $('#calendar_start_date_day').on('change', validateDate);
+  $('#calendar_start_date_month').on('change', validateDate);
+  $('#calendar_start_date_year').on('change', validateDate);
+});
+
+
+	</script>
+	
+	<script src="{{ asset('assets/js/reservationVerif.js') }}" defer></script>
 {% endblock %}

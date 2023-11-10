@@ -21,10 +21,15 @@ for(let link of imageLinks){
             .then(data =>{
                 if(data.success){
                     this.parentElement.remove();
-                }else{
-                    alert(data.error);
+                } else if (data.error === "Token invalide") {
+                    alert("Token invalide, impossible de supprimer l'image'.");
+                } else {
+                    alert("Vous n'avez pas les droits nécessaires pour supprimer cette image.");
                 }
             })
+            .catch(error => {
+                console.error('Erreur lors de la suppression:', error);
+            });
         }
     });
 }
