@@ -15,6 +15,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/admin/calendar", name: "admin_calendar_")]
 class CalendarController extends AbstractController
@@ -22,6 +23,9 @@ class CalendarController extends AbstractController
     #[Route("/", name: "index", methods: ["GET"])]
     public function index(CalendarRepository $calendarRepository): Response
     {
+        if (false === $this->isGranted('ROLE_DISHES_ADMIN', $calendarRepository)) {
+            throw new AccessDeniedException('Seuls les super administrateurs peuvent accéder à cette page.');
+        }
         $calendars = $calendarRepository->findAll();
         return $this->render('admin/calendar/index.html.twig', [
             'calendars' => $calendars,
@@ -31,13 +35,13 @@ class CalendarController extends AbstractController
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager,  CalendarService $calendarService): Response
     {
+       
         $business_hours = $businessHoursRepository->findAll();
-        usort($business_hours, function($a, $b) {
+        usort($business_hours, function ($a, $b) {
             $dayA = $a->getDay() === 0 ? 7 : $a->getDay();
             $dayB = $b->getDay() === 0 ? 7 : $b->getDay();
             return $dayA <=> $dayB;
         });
-                $anyDayClosed = false;
         $openDays = [];
         foreach ($business_hours as $hour) {
             if (!$hour->isClosed()) {
@@ -46,7 +50,7 @@ class CalendarController extends AbstractController
         }
         if (empty($openDays)) {
             $this->addFlash('danger', 'Le restaurant est fermé pour vacance annuelle choisissez une autre date.');
-            return $this->redirectToRoute('app_calendar_index');
+            return $this->redirectToRoute('admin_calendar_index');
         }
         $randomOpenDay = $openDays[array_rand($openDays)];
         $randomOpenDayNameEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][$randomOpenDay];
@@ -59,8 +63,6 @@ class CalendarController extends AbstractController
         $closedDaysArray = array_map(function ($hour) {
             return $hour->getDay();
         }, $closedDays);
-
-        $form = $this->createForm(CalendarType::class, $calendar);
 
         $user = $security->getUser();
 
@@ -86,6 +88,7 @@ class CalendarController extends AbstractController
 
         // Récupération des places disponibles
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 1;
+        
         $remainingPlaces = $calendarService->getAvailablePlaces($calendar->getStart(), $numberOfGuests);
 
         $calendar->setAvailablePlaces($remainingPlaces);
@@ -93,14 +96,7 @@ class CalendarController extends AbstractController
         // Obtenir le nombre de places disponibles
         //$remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
 
-
-        // Si le nombre de places restantes est insuffisant, retourner une erreur
-        if ($remainingPlaces < $numberOfGuests - $numberOfGuests) {
-            $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
-            return $this->redirectToRoute('app_calendar_index');
-        }
-
-            $form = $this->createForm(CalendarType::class, $calendar, [
+        $form = $this->createForm(CalendarType::class, $calendar, [
             'hours' => $start,
 
         ]);
@@ -116,26 +112,27 @@ class CalendarController extends AbstractController
                 $start = $calendar->getStart();
                 $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
 
-                if ($dayOfWeek === 1) { // Si c'est un lundi
+                if ($dayOfWeek === $closedDays) {
+
                     $this->addFlash('danger', 'Le restaurant est fermé . Veuillez choisir un autre jour.');
                     $entityManager->rollback();
-                    return $this->redirectToRoute('app_calendar_edit', ['id' => $calendar->getId()]);
+                    return $this->redirectToRoute('admin_calendar_index');
                 }
-
-
+                
                 $numberOfGuests = $calendar->getNumberOfGuests();
 
                 // Obtenir le nombre de places disponibles
                 $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
 
-                  // Si le nombre de places restantes est insuffisant, retourner une erreur
-                  if ($remainingPlaces < $numberOfGuests - $numberOfGuests) {
-                    $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
-                    $entityManager->rollback();
-                    return $this->redirectToRoute('app_calendar_new');
-                }
+               // Si le nombre de places restantes est insuffisant, retourner une erreur
+               if ($remainingPlaces < $numberOfGuests) {
+                //dd($remainingPlaces, $numberOfGuests);
+                $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
+                $entityManager->rollback();
+                return $this->redirectToRoute('admin_calendar_index');
+            }
 
-                $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
+            $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
 
                 // Persister et flusher les données
                 $entityManager->persist($calendar);
@@ -145,44 +142,39 @@ class CalendarController extends AbstractController
                 // Commit de la transaction
                 $entityManager->commit();
 
+                $emailAdmin = (new TemplatedEmail())
+                    ->from('quai-antique@crocobingo.fr')
+                    ->to('quai.antiquead@gmail.com')
+                    ->subject('Réservation modifiée')
+                    ->htmlTemplate('emails/modified_reservation.html.twig')
+                    ->context([
+                        'reservation' => $calendar,
+                    ]);
+
+                $emailUser = (new TemplatedEmail())
+                    ->from('quai-antique@crocobingo.fr')
+                    ->to($user->getEmail())
+                    ->subject('Réservation modifiée')
+                    ->htmlTemplate('emails/modifiedUser_reservation.html.twig')
+                    ->context([
+                        'reservation' => $calendar,
+                    ]);
+
+                $mailer->send($emailAdmin);
+                $mailer->send($emailUser);
+
+                $this->addFlash('success', 'La réservation a été modifiée avec succès.');
 
 
-            $emailAdmin = (new TemplatedEmail())
-                ->from('quai-antique@crocobingo.fr')
-                ->to('quai.antiquead@gmail.com')
-                ->subject('Réservation modifiée')
-                ->htmlTemplate('emails/modified_reservation.html.twig')
-                ->context([
-                    'reservation' => $calendar,
-                ]);
-
-            $emailUser = (new TemplatedEmail())
-                ->from('quai-antique@crocobingo.fr')
-                ->to($user->getEmail())
-                ->subject('Réservation modifiée')
-                ->htmlTemplate('emails/modifiedUser_reservation.html.twig')
-                ->context([
-                    'reservation' => $calendar,
-                ]);
-
-            $mailer->send($emailAdmin);
-            $mailer->send($emailUser);
-
-            $this->addFlash('success', 'La réservation a été modifiée avec succès.');
-
-
-            return $this->redirectToRoute('admin_calendar_index', [], Response::HTTP_SEE_OTHER);
-        } catch (\Exception $e) {
-            if ($entityManager->getConnection()->isTransactionActive()) {
-                $entityManager->rollback();
+                return $this->redirectToRoute('admin_calendar_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                if ($entityManager->getConnection()->isTransactionActive()) {
+                    $entityManager->rollback();
+                }
+                throw $e;
             }
-            throw $e;
         }
-    }
-
-
-
-        return $this->render('admin/calendar/edit.html.twig', [
+        return $this->render('calendar/edit.html.twig', [
             'calendar' => $calendar,
             'closedDaysArray' => $closedDaysArray,
             'business_hours' => $business_hours,

@@ -1,9 +1,15 @@
-
-<h1>Modification de réservation</h1>
-<p>Bonjour {{ reservation.name.firstname }},</p>
-<p>Votre réservation a été modifiée avec succès.</p>
-<p>Nouvelle date et heure de réservation : {{ reservation.start|date('d-m-Y H:i') }}</p>
-<p>Merci de votre confiance et à bientôt.</p>
-
-{% set logo_url = "https://restaurant-demo.ovh/assets/images/OrangeetBordeauxRestaurantLogo.png" %}
-<img style="width: 150px; height: auto; background-color: #1e1f20; padding: 10px; border-radius: 5px;" src="{{ logo_url }}" alt="Logo" />
+<div class="container" style="max-width: 600px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="header" style="text-align: center; margin-bottom: 20px;">
+        {% set logo_url = "https://restaurant-demo.ovh/assets/images/OrangeetBordeauxRestaurantLogo.png" %}
+        <img src="{{ logo_url }}" alt="Logo" style="max-width: 150px; height: auto; padding: 10px; border-radius: 5px;"/>
+    </div>
+    <h1>Confirmation de la Modification de Votre Réservation</h1>
+    <p>Bonjour {{ reservation.name.firstname }} {{ reservation.name.lastname }},</p>
+    <p>Nous tenons à vous informer que votre réservation dans notre restaurant <strong>Le Quai-Antique</strong> a été modifiée avec succès. Nous sommes impatients de vous accueillir et de vous offrir une expérience culinaire exceptionnelle.</p>
+    <p>Voici les détails de votre nouvelle réservation :</p>
+    <p>Date et heure : {{ reservation.start|date('d-m-Y H:i') }}</p>
+    <p>Nous vous remercions pour votre confiance et restons à votre disposition pour toute demande ou modification supplémentaire. N'hésitez pas à nous contacter pour toute question ou préférence particulière concernant votre visite.</p>
+    <p>Au plaisir de vous servir prochainement.</p>
+    <p>Cordialement,</p>
+    <p><strong>Le Quai-Antique</strong></p>
+</div>

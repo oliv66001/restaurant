@@ -29,7 +29,7 @@ class SecurityController extends AbstractController
 
         // Initialisation du compteur et du délai d'attente
         $maxAttempts = 3;
-        $delay = 50; // 10 secondes de délai
+        $delay = 50; // 50 secondes de délai
 
         $attempts = $session->get('login_attempts', 0);
         $lastAttempt = $session->get('last_login_attempt_time', null);

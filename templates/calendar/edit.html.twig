@@ -11,54 +11,23 @@
 
 				{{ include('calendar/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-			
-					
+
 				{{ include('calendar/_delete_form.html.twig') }}
-				
+
 			</div>
-			
+
 		</div>
 		<div class="text-center mb-5">
-		<a class="btn btn1 text-center mt-5" href="{{ path('app_calendar_index') }}">Retour</a>
+			<a class="btn btn1 text-center mt-5" href="{{ path('app_calendar_index') }}">Retour</a>
 		</div>
 
 	</section>
 {% endblock %}
+
 {% block javascripts %}
-
 	<script src="{{ asset('assets/js/calendar.js') }}" defer></script>
-	<script>
+	<script>let closedDays = {{ closedDaysArray | json_encode | raw }};</script>
+	<script src="{{ asset('assets/js/calendarCloseDay.js') }}"defer></script>
 	
-let closedDays = {{ closedDaysArray | json_encode | raw }};
-
-function validateDate() {
-	console.log("Fonction validateDate appelée");
-  const selectedDayOfMonth = $('#calendar_start_date_day').val();
-  const selectedMonth = $('#calendar_start_date_month').val() - 1;
-  const selectedYear = $('#calendar_start_date_year').val();
-  const selectedTime = $('#calendar_start_time_hour').val();
-  const selectedDate = new Date(Date.UTC(selectedYear, selectedMonth, selectedDayOfMonth));
-  const selectedDayOfWeek = selectedDate.getUTCDay();
-
-  console.log("Jour de la semaine calculé:", selectedDayOfWeek);
-  console.log('Jours fermés:', closedDays);
-  console.log('Jour sélectionné:', selectedDayOfWeek);
-  console.log('Heure sélectionnée:', selectedTime);
-
-  if (closedDays.includes(selectedDayOfWeek)) {
-    alert('Le restaurant est fermé ce jour-là. Veuillez choisir un autre jour.');
-    $('#calendar_start_date_day').val('');  // Réinitialise le champ du jour
-  }
-}
-
-$(document).ready(function () {
-  $('#calendar_start_date_day').on('change', validateDate);
-  $('#calendar_start_date_month').on('change', validateDate);
-  $('#calendar_start_date_year').on('change', validateDate);
-});
-
-
-	</script>
-		<script src="{{ asset('assets/js/reservationVerif.js') }}" defer></script>
-
+	<script src="{{ asset('assets/js/reservationVerif.js') }}" defer></script>
 {% endblock %}

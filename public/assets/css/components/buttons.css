@@ -1,6 +1,4 @@
 .btn, .btn2, .btn3, .btnTime {
-  background-color: var(--button-color);
-  color: var(--text-color);
   font-family: 'Roboto', sans-serif;
   padding: 10px 20px;
   border: none;
@@ -11,7 +9,22 @@
   transition: all 0.3s ease;
 }
 
+.btn {
+  background-color: var(--button-color);
+  color: var(--text-color);
+}
+
 .btn:hover {
+  background-color: var(--hoverbtn2-color);
+  color: var(--templates-color);
+}
+
+.btn1{
+  background-color: var(--button-color);
+  color: var(--text-color);
+}
+
+.btn1:hover {
   background-color: var(--hoverbtn-color);
   color: var(--templates-color);
 }
@@ -27,10 +40,11 @@
 
 .btn3 {
   background-color: var(--button3-color);
+  color: var(--text-color);
 }
 
 .btn3:hover {
-  background-color: var(--hoverbtn-color);
+  background-color: var(--hoverbtn3-color);
   color: var(--templates-color);
 }
 
@@ -42,5 +56,15 @@
 
 .btnTime:hover {
   background-color: var(--hoverbtn-color);
+  color: var(--templates-color);
+}
+
+.btn4{
+  background-color: var(--button4-color);
+  color: var(--text-color);
+}
+
+.btn4:hover {
+  background-color: var(--text-color);
   color: var(--templates-color);
 }

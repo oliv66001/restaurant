@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil | Le Quai-Antique
+{% block title %}Catégorie des plats | Le Quai-Antique
 {% endblock %}
 
 {% block body %}
 
 	<main class="container">
 		<section class="row justify-content-center">
-			<div class="col-12">
-				<h1>Voir les
+			<div class="col-lg-12 col-md-6 col-sm-12 mb-4 text-center">
+				<h1>Voir les :
 					{{ categorie.name }}</h1>
 			</div>
 
 			{% for dishe in dishes.data %}
 
-				<div class="col-lg-6 col-md-6 col-sm-8 mb-4">
+				<div class="col-lg-6 col-md-6 col-sm-12 mb-4">
 					<article class="card h-100" id="card">
 						<div class="card-body text-center">
 							<div>
@@ -31,15 +31,15 @@
 							<p>Les
 								{{ dishe.description }}</p>
 							<div class="text-center mt-auto">
-								<a href="{{ path('app_dishes_details', {"slug": dishe.slug }) }}" class="btn btn">Détails</a>
+								<a href="{{ path('app_dishes_details', {"slug": dishe.slug }) }}" class="btn btn4">Détails</a>
 								{% if app.user %}
 									<div class="d-flex mt-auto">
 										<a class="btn btn2 me-auto p-2" href=" {{ path('app_carte')}} ">La carte</a>
-										<a class="btn p-2" href="{{ path('app_calendar_new') }}">Réserver</a>
+										<a class="btn btn3 p-2" href="{{ path('app_calendar_new') }}">Réserver</a>
 									</div>
 								{% else %}
 									<div class="d-flex mt-auto">
-										<a class="btn btn3 me-auto p-2" href=" {{ path('app_login')}} ">connexion</a>
+										<a class="btn btn me-auto p-2" href=" {{ path('app_login')}} ">connexion</a>
 										<a type="button" href="{{ path('app_register') }}" class="btn btn3 p-2">S'inscrire</a>
 									</div>
 								{% endif %}

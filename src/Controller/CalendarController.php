@@ -44,8 +44,9 @@ class CalendarController extends AbstractController
 
     #[Route('/', name: 'app_calendar_index', methods: ['GET'])]
 
-    public function index(CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository, CategoriesRepository $categoriesRepository): Response
+    public function index(CalendarRepository $calendarRepository, BusinessHoursRepository $businessHoursRepository, CategoriesRepository $categoriesRepository, EntityManagerInterface $entityManager): Response
     {
+        $category = $entityManager->getRepository(Categories::class)->findAll();
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
         $business_hours = $businessHoursRepository->findAll();
         usort($business_hours, function ($a, $b) {
@@ -63,6 +64,7 @@ class CalendarController extends AbstractController
         return $this->render('calendar/index.html.twig', [
             'business_hours' => $business_hours,
             'categories' => $categories,
+            'category' => $category,
             'calendars' => $calendars
 
         ]);
@@ -370,19 +372,13 @@ class CalendarController extends AbstractController
 
         // Récupération des places disponibles
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 1;
+        
         $remainingPlaces = $calendarService->getAvailablePlaces($calendar->getStart(), $numberOfGuests);
 
         $calendar->setAvailablePlaces($remainingPlaces);
 
         // Obtenir le nombre de places disponibles
         //$remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
-
-
-        // Si le nombre de places restantes est insuffisant, retourner une erreur
-        if ($remainingPlaces < $numberOfGuests - $numberOfGuests) {
-            $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
-            return $this->redirectToRoute('app_calendar_index');
-        }
 
         $form = $this->createForm(CalendarType::class, $calendar, [
             'hours' => $start,
@@ -406,21 +402,21 @@ class CalendarController extends AbstractController
                     $entityManager->rollback();
                     return $this->redirectToRoute('app_calendar_new');
                 }
-
-
+                
                 $numberOfGuests = $calendar->getNumberOfGuests();
 
                 // Obtenir le nombre de places disponibles
                 $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
 
-                // Si le nombre de places restantes est insuffisant, retourner une erreur
-                if ($remainingPlaces < $numberOfGuests - $numberOfGuests) {
-                    $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
-                    $entityManager->rollback();
-                    return $this->redirectToRoute('app_calendar_new');
-                }
+               // Si le nombre de places restantes est insuffisant, retourner une erreur
+               if ($remainingPlaces < $numberOfGuests) {
+                //dd($remainingPlaces, $numberOfGuests);
+                $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
+                $entityManager->rollback();
+                return $this->redirectToRoute('app_calendar_new');
+            }
 
-                $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
+            $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
 
                 // Persister et flusher les données
                 $entityManager->persist($calendar);
