@@ -32,7 +32,7 @@
 									{% for dish in menu.getDishes %}
 
 										{% if dish.images|length > 0 %}
-											<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dish.images[0].name ) }}" alt="{{ dish.name }}" class="img-fluid product-img">
+											<img src="{{ asset('assets/uploads/dishes/mini/300x300-' ~ dish.images[0].name ) }}" alt="{{ dish.name }}" class="product-img">
 										{% else %}
 											<img src="{{ asset('assets/images/OrangeetBordeauxRestaurantLogo.png') }}" alt="Image par défaut" class="img-fluid product-img">
 										{% endif %}

@@ -1,4 +1,4 @@
-.table th {
+.table td th {
     background-color: var(--templates-color);
     color: var(--text-color);
 }

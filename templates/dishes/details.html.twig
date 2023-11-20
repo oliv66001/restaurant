@@ -42,11 +42,11 @@
 				</p>
 				<p>Prix : {{ dishe.price }} €</p>
 				{% if app.user %}
-				<a type="button" href="#" class="btn mt-3">Réserver</a>
+				<a type="button" href="{{ path('app_calendar_new') }}" class="btn btn3 mt-3">Réserver</a>
 				{% else %}
 				<p>Connectez-vous pour réserver</p>
 				<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
-				<a type="button" href="{{ path('app_register') }}" class="btn mt-3">S'inscrire</a>
+				<a type="button" href="{{ path('app_register') }}" class="btn btn3 mt-3">S'inscrire</a>
 				{% endif %}
 			</div>
 		</section>

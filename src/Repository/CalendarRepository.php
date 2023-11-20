@@ -267,4 +267,12 @@ class CalendarRepository extends ServiceEntityRepository
       
         return $availablePlaces;
     }
+
+    public function findAllOrderByDate()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.start', 'ASC') // 'c.start' doit être remplacé par le nom de ton champ de date
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,4 @@
+<form class="text-center" method="post" action="{{ path('admin_calendar_delete', {'id': calendar.id}) }}" onsubmit="return confirm('Confirmez-vous la suppression de cette réservation ? Cette action est irréversible.');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ calendar.id) }}">
+    <button class="btn btn-danger admin-delete-btn">Supprimer (Admin)</button>
+</form>

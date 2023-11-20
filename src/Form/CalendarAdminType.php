@@ -28,7 +28,7 @@ class CalendarAdminType extends AbstractType
         $this->calendarRepository = $calendarRepository;
         $this->businessHoursRepository = $businessHoursRepository;
     }
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $current_user_id = $this->security->getUser();
         $calendar = $builder->getData();
@@ -54,7 +54,7 @@ class CalendarAdminType extends AbstractType
             ->add('availablePlaces', IntegerType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,

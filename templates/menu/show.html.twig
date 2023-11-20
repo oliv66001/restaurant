@@ -8,10 +8,17 @@
     <div class="row justify-content-center">
         <div class="col-lg-12 col-sm-12">
 
-            <section class="container-fluid" id="menu">
+            <section class="container-fluid" id="carte">
                 <div>
                     <h1> {{ menu.name }}</h1>
                 </div>
+              <div class="row justify-content-center borderTitre mb-4 mt-5">
+												<div class="col-6">
+                                                <h2 class="text-center">Description du menu</h2>
+													<p>
+														{{ menu.description }}</p>
+												</div>
+											</div>
 
               {% for sortedMenu in sortedMenus %}
             {% if sortedMenu.menu.id == menu.id %}
@@ -20,18 +27,17 @@
                         <div class="col-lg-12 col-sm-12 px-20">
                             <h3>{{ sortedDish.name }}</h3>
                             <p class="text-center px-50">{{ sortedDish.description }}</p>
-                            <p class="price">{{ sortedDish.price }}€</p>
+                          
                         </div>
                     </div>
                 {% endfor %}
                 {% endif %}
                 {% endfor %}
-                {#{% include "_partials/_pagination.html.twig" with {
-                    'menu_index': 'menu_show',
-                    'currentPage': 1,
-                    'totalPages': totalPages,
-                } %}#}
-               
+
+                <div class="borderTitre mt-5 mb-5">
+                <h2 class="text-center">Prix du menu</h2>
+                  <h3 class="price">{{ menu.price }}€</h3>
+               </div>
                 {% if app.user %}
                     <div class="nav-item">
                         <a class="btn btn mt-3" href="{{ path('app_calendar_new') }}">Réserver</a>

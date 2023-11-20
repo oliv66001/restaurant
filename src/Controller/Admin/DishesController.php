@@ -154,7 +154,7 @@ class DishesController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse {
         //Vérification si l'user peut supprimer avec le voter
-        if (false === $this->isGranted('ROLE_ADMIN', $dishes)) {
+        if (false === $this->isGranted('ROLE_DISHES_ADMIN', $dishes)) {
             throw new AccessDeniedException('Seuls les administrateurs peuvent supprimer ce produit.');
         }
         $data = json_decode($request->getContent(), true);

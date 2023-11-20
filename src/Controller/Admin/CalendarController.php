@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Service\CalendarService;
+use App\Repository\UsersRepository;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\BusinessHoursRepository;
@@ -26,14 +27,14 @@ class CalendarController extends AbstractController
         if (false === $this->isGranted('ROLE_DISHES_ADMIN', $calendarRepository)) {
             throw new AccessDeniedException('Seuls les super administrateurs peuvent accéder à cette page.');
         }
-        $calendars = $calendarRepository->findAll();
+        $calendars = $calendarRepository->findAllOrderByDate();
         return $this->render('admin/calendar/index.html.twig', [
             'calendars' => $calendars,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager,  CalendarService $calendarService): Response
+    public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager,  CalendarService $calendarService, UsersRepository $userRepository): Response
     {
        
         $business_hours = $businessHoursRepository->findAll();
@@ -64,7 +65,8 @@ class CalendarController extends AbstractController
             return $hour->getDay();
         }, $closedDays);
 
-        $user = $security->getUser();
+        $reservationUser = $calendar->getName();
+
 
         $start = [];
         foreach ($business_hours as $hour) {
@@ -102,7 +104,7 @@ class CalendarController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        $existingReservations = $calendarRepository->findByUserOrAll($user);
+       // $existingReservations = $calendarRepository->findByUserOrAll($user);
         if ($form->isSubmitted() && $form->isValid()) {
             // On démarre une transaction
             $entityManager->beginTransaction();
@@ -151,17 +153,18 @@ class CalendarController extends AbstractController
                         'reservation' => $calendar,
                     ]);
 
-                $emailUser = (new TemplatedEmail())
+                    $emailUser = (new TemplatedEmail())
                     ->from('quai-antique@crocobingo.fr')
-                    ->to($user->getEmail())
+                    ->to($reservationUser->getEmail()) // Utilise l'email de l'utilisateur de la réservation
                     ->subject('Réservation modifiée')
                     ->htmlTemplate('emails/modifiedUser_reservation.html.twig')
                     ->context([
                         'reservation' => $calendar,
                     ]);
-
+                    
                 $mailer->send($emailAdmin);
                 $mailer->send($emailUser);
+               
 
                 $this->addFlash('success', 'La réservation a été modifiée avec succès.');
 
@@ -184,7 +187,8 @@ class CalendarController extends AbstractController
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security): Response
     {
-        $user = $security->getUser();
+        $reservationUser = $calendar->getName();
+
         if ($this->isCsrfTokenValid('delete' . $calendar->getId(), $request->request->get('_token'))) {
             $calendarRepository->remove($calendar, true);
 
@@ -196,18 +200,8 @@ class CalendarController extends AbstractController
                 ->context([
                     'reservation' => $calendar,
                 ]);
-
-            $emailUser = (new TemplatedEmail())
-                ->from('quai-antique@crocobingo.fr')
-                ->to($user->getEmail())
-                ->subject('Réservation supprimée')
-                ->htmlTemplate('emails/deletedUser_reservation.html.twig')
-                ->context([
-                    'reservation' => $calendar,
-                ]);
-
+                
             $mailer->send($emailAdmin);
-            $mailer->send($emailUser);
         }
 
         $this->addFlash('warning', 'La réservation a été supprimée avec succès.');

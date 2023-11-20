@@ -41,8 +41,12 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-</div></div></article><hr>
+</div></div></article>
+
+
 {% if not is_granted('ROLE_DISHES_ADMIN') %}
+<section class="container">
+<hr>
 <div class="text-center">
 	{% if app.user %}
 		<a type="button" href="{{ path('app_calendar_new') }}" class="btn btn3 mt-3">Réserver</a>
@@ -52,5 +56,7 @@
 		<a type="button" href="{{ path('app_register') }}" class="btn btn3 mt-3">S'inscrire</a>
 	{% endif %}
 				</div>
+                <hr>
+                </section>
 {% endif %}
-				<hr>
+				

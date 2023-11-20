@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Menu;
+use App\Entity\Dishes;
 use App\Entity\Categories;
 use App\Repository\MenuRepository;
 use App\Repository\DishesRepository;
@@ -26,6 +27,8 @@ class MenuController extends AbstractController
         int $page = 1
     ): Response {
 
+
+        $category = $entityManager->getRepository(Categories::class)->findAll();
         $menusPerPage = 2; // Nombre de menus à afficher par page
         $menus = $menuRepository->findWithPagination($page, $menusPerPage); // Récupère les menus paginés
         $sortedMenus = [];
@@ -37,6 +40,7 @@ class MenuController extends AbstractController
             });
             $sortedMenus[] = [
                 'menu' => $menu,
+                'categories' => $category,
                 'sortedDishes' => $sortedDishes,
             ];
         }
@@ -69,6 +73,7 @@ class MenuController extends AbstractController
     #[Route('/menu/{id}', name: 'menu_show', requirements: ['id' => '\d+'])]
     public function show(Menu $menu, BusinessHoursRepository $businessHoursRepository, CategoriesRepository $categoriesRepository, EntityManagerInterface $entityManager, MenuRepository $menuRepository, int $page = 1): Response
     {
+        $dishes = $entityManager->getRepository(Dishes::class)->findAll();
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $business_hours = $businessHoursRepository->findAll();
         usort($business_hours, function($a, $b) {
@@ -93,6 +98,7 @@ class MenuController extends AbstractController
         return $this->render('menu/show.html.twig', [
             'business_hours' => $business_hours,
             'categories' => $categories,
+            'dishes' => $dishes,
             'sortedMenus' => $sortedMenus,
             'category' => $category,
             'menu' => $menu,
