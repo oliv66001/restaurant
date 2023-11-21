@@ -65,7 +65,7 @@ slotMaxTime: '23:45', // Limiter l'affichage de l'heure de fin
 
 calendar.on('eventClick', (eventClickInfo) => {
 let eventId = eventClickInfo.event.id;
-window.location.href = `/admin/calendar/${eventId}/edit`;
+window.location.href = `/admin/calendarA/${eventId}/edit`;
 });
 
 calendar.on('eventChange', (e) => {

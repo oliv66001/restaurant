@@ -39,6 +39,18 @@ app_calendar_delete:
     path: /calendar/delete/{id}
     controller: App\Controller\CalendarController::delete
 
+admin_calendar_edit:
+    path: /admin/calendarA/{id}/edit
+    controller: App\Controller\Admin\AdminCalendarController::edit
+
+admin_calendar_delete:
+    path: /admin/calendarA/delete/{id}
+    controller: App\Controller\Admin\AdminCalendarController::delete
+
+admin_calendar_index:
+    path: /admin/calendarA
+    controller: App\Controller\Admin\AdminCalendarController::index
+
 
 
 

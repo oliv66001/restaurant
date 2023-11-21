@@ -18,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-#[Route("/admin/calendar", name: "admin_calendar_")]
-class CalendarController extends AbstractController
+#[Route("/admin/calendarA", name: "admin_calendar_")]
+class AdminCalendarController extends AbstractController
 {
     #[Route("/", name: "index", methods: ["GET"])]
     public function index(CalendarRepository $calendarRepository): Response
@@ -28,7 +28,7 @@ class CalendarController extends AbstractController
             throw new AccessDeniedException('Seuls les super administrateurs peuvent accéder à cette page.');
         }
         $calendars = $calendarRepository->findAllOrderByDate();
-        return $this->render('admin/calendar/index.html.twig', [
+        return $this->render('admin/calendarA/index.html.twig', [
             'calendars' => $calendars,
         ]);
     }
@@ -177,7 +177,7 @@ class CalendarController extends AbstractController
                 throw $e;
             }
         }
-        return $this->render('calendar/edit.html.twig', [
+        return $this->render('admin/calendarA/edit.html.twig', [
             'calendar' => $calendar,
             'closedDaysArray' => $closedDaysArray,
             'business_hours' => $business_hours,
@@ -200,8 +200,18 @@ class CalendarController extends AbstractController
                 ->context([
                     'reservation' => $calendar,
                 ]);
+                $emailUser = (new TemplatedEmail())
+                ->from('quai-antique@crocobingo.fr')
+                ->to($reservationUser->getEmail()) // Utilise l'email de l'utilisateur de la réservation
+                ->subject('Réservation modifiée')
+                ->htmlTemplate('emails/deletedUser_reservation.html.twig')
+                ->context([
+                    'reservation' => $calendar,
+                ]);
                 
             $mailer->send($emailAdmin);
+            $mailer->send($emailUser);
+           
         }
 
         $this->addFlash('warning', 'La réservation a été supprimée avec succès.');

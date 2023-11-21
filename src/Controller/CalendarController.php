@@ -369,7 +369,7 @@ class CalendarController extends AbstractController
                 $start[] = $i;
             }
         }
-
+        
         // Récupération des places disponibles
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 1;
         
@@ -390,7 +390,7 @@ class CalendarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // On démarre une transaction
             $entityManager->beginTransaction();
-
+          
             try {
                 // Mettons à jour $calendar avec les nouvelles valeurs du formulaire
                 $start = $calendar->getStart();
@@ -425,7 +425,7 @@ class CalendarController extends AbstractController
 
                 // Commit de la transaction
                 $entityManager->commit();
-
+                
                 $emailAdmin = (new TemplatedEmail())
                     ->from('quai-antique@crocobingo.fr')
                     ->to('quai.antiquead@gmail.com')
