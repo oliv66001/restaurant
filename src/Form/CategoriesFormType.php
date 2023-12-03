@@ -42,17 +42,18 @@ class CategoriesFormType extends AbstractType
             ])
         
 
-        ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-            $category = $event->getData();
-            $parent = $category->getParent();
-
-            if ($parent) {
-                $maxOrder = $this->categoriesRepository->getMaxCategoryOrderForParent($parent);
-                $category->setCategoryOrder($maxOrder + 1);
-            } else {
-                $category->setCategoryOrder(1);
-            }
-        });
+            ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+                $category = $event->getData();
+                $parent = $category->getParent();
+            
+                if ($parent) {
+                    $parentOrder = $parent->getCategoryOrder(); // Obtient l'ordre de la catégorie parente
+                    $category->setCategoryOrder($parentOrder); // Assigne le même ordre à la nouvelle catégorie
+                } else {
+                    $category->setCategoryOrder(1); // Pour une catégorie sans parent, tu peux garder cette logique
+                }
+            });
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

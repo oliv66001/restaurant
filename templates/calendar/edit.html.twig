@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block javascripts %}
-	<script src="{{ asset('assets/js/calendar.js') }}" defer></script>
+	{#<script src="{{ asset('assets/js/editCalendar.js') }}" defer></script>#}
 	<script>let closedDays = {{ closedDaysArray | json_encode | raw }};</script>
 	<script src="{{ asset('assets/js/calendarCloseDay.js') }}"defer></script>
 	

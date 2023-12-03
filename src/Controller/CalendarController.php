@@ -82,6 +82,7 @@ class CalendarController extends AbstractController
         CalendarService $calendarService
     ): Response {
 
+       
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $business_hours = $businessHoursRepository->findAll();
         usort($business_hours, function ($a, $b) {
@@ -115,25 +116,29 @@ class CalendarController extends AbstractController
         $closedDaysArray = array_map(function ($hour) {
             return $hour->getDay();
         }, $closedDays);
+
+       
+
        
         $calendar = new Calendar();
         $calendar->setName($user);
         $calendar->setStart(null);
 
+        $isEditMode = $calendar === null;
         // Récupération des places disponibles
         $start = $calendar->getStart();
 
         $capacity = self::RESTAURANT_CAPACITY;
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 0;
-        
+
         $occupiedPlaces = $calendarRepository->countOccupiedPlaces($start, $numberOfGuests);
         //dd($start, $numberOfGuests);
         $availablePlaces = max($capacity - $occupiedPlaces, 0);
         $calendar->setAvailablePlaces($availablePlaces);
         $remainingPlaces = $calendarService->getAvailablePlaces($calendar->getStart(), $numberOfGuests);
-       
+
         $calendar->setAvailablePlaces($remainingPlaces);
-        
+
 
         //Récupération des heures d'ouverture du restaurant
         $start = [];
@@ -168,7 +173,7 @@ class CalendarController extends AbstractController
         $existingReservations = $calendarRepository->findByUserOrAll($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          
+
             // On démarre une transaction
             $entityManager->beginTransaction();
 
@@ -176,14 +181,14 @@ class CalendarController extends AbstractController
                 $numberOfGuests = $calendar->getNumberOfGuests();
                 $occupiedPlaces = $calendarRepository->countOccupiedPlaces($calendar->getStart(), $numberOfGuests);
                 $availablePlaces = $form->get('availablePlaces')->getData() - $occupiedPlaces;
-                
+
                 // Mettons à jour $calendar avec les nouvelles valeurs du formulaire
                 $start = $calendar->getStart();
                 //dd($availablePlaces);
                 //dd($start, $numberOfGuests);
                 // Compte le nombre de réservations pour cette heure
                 $count = $calendarRepository->countReservationsByHour($start);
-                
+
                 if ($count >= 30) {
                     $this->addFlash('error', 'Désolé, il y a déjà 30 réservations pour cette heure.');
                     $entityManager->rollback();
@@ -193,7 +198,7 @@ class CalendarController extends AbstractController
                 // Obtenir le nombre de places disponibles
                 $numberOfGuests = $calendar->getNumberOfGuests();
                 $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
-                 
+
                 // Si le nombre de places restantes est insuffisant, retourner une erreur
                 if ($remainingPlaces < $numberOfGuests) {
                     //dd($remainingPlaces, $numberOfGuests);
@@ -203,8 +208,8 @@ class CalendarController extends AbstractController
                 }
 
                 $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
-                
-                
+
+
                 $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
 
                 if ($dayOfWeek === $closedDays) {
@@ -214,7 +219,7 @@ class CalendarController extends AbstractController
                     return $this->redirectToRoute('app_calendar_new');
                 }
 
-              // Persister et flusher les données
+                // Persister et flusher les données
                 $entityManager->persist($calendar);
                 $entityManager->flush();
                 //dd($calendar);
@@ -264,6 +269,7 @@ class CalendarController extends AbstractController
             'calendar' => $calendar,
             'business_hours' => $business_hours,
             'start' => $start,
+            'editMode' => $isEditMode,
             'category' => $category,
             'closedDaysArray' => $closedDaysArray,
             'remainingPlaces' => $remainingPlaces,
@@ -315,10 +321,11 @@ class CalendarController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendar $calendar, CalendarRepository $calendarRepository, MailerInterface $mailer, Security $security, BusinessHoursRepository $businessHoursRepository, EntityManagerInterface $entityManager,  CalendarService $calendarService): Response
     {
+
+        $isEditMode = $calendar != null;
         $category = $entityManager->getRepository(Categories::class)->findAll();
         $business_hours = $businessHoursRepository->findAll();
         usort($business_hours, function ($a, $b) {
@@ -369,10 +376,10 @@ class CalendarController extends AbstractController
                 $start[] = $i;
             }
         }
-        
+
         // Récupération des places disponibles
         $numberOfGuests = $calendar->getNumberOfGuests() ?? 1;
-        
+
         $remainingPlaces = $calendarService->getAvailablePlaces($calendar->getStart(), $numberOfGuests);
 
         $calendar->setAvailablePlaces($remainingPlaces);
@@ -385,47 +392,58 @@ class CalendarController extends AbstractController
 
         ]);
         $form->handleRequest($request);
-
+        //dd($calendar, $user);
         $existingReservations = $calendarRepository->findByUserOrAll($user);
+
+        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // On démarre une transaction
-            $entityManager->beginTransaction();
-          
-            try {
-                // Mettons à jour $calendar avec les nouvelles valeurs du formulaire
-                $start = $calendar->getStart();
-                $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
+    // On démarre une transaction
+    $entityManager->beginTransaction();
 
-                if ($dayOfWeek === $closedDays) {
+    try {
+        // Mettons à jour $calendar avec les nouvelles valeurs du formulaire
+        $start = $calendar->getStart();
+        $dayOfWeek = (int) $start->format('N'); // 1 pour Lundi, 2 pour Mardi, etc.
 
-                    $this->addFlash('danger', 'Le restaurant est fermé . Veuillez choisir un autre jour.');
-                    $entityManager->rollback();
-                    return $this->redirectToRoute('app_calendar_new');
-                }
-                
-                $numberOfGuests = $calendar->getNumberOfGuests();
+        if (in_array($dayOfWeek, $closedDaysArray)) {
+            $this->addFlash('danger', 'Le restaurant est fermé. Veuillez choisir un autre jour.');
+            $entityManager->rollback();
+            return $this->redirectToRoute('app_calendar_new');
+        }
 
-                // Obtenir le nombre de places disponibles
-                $remainingPlaces = $calendarService->getAvailablePlaces($start, $numberOfGuests);
+        // Augmenter les places disponibles par le nombre d'invités actuel
+        $currentNumberOfGuests = $calendar->getNumberOfGuests();
+        $currentAvailablePlaces = $calendar->getAvailablePlaces();
+        $calendar->setAvailablePlaces($currentAvailablePlaces + $currentNumberOfGuests);
 
-               // Si le nombre de places restantes est insuffisant, retourner une erreur
-               if ($remainingPlaces < $numberOfGuests) {
-                //dd($remainingPlaces, $numberOfGuests);
-                $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
-                $entityManager->rollback();
-                return $this->redirectToRoute('app_calendar_new');
-            }
+        // Réinitialiser le nombre d'invités à zéro avant de traiter la nouvelle demande
+        $calendar->setNumberOfGuests(0);
 
-            $calendar->setAvailablePlaces($remainingPlaces - $numberOfGuests);
+        // Nouveau nombre d'invités demandé
+        $newNumberOfGuests = $form->get('numberOfGuests')->getData();
 
-                // Persister et flusher les données
-                $entityManager->persist($calendar);
-                $entityManager->flush();
+        // Recalculer les places disponibles pour la nouvelle demande
+        $remainingPlaces = $calendarService->getAvailablePlaces($start, $newNumberOfGuests);
+
+        if ($remainingPlaces < $newNumberOfGuests) {
+            $this->addFlash('danger', 'Désolé, il n’y a pas assez de places disponibles.');
+            $entityManager->rollback();
+            return $this->redirectToRoute('app_calendar_new');
+        }
+
+        // Mettre à jour le nombre de places disponibles et d'invités
+        $calendar->setAvailablePlaces($remainingPlaces - $newNumberOfGuests);
+        $calendar->setNumberOfGuests($newNumberOfGuests);
+
+        // Persister et flusher les données
+        $entityManager->persist($calendar);
+        $entityManager->flush();
                 //dd($calendar);
 
                 // Commit de la transaction
                 $entityManager->commit();
-                
+
                 $emailAdmin = (new TemplatedEmail())
                     ->from('quai-antique@crocobingo.fr')
                     ->to('quai.antiquead@gmail.com')
@@ -463,6 +481,7 @@ class CalendarController extends AbstractController
             'category' => $category,
             'closedDaysArray' => $closedDaysArray,
             'business_hours' => $business_hours,
+            'editMode' => $isEditMode,
             'form' => $form,
         ]);
     }

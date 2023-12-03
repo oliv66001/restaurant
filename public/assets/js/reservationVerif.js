@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const allergieInput = document.querySelector('#calendar_allergieOfGuests'); // Remplace avec le bon sélecteur
+    const allergieInput = document.querySelector('#calendar_allergieOfGuests'); // Sélecteur de l'input allergie
     const submitButton = document.querySelector('#submit-button'); // Sélecteur du bouton de soumission
     const errorMessage = document.querySelector('#error-message'); // Sélecteur du message d'erreur
      if (allergieInput) { // Ajout d'une vérification pour s'assurer que allergieInput n'est pas null

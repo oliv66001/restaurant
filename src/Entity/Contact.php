@@ -32,6 +32,10 @@ class Contact
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Assert\Regex(
+        pattern:"/[<>.\$%\/;:!?@€*-]/",
+        match:false,
+        message:"Votre numéro de téléphone ne peut pas contenir de caractères spéciaux")]
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 

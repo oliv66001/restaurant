@@ -54,17 +54,22 @@
                             {% set categoryImageFound = true %}
                         {% endif %}
                     {% endfor %}
-                    <div class="col-12 text-center">
-                        <h3 class="card-title mt-5 mb-0">{{ category.name }}</h3>
-                        <a  href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn btn4 mt-3">Voir le détails</a>
-                        {% if app.user %}
-                            <a type="button" href="{{ path('app_calendar_new') }}" class="btn btn3 mt-3">Réserver</a>
-                        {% else %}
-                            <p>Connectez-vous pour réserver</p>
-			        		<a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
-			        		<a type="button" href="{{ path('app_register') }}" class="btn btn3 mt-3">S'inscrire</a>
-			        	{% endif %}
+                   <div class="col-12 text-center">
+    <h3 class="card-title mt-5 mb-0">{{ category.name }}</h3>
+    {% if category.dishes|length > 0 %}
+        <a href="{{ path('app_categories_list', {slug: category.slug}) }}" class="btn btn4 mt-3">Voir le détails</a>
+    {% else %}
+        <a href="{{ path('app_main') }}" class="btn btn4 mt-3">Voir le détails</a>
+    {% endif %}
+    {% if app.user %}
+        <a type="button" href="{{ path('app_calendar_new') }}" class="btn btn3 mt-3">Réserver</a>
+    {% else %}
+        <p>Connectez-vous pour réserver</p>
+        <a type="button" href="{{ path('app_login') }}" class="btn mt-3">Connexion</a>
+        <a type="button" href="{{ path('app_register') }}" class="btn btn3 mt-3">S'inscrire</a>
+    {% endif %}
 				</div>
+
 			</div>
 		</article>
 	</div>

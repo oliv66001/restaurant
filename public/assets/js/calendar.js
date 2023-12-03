@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `Fetching remaining places with start = ${start} and numberOfGuests = ${numberOfGuests}`
           );
 
+          //Récupération des places disponibles
           fetch(
             `/calendar/remaining-places-api?start=${encodeURIComponent(
               start
@@ -66,9 +67,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .then((data) => {
               console.log("Données récupérées :", data);
               const remainingPlaces = data.remainingPlaces;
+              //Message d'alerte si le nombre de places disponibles est négatif
               if (remainingPlaces < 0) {
-                alert("Les places disponibles ne peuvent pas être négatives.");
-                availablePlacesInput.value = 0; // Définir à zéro si négatif
+                alert(" Les places disponibles ne peuvent pas être négatives. Merci de choisir une autre heure de réservation s'il n'y a pas assez de places disponibles.");
+                availablePlacesInput.value = 0; // Défini à zéro si négatif
               } else {
                 availablePlacesInput.value = remainingPlaces;
               }

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 #[Route('/admin/categories', name: 'admin_categories_')]
@@ -19,6 +20,9 @@ class CategoriesController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(CategoriesRepository $categoriesRepository): Response
     {
+        if (false === $this->isGranted('ROLE_DISHES_ADMIN')) {
+            throw new AccessDeniedException('Seuls les administrateurs peuvent accéder à cette page.');
+        }
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'ASC']);
         return $this->render('admin/categories/index.html.twig', compact('categories'));
     }
@@ -26,6 +30,9 @@ class CategoriesController extends AbstractController
     #[Route('/ajouter', name: 'add')]
     public function add(Request $request, EntityManagerInterface $em, CategoriesFormType $category, Categories $categories): Response
     {
+        if (false === $this->isGranted('ROLE_DISHES_ADMIN')) {
+            throw new AccessDeniedException('Seuls les administrateurs peuvent accéder à cette page.');
+        }
         $category = new Categories();
 
         $form = $this->createForm(CategoriesFormType::class, $category);
@@ -49,6 +56,9 @@ class CategoriesController extends AbstractController
 
     public function edit(Request $request, Categories $category, EntityManagerInterface $em): Response
     {
+        if (false === $this->isGranted('ROLE_DISHES_ADMIN')) {
+            throw new AccessDeniedException('Seuls les administrateurs peuvent accéder à cette page.');
+        }
         $form = $this->createForm(CategoriesFormType::class, $category);
         $form->handleRequest($request);
 
@@ -71,6 +81,9 @@ class CategoriesController extends AbstractController
  
 public function delete(Request $request, Categories $category, EntityManagerInterface $em): Response
 {
+    if (false === $this->isGranted('ROLE_DISHES_ADMIN')) {
+        throw new AccessDeniedException('Seuls les administrateurs peuvent accéder à cette page.');
+    }
     $data = json_decode($request->getContent(), true);
 
     if ($this->isCsrfTokenValid('delete_categories' . $category->getId(), $data['_token'])) {
